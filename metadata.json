@@ -1,0 +1,7 @@
+{
+  "name": "GreenTrust Fresh Market",
+  "description": "A premium farm-to-table digital storefront for fresh vegetables and fruits with AI-powered recipe suggestions.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

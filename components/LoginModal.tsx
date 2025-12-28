@@ -19,71 +19,73 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex flex-col justify-end max-w-md mx-auto">
-      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md animate-fadeIn" onClick={onClose}></div>
-      <div className="relative bg-white rounded-t-[4rem] p-10 pb-16 shadow-2xl animate-popIn overflow-hidden border-t border-slate-100">
-        {/* Background glow */}
-        <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 rounded-full -translate-y-24 translate-x-24 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-slate-500/5 rounded-full translate-y-32 -translate-x-32 blur-3xl"></div>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-md animate-fadeIn" onClick={onClose}></div>
+      <div className="relative bg-white rounded-t-[3.5rem] p-10 pb-16 shadow-[0_-20px_60px_rgba(0,0,0,0.3)] animate-slideUpModal overflow-hidden">
+        {/* Background glow for flair */}
+        <div className="absolute top-0 right-0 w-48 h-48 bg-green-400/10 rounded-full -translate-y-24 translate-x-24 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/10 rounded-full translate-y-32 -translate-x-32 blur-3xl"></div>
 
-        <div className="w-16 h-1.5 bg-slate-100 rounded-full mx-auto mb-10 relative z-10"></div>
-
-        <div className="text-center mb-10 relative z-10">
-          <div className="w-24 h-24 bg-emerald-600 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-emerald-100 border-4 border-white rotate-3">
-            <i className="fa-solid fa-leaf text-white text-4xl"></i>
+        <div className="w-16 h-1.5 bg-gray-100 rounded-full mx-auto mb-10 relative z-10"></div>
+        
+        <div className="text-center mb-10 relative z-10 animate-popIn stagger-1">
+          <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-700 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-green-200 border-4 border-white rotate-6">
+            <span className="text-white font-black text-5xl">G</span>
           </div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">Green Trust</h2>
-          <p className="text-slate-400 text-sm mt-3 font-medium uppercase tracking-[0.2em]">Purity At Your Doorstep</p>
+          <h2 className="text-3xl font-black text-gray-900">Welcome Back</h2>
+          <p className="text-gray-400 text-sm mt-2 font-medium">Experience the freshest organic harvest</p>
         </div>
 
-        <div className="space-y-6 relative z-10">
-          <div>
+        <div className="space-y-5 relative z-10">
+          <div className="animate-popIn stagger-2">
             <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
-                <span className="text-slate-400 font-black tracking-widest text-sm">+91</span>
+              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                <span className="text-gray-400 font-black tracking-widest">+91</span>
               </div>
-              <input
-                type="tel"
+              <input 
+                type="tel" 
                 maxLength={10}
                 value={phone}
                 onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
-                placeholder="Mobile Number"
-                className="w-full pl-16 pr-6 py-6 bg-slate-50 border-2 border-slate-50 group-focus-within:border-emerald-500 group-focus-within:bg-white rounded-[2rem] outline-none font-black tracking-widest text-lg transition-all shadow-inner"
+                placeholder="00000 00000" 
+                className="w-full pl-16 pr-6 py-5 bg-gray-50 border-2 border-gray-50 group-focus-within:border-green-500 group-focus-within:bg-white rounded-[1.5rem] outline-none font-black tracking-[0.2em] text-xl transition-all shadow-inner"
               />
             </div>
           </div>
 
-          <button
-            onClick={handleLogin}
-            disabled={phone.length !== 10 || isLoading}
-            className={`w-full py-6 rounded-[2rem] font-black text-sm uppercase tracking-[0.2em] transition-all transform active-pop shadow-2xl flex items-center justify-center ${phone.length === 10 ? 'bg-emerald-600 text-white shadow-emerald-100' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
-          >
-            {isLoading ? (
-              <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-            ) : (
-              'Get Started'
-            )}
+          <div className="animate-popIn stagger-3">
+            <button 
+              onClick={handleLogin}
+              disabled={phone.length !== 10 || isLoading}
+              className={`w-full py-5 rounded-[1.5rem] font-black text-lg transition-all transform active:scale-95 shadow-2xl flex items-center justify-center ${phone.length === 10 ? 'bg-green-600 text-white shadow-green-200' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+            >
+              {isLoading ? (
+                <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+              ) : (
+                'GET OTP'
+              )}
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-10 flex items-center gap-4 animate-popIn stagger-4 relative z-10">
+          <div className="flex-1 h-[1.5px] bg-gray-100"></div>
+          <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Social Connect</span>
+          <div className="flex-1 h-[1.5px] bg-gray-100"></div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-5 mt-8 animate-popIn stagger-5 relative z-10">
+          <button className="flex items-center justify-center gap-3 py-4 bg-white border-2 border-gray-50 rounded-[1.5rem] hover:bg-gray-50 hover:border-gray-200 transition-all active-pop shadow-sm">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-6 h-6" alt="Google" />
+            <span className="text-sm font-black text-gray-700 uppercase tracking-tighter">Google</span>
+          </button>
+          <button className="flex items-center justify-center gap-3 py-4 bg-white border-2 border-gray-50 rounded-[1.5rem] hover:bg-gray-50 hover:border-gray-200 transition-all active-pop shadow-sm">
+            <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" className="w-6 h-6" alt="FB" />
+            <span className="text-sm font-black text-gray-700 uppercase tracking-tighter">Facebook</span>
           </button>
         </div>
 
-        <div className="mt-12 flex items-center gap-4 relative z-10 px-4">
-          <div className="flex-1 h-[1.5px] bg-slate-100"></div>
-          <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em]">Secure Connect</span>
-          <div className="flex-1 h-[1.5px] bg-slate-100"></div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-5 mt-8 relative z-10">
-          <button className="flex items-center justify-center gap-4 py-5 bg-white border-2 border-slate-50 rounded-[2rem] hover:bg-slate-50 transition-all active-pop shadow-sm">
-            <i className="fa-brands fa-google text-slate-400 text-xl"></i>
-            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Google</span>
-          </button>
-          <button className="flex items-center justify-center gap-4 py-5 bg-white border-2 border-slate-50 rounded-[2rem] hover:bg-slate-50 transition-all active-pop shadow-sm">
-            <i className="fa-brands fa-apple text-slate-400 text-xl"></i>
-            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Apple</span>
-          </button>
-        </div>
-
-        <p className="mt-12 text-[9px] text-center text-slate-300 leading-relaxed font-black uppercase tracking-widest relative z-10">
-          By signing in you agree to our <span className="text-emerald-600 cursor-pointer">Terms</span>
+        <p className="mt-12 text-[10px] text-center text-gray-400 leading-relaxed font-bold animate-fadeIn stagger-5 relative z-10">
+          SECURE ENCRYPTED LOGIN • <span className="text-green-600 underline cursor-pointer">PRIVACY POLICY</span>
         </p>
       </div>
     </div>

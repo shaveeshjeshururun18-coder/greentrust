@@ -1,13 +1,10 @@
 
-export type ViewState = 'home' | 'food' | 'bolt' | '99store' | 'deal-rush' | 'categories' | 'cart' | 'account' | 'product-detail' | 'wishlist' | 'location-picker' | 'orders';
-
 export interface Unit {
   id: string;
   weight: string;
   price: number;
   mrp: number;
   discount: string;
-  name: string;
 }
 
 export interface Product {
@@ -16,12 +13,11 @@ export interface Product {
   brandTa?: string;
   nameEn: string;
   nameTa: string;
-  name: string;
   image: string;
   category: string;
   isVeg: boolean;
   rating: number;
-  ratingCount?: number;
+  ratingCount: number;
   deliveryTime: string;
   units: Unit[];
   descriptionEn?: string;
@@ -34,7 +30,6 @@ export interface Category {
   id: string;
   nameEn: string;
   nameTa: string;
-  name: string;
   image: string;
   color: string;
 }
@@ -46,6 +41,8 @@ export interface CartItem extends Product {
 
 export interface UserLocation {
   address: string;
-  lat?: number;
-  lng?: number;
+  lat: number;
+  lng: number;
 }
+
+export type ViewState = 'home' | 'categories' | 'wallet' | 'orders' | 'account' | 'cart' | 'product-detail' | 'wishlist' | 'location-picker';

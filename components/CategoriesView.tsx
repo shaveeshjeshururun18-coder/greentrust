@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { DETAILED_CATEGORIES } from '../constants.tsx';
+import Footer from './Footer.tsx';
 import { Product, Unit } from '../types.ts';
 
 interface CategoriesViewProps {
@@ -11,7 +12,50 @@ interface CategoriesViewProps {
     toggleWishlist?: (id: string) => void;
     wishlist?: string[];
     getQuantity: (productId: string, unitId: string) => number;
+    searchQuery?: string;
+    initialCategoryId?: string;
 }
+
+// Product Images Mock
+const PRODUCT_IMAGES = [
+    'product-4-1.jpg', 'product-5-1.jpg', 'product-6-1.jpg', 'product-7-1.jpg',
+    'product-8-1.jpg', 'product-9-1.jpg', 'product-10-1.jpg', 'product-11-1.jpg',
+    'product-13-1.jpg', 'product-15-1.jpg'
+];
+
+// Simple dictionary for demo purposes
+const TAMIL_NAMES: { [key: string]: string } = {
+    'Potato': 'உருளைக்கிழங்கு',
+    'Tomato': 'தக்காளி',
+    'Onion': 'வெங்காயம்',
+    'Carrot': 'கேரட்',
+    'Beans': 'பீன்ஸ்',
+    'Brinjal': 'கத்தரிக்காய்',
+    'Ladies Finger': 'வெண்டைக்காய்',
+    'Cabbage': 'முட்டைக்கோஸ்',
+    'Cauliflower': 'பூக்கோசு',
+    'Ginger': 'இஞ்சி',
+    'Garlic': 'பூண்டு',
+    'Chilli': 'மிளகாய்',
+    'Apple': 'ஆப்பிள்',
+    'Orange': 'ஆரஞ்சு',
+    'Banana': 'வாழைப்பழம்',
+    'Grapes': 'திராட்சை',
+    'Mango': 'மாம்பழம்',
+    'Pineapple': 'அன்னாசி',
+    'Watermelon': 'தர்பூசணி',
+    'Spinach': 'பசலைக்கீரை',
+    'Coriander': 'கொத்தமல்லி',
+    'Mint': 'புதினா',
+};
+
+// Price Ranges
+const PRICE_RANGES = [
+    { id: 'p1', label: 'Under ₹50', min: 0, max: 50 },
+    { id: 'p2', label: '₹50 - ₹100', min: 50, max: 100 },
+    { id: 'p3', label: '₹100 - ₹200', min: 100, max: 200 },
+    { id: 'p4', label: 'Above ₹200', min: 200, max: 9999 },
+];
 
 const CategoriesView: React.FC<CategoriesViewProps> = ({
     onBack,
@@ -20,116 +64,477 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     removeFromCart,
     getQuantity,
     wishlist = [],
-    toggleWishlist = () => { }
+    toggleWishlist = () => { },
+    initialCategoryId = 'all',
+    ...props
 }) => {
-    const [activeCategoryId, setActiveCategoryId] = useState(DETAILED_CATEGORIES[0].id);
-    const activeCategory = DETAILED_CATEGORIES.find(c => c.id === activeCategoryId) || DETAILED_CATEGORIES[0];
+    // Mobile State: Active Category Tab
+    const [activeMobileCategoryId, setActiveMobileCategoryId] = useState(initialCategoryId !== 'all' ? initialCategoryId : DETAILED_CATEGORIES[0].id);
 
-    // Mock product generator for display items
-    const createMockProduct = (name: string, categoryName: string): Product => ({
-        id: `mock-${name.replace(/\s+/g, '-').toLowerCase()}`,
-        nameEn: name,
-        nameTa: name,
-        image: 'https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?w=300&fit=crop', // Placeholder
-        category: categoryName,
-        isVeg: true,
-        rating: 4.5,
-        ratingCount: 100,
-        deliveryTime: '15 MINS',
-        units: [{ id: 'u1', weight: '500g', price: 40, mrp: 50, discount: '' }],
-        descriptionEn: 'Fresh and organic.',
-        descriptionTa: ''
-    });
+    // Desktop State: Advanced Filters
+    const [isFiltersOpen, setIsFiltersOpen] = useState(false); // Default CLOSED (Slim Mode)
+    const [activeCategoryId, setActiveCategoryId] = useState<string>(initialCategoryId); // Default from prop
+    const [expandedCategoryIds, setExpandedCategoryIds] = useState<string[]>(initialCategoryId !== 'all' ? [initialCategoryId] : [DETAILED_CATEGORIES[0].id]);
+    const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>([]);
+    const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
+    const [customPriceRange, setCustomPriceRange] = useState<{ min: string, max: string }>({ min: '', max: '' });
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
+
+    // Toggles
+    const toggleExpand = (id: string) => {
+        setExpandedCategoryIds(prev => prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]);
+    };
+
+    const toggleSubCategory = (subCatName: string) => {
+        setSelectedSubCategories(prev =>
+            prev.includes(subCatName)
+                ? prev.filter(s => s !== subCatName)
+                : [...prev, subCatName]
+        );
+    };
+
+    const toggleMainCategorySelect = (catId: string, allSubCats: string[]) => {
+        // If all subcats of this category are selected, deselect all. Otherwise, select all.
+        const allSelected = allSubCats.every(sub => selectedSubCategories.includes(sub));
+        if (allSelected) {
+            setSelectedSubCategories(prev => prev.filter(s => !allSubCats.includes(s)));
+        } else {
+            // Add missing ones
+            setSelectedSubCategories(prev => [...new Set([...prev, ...allSubCats])]);
+        }
+    };
+
+    // Switch Category via Icon Rail
+    const handleCategoryClick = (id: string) => {
+        setActiveCategoryId(id);
+        // Also expand it in the filter panel if not already
+        if (id !== 'all' && !expandedCategoryIds.includes(id)) {
+            setExpandedCategoryIds(prev => [...prev, id]);
+        }
+    };
+
+    const togglePriceRange = (rangeId: string) => {
+        setSelectedPriceRanges(prev => prev.includes(rangeId) ? prev.filter(r => r !== rangeId) : [...prev, rangeId]);
+        setCustomPriceRange({ min: '', max: '' });
+    };
+
+    const clearFilters = () => {
+        setSelectedSubCategories([]);
+        setSelectedPriceRanges([]);
+        setCustomPriceRange({ min: '', max: '' });
+        setSortOrder(null);
+    };
+
+    // Flatten all products
+    const allProducts = useMemo(() => {
+        const products: { product: Product, categoryId: string, subCategoryName: string }[] = [];
+        DETAILED_CATEGORIES.forEach(cat => {
+            cat.subcategories.forEach(sub => {
+                sub.items.forEach((itemName, index) => {
+                    const imageIndex = (itemName.length + index) % PRODUCT_IMAGES.length;
+                    const image = `/assets/products/${PRODUCT_IMAGES[imageIndex]}`;
+
+                    // Simple lookup or default fallback
+                    const tamilName = TAMIL_NAMES[itemName] || itemName;
+
+                    const product: Product = {
+                        id: `mock-${itemName.replace(/\s+/g, '-').toLowerCase()}`,
+                        nameEn: itemName,
+                        nameTa: tamilName,
+                        image: image,
+                        category: cat.name,
+                        brandEn: 'Farm Fresh', // default
+                        brandTa: 'Farm Fresh',
+                        isVeg: true,
+                        rating: 4.5,
+                        ratingCount: 100,
+                        deliveryTime: '15 MINS',
+                        units: [{ id: 'u1', weight: '500g', price: 40 + (index * 5), mrp: 50 + (index * 6), discount: '' }],
+                        descriptionEn: 'Fresh and organic, sourced directly from farmers.',
+                        descriptionTa: ''
+                    };
+                    products.push({ product, categoryId: cat.id, subCategoryName: sub.name });
+                });
+            });
+        });
+        return products;
+    }, []);
+
+    // Filter Logic
+    const filteredProducts = useMemo(() => {
+        // Hydrate ALL_PRODUCTS with Category/Subcategory context if needed for filters?
+        // Actually ALL_PRODUCTS doesn't store subCategoryId easily, but it stores 'category' name.
+        // We need to map it back or rely on name matching?
+        // Simpler: Just reconstruct the 'allProducts' with category metadata for local filtering.
+        // BUT wait, ALL_PRODUCTS in constants is flat.
+        // CategoriesView needs `categoryId`, `subCategoryName` for its filters.
+
+        // Let's re-map ALL_PRODUCTS slightly to add the needed metadata for this view's specific filters
+        // Or better yet, just traverse DETAILED_CATEGORIES like before to build the *view specific* list 
+        // that INCLUDES the metadata, but uses the IDs to link to the global product if needed?
+        // Actually, easiest way to keep it consistent is to use ALL_PRODUCTS and find its metadata.
+
+        // Correction: The easiest way is to continue doing what we did in CategoriesView (generating it with metadata)
+        // BUT make sure it matches what we put in constants.
+        // Since I duplicated the logic in constants, they should result in same IDs.
+
+        // However, to ensure they are EXACTLY the same objects (references), we should ideally use ALL_PRODUCTS.
+        // But ALL_PRODUCTS lost the `subCategoryName` association in the flat list (unless we added it? We didn't).
+
+        // For now, to solve the "Home Search" issue, `constants.tsx` having `ALL_PRODUCTS` is enough for App.tsx.
+        // For `CategoriesView.tsx`, it can keep its own generation logic for now to preserve the complex filter relationships
+        // without rewriting the entire filter logic. They will produce identical data visual-wise.
+
+        // So I will REVERT the removal of generation logic in CategoriesView for this specific step to avoid breaking filters,
+        // unless I am sure I can reconstruct metadata. 
+        // Re-reading my previous thought: "Use ALL_MOCK_PRODUCTS as the base".
+        // If I do that, I lose 'subCategoryName'.
+
+        // DECISION: KEEP generic logic in CategoriesView (it works fine there).
+        // The USER'S issue is "Home page search not listing".
+        // So I ONLY need to update `App.tsx` to use `ALL_PRODUCTS`.
+        // I will revert changes to CategoriesView in this tool call (by sending empty chunks or not calling it for CategoriesView).
+
+        return allProducts.filter(({ product: p, subCategoryName, categoryId }) => {
+            // 0. Search Filter (Global)
+            if (props.searchQuery) {
+                const q = props.searchQuery.toLowerCase();
+                const match = p.nameEn.toLowerCase().includes(q) || (p.nameTa && p.nameTa.includes(q));
+                if (!match) return false;
+                // If searching, ignore category unless specific? 
+                // Let's allow searching across ALL categories if 'all' is active, or restrict if specific one is active.
+                // Actually, standard e-commerce behavior: Search Bar = Global Search.
+                // So we likely want to ignore the sidebar category if match found?
+                // OR just filter within the current view. 
+                // Given the user flow, if they are in 'All Products' (which is default now), it searches all.
+                // If they are deep in 'Vegetables', maybe they want to find 'Tomato' in Vegetables.
+                // Let's respect the category filter IF it's not 'all'.
+            }
+
+            // 1. Main Category
+            const categoryMatch = activeCategoryId === 'all' || activeCategoryId === categoryId;
+
+            // 1. Subcategory (Only applies if not 'All', or if we want global subcat filter?)
+            // Usually subcats are specific to a category. If 'All' is selected, we might clear subcats or strictly filter by name if they are global (unlikely).
+            // Let's assume subcat filter only works when a specific category is active, OR we clear it when switching to 'All'.
+            // For now, if 'All', we ignore subcat filter unless the user somehow selected one visually (which they can't easily in 'All' mode unless we show ALL subcats).
+            // Simplest: only apply subcat filter if NOT 'all' mode.
+            const subCatMatch = activeCategoryId === 'all' ? true : (selectedSubCategories.length === 0 || selectedSubCategories.includes(subCategoryName));
+
+            // 2. Price Filter
+            let priceMatch = true;
+            const price = p.units[0].price;
+
+            // Check Slider Range
+            const minC = customPriceRange.min ? parseFloat(customPriceRange.min) : 0;
+            const maxC = customPriceRange.max ? parseFloat(customPriceRange.max) : Infinity;
+
+            if (customPriceRange.min !== '' || customPriceRange.max !== '') {
+                priceMatch = price >= minC && price <= maxC;
+            }
+            // Else check Presets
+            else if (selectedPriceRanges.length > 0) {
+                priceMatch = selectedPriceRanges.some(rangeId => {
+                    const range = PRICE_RANGES.find(r => r.id === rangeId);
+                    return range && price >= range.min && price < range.max;
+                });
+            }
+
+            return categoryMatch && subCatMatch && priceMatch;
+        }).sort((a, b) => {
+            if (!sortOrder) return 0;
+            const priceA = a.product.units[0].price;
+            const priceB = b.product.units[0].price;
+            return sortOrder === 'asc' ? priceA - priceB : priceB - priceA;
+        });
+    }, [allProducts, activeCategoryId, selectedSubCategories, selectedPriceRanges, customPriceRange, sortOrder, props.searchQuery]);
+
+    const activeMobileCategory = DETAILED_CATEGORIES.find(c => c.id === activeMobileCategoryId) || DETAILED_CATEGORIES[0];
+    const currentDesktopCategory = activeCategoryId === 'all'
+        ? { name: 'All Products', subcategories: [] }
+        : (DETAILED_CATEGORIES.find(c => c.id === activeCategoryId) || DETAILED_CATEGORIES[0]);
 
     return (
-        <div className="flex h-[calc(100vh-80px)] bg-white animate-fadeIn fixed inset-0 top-0 z-40">
-            {/* Sidebar */}
-            <div className="w-24 flex-shrink-0 bg-slate-50 border-r border-slate-100 flex flex-col h-full py-4 pb-20 overflow-y-auto no-scrollbar">
-                <button onClick={onBack} className="mx-auto mb-6 w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-400 active:scale-90 transition-transform">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row relative animate-fadeIn">
+
+            {/* Mobile Header */}
+            <div className="md:hidden sticky top-0 z-30 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm flex items-center gap-4">
+                <button onClick={onBack} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
                     <i className="fa-solid fa-arrow-left"></i>
                 </button>
+                <h1 className="text-lg font-black text-slate-900 dark:text-white">Categories</h1>
+            </div>
 
-                <div className="space-y-4 flex flex-col items-center">
-                    {DETAILED_CATEGORIES.map((cat) => (
+            {/* Desktop Sidebar Container */}
+            <div className={`
+                flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800
+                flex flex-row md:h-screen md:sticky md:top-0 h-auto
+                transition-all duration-300 ease-in-out
+                ${isFiltersOpen ? 'w-[320px]' : 'w-[88px]'}
+                overflow-hidden z-30
+            `}>
+
+                {/* 1. Slim Icon Rail (Always Visible) */}
+                <div className="w-[88px] flex-shrink-0 flex flex-col items-center py-6 bg-slate-50/50 dark:bg-slate-900/50 border-r border-slate-100 dark:border-slate-800 h-full overflow-y-auto custom-scrollbar no-scrollbar">
+                    <button onClick={onBack} className="w-10 h-10 mb-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+                        <i className="fa-solid fa-arrow-left"></i>
+                    </button>
+
+                    <div className="space-y-4 w-full px-2">
+                        {/* All Products Option */}
                         <button
-                            key={cat.id}
-                            onClick={() => setActiveCategoryId(cat.id)}
-                            className={`flex flex-col items-center gap-1 group relative ${activeCategoryId === cat.id ? 'opacity-100' : 'opacity-50 hover:opacity-80'}`}
+                            onClick={() => handleCategoryClick('all')}
+                            className={`group flex flex-col items-center justify-center w-full aspect-square rounded-2xl transition-all duration-300 ${activeCategoryId === 'all' ? 'bg-slate-900 text-white shadow-lg scale-105' : 'bg-white dark:bg-slate-800 text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900'}`}
                         >
-                            {activeCategoryId === cat.id && (
-                                <div className="absolute -right-[17px] top-1/2 -translate-y-1/2 w-1 h-8 bg-emerald-500 rounded-l-full"></div>
-                            )}
-                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl transition-all ${activeCategoryId === cat.id ? 'bg-emerald-100 text-emerald-600 shadow-emerald-200 shadow-md' : 'bg-white text-slate-400 shadow-sm'}`}>
-                                <i className={`fa-solid ${cat.icon}`}></i>
-                            </div>
-                            <span className="text-[9px] font-bold text-center leading-tight max-w-[60px]">{cat.name}</span>
+                            <i className="fa-solid fa-border-all text-xl mb-1"></i>
+                            <span className="text-[9px] font-bold text-center leading-none">All</span>
                         </button>
-                    ))}
+
+                        <div className="h-px w-10 bg-slate-200 dark:bg-slate-700 my-2"></div>
+
+                        {DETAILED_CATEGORIES.map(cat => {
+                            const isActive = activeCategoryId === cat.id;
+                            return (
+                                <button
+                                    key={cat.id}
+                                    onClick={() => handleCategoryClick(cat.id)}
+                                    className={`group flex flex-col items-center justify-center w-full aspect-square rounded-2xl transition-all duration-300 ${isActive ? 'bg-green-600 text-white shadow-lg shadow-green-500/20 scale-105' : 'bg-white dark:bg-slate-800 text-slate-400 hover:bg-green-50 dark:hover:bg-slate-700 hover:text-green-600'}`}
+                                >
+                                    <i className={`fa-solid ${cat.icon} text-xl mb-1`}></i>
+                                    <span className="text-[9px] font-bold text-center leading-none">{cat.name}</span>
+                                </button>
+                            )
+                        })}
+                    </div>
+                </div>
+
+                {/* 2. Expanded Filter Panel (Toggleable) */}
+                <div className={`flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar bg-white dark:bg-slate-900 transition-opacity duration-300 ${isFiltersOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                    <div className="p-5">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-lg font-black text-slate-900 dark:text-white">Filters</h2>
+                            <button onClick={clearFilters} className="text-[10px] font-bold text-red-500 hover:underline uppercase">Reset</button>
+                        </div>
+
+                        {/* Price Slider */}
+                        <div className="mb-8">
+                            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Price</h3>
+                            <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl p-4 border border-slate-100 dark:border-slate-700/50">
+                                <p className="text-lg font-black text-slate-900 dark:text-white mb-6">
+                                    ₹{customPriceRange.min || 0} – ₹{customPriceRange.max || 1000}
+                                </p>
+                                <div className="relative h-2 bg-slate-200 dark:bg-slate-700 rounded-full mb-6">
+                                    {/* Track Fill */}
+                                    <div
+                                        className="absolute h-full bg-green-600 rounded-full opacity-80"
+                                        style={{
+                                            left: `${((parseInt(customPriceRange.min || '0') / 1000) * 100)}%`,
+                                            right: `${100 - ((parseInt(customPriceRange.max || '1000') / 1000) * 100)}%`
+                                        }}
+                                    ></div>
+
+                                    {/* Range Inputs Stacked */}
+                                    <input
+                                        type="range"
+                                        min="0" max="1000" step="10"
+                                        value={customPriceRange.min || 0}
+                                        onChange={(e) => {
+                                            const val = Math.min(parseInt(e.target.value), parseInt(customPriceRange.max || '1000') - 50);
+                                            setCustomPriceRange(p => ({ ...p, min: val.toString() }));
+                                            setSelectedPriceRanges([]);
+                                        }}
+                                        className="absolute w-full h-full opacity-0 cursor-pointer z-10"
+                                    />
+                                    <input
+                                        type="range"
+                                        min="0" max="1000" step="10"
+                                        value={customPriceRange.max || 1000}
+                                        onChange={(e) => {
+                                            const val = Math.max(parseInt(e.target.value), parseInt(customPriceRange.min || '0') + 50);
+                                            setCustomPriceRange(p => ({ ...p, max: val.toString() }));
+                                            setSelectedPriceRanges([]);
+                                        }}
+                                        className="absolute w-full h-full opacity-0 cursor-pointer z-20"
+                                    />
+
+                                    {/* Custom Thumbs (Visual Only) */}
+                                    <div
+                                        className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white border-4 border-green-600 rounded-full shadow-lg pointer-events-none transition-all"
+                                        style={{ left: `calc(${((parseInt(customPriceRange.min || '0') / 1000) * 100)}% - 12px)` }}
+                                    ></div>
+                                    <div
+                                        className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white border-4 border-green-600 rounded-full shadow-lg pointer-events-none transition-all"
+                                        style={{ left: `calc(${((parseInt(customPriceRange.max || '1000') / 1000) * 100)}% - 12px)` }}
+                                    ></div>
+                                </div>
+                                <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase">
+                                    <span>Min</span>
+                                    <span>Max (1k+)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Active Category Subcategories - Hide if 'All' */}
+                        {activeCategoryId !== 'all' && (
+                            <div>
+                                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">{currentDesktopCategory.name}</h3>
+                                <div className="space-y-1">
+                                    {(currentDesktopCategory as any).subcategories?.map((sub: any) => {
+                                        const isSelected = selectedSubCategories.includes(sub.name);
+                                        return (
+                                            <label key={sub.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer group">
+                                                <span className={`text-sm font-medium transition-colors ${isSelected ? 'text-green-600 font-bold' : 'text-slate-600 dark:text-slate-300'}`}>{sub.name}</span>
+                                                <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${isSelected ? 'bg-green-500 border-green-500' : 'border-slate-200 group-hover:border-green-400'}`}>
+                                                    {isSelected && <i className="fa-solid fa-check text-white text-[10px]"></i>}
+                                                </div>
+                                                <input type="checkbox" className="hidden" onChange={() => toggleSubCategory(sub.name)} checked={isSelected} />
+                                            </label>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                        {activeCategoryId === 'all' && (
+                            <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl text-center">
+                                <p className="text-xs text-slate-400">Select a specific category to filter by subcategories.</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {/* Right Content */}
-            <div className="flex-1 overflow-y-auto bg-white h-full pb-24">
-                <div className="sticky top-0 bg-white z-10 px-6 py-4 border-b border-slate-50/50 backdrop-blur-sm">
-                    <h1 className="text-xl font-black text-slate-900">{activeCategory.name}</h1>
-                </div>
+            {/* Main Content (Full Page) */}
+            <div className="flex-1 h-[calc(100vh-64px)] md:h-screen overflow-y-auto p-4 md:p-8 custom-scrollbar bg-slate-50 dark:bg-slate-950">
 
-                <div className="px-5 py-4 space-y-8">
-                    {activeCategory.subcategories.map((sub) => (
-                        <div key={sub.id} className="animate-popIn">
-                            <h2 className="text-sm font-black text-slate-800 mb-3 flex items-center gap-2">
-                                <span className="w-1 h-4 bg-emerald-500 rounded-full"></span>
+                {/* Mobile View */}
+                <div className="md:hidden pb-20">
+                    <h2 className="text-xl font-black text-slate-900 dark:text-white mb-6 animate-fadeIn">{activeMobileCategory.name}</h2>
+                    {activeMobileCategory.subcategories.map((sub) => (
+                        <div key={sub.id} className="mb-8">
+                            <h3 className="text-sm font-black text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
                                 {sub.name}
-                            </h2>
-                            <div className="grid grid-cols-2 gap-3">
-                                {sub.items.map((itemName) => {
-                                    const mockProduct = createMockProduct(itemName, activeCategory.name);
-                                    const qty = getQuantity(mockProduct.id, mockProduct.units[0].id);
-
+                            </h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                {sub.items.map((itemName, idx) => {
+                                    const productEntry = allProducts.find(p => p.product.nameEn === itemName && p.categoryId === activeMobileCategory.id);
+                                    if (!productEntry) return null;
+                                    const p = productEntry.product;
+                                    const qty = getQuantity(p.id, p.units[0].id);
                                     return (
-                                        <div key={itemName} className="bg-white border border-slate-100 rounded-xl p-2.5 flex items-center gap-3 shadow-sm active:scale-[0.98] transition-transform">
-                                            <div className="w-12 h-12 rounded-lg bg-slate-50 flex-shrink-0 overflow-hidden">
-                                                <img src={mockProduct.image} className="w-full h-full object-cover opacity-80" alt={itemName} />
+                                        <div key={p.id} onClick={() => onProductClick(p)} className="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/50 hover:shadow-md transition-all">
+                                            <div className="w-full aspect-square rounded-xl bg-slate-50 dark:bg-slate-900 mb-3 overflow-hidden">
+                                                <img src={p.image} className="w-full h-full object-cover" alt={p.nameEn} />
                                             </div>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-xs font-bold text-slate-800 truncate line-clamp-1">{itemName}</p>
-                                                <p className="text-[10px] text-slate-400 font-medium">500g</p>
-                                                <div className="flex items-center justify-between mt-1.5">
-                                                    <span className="text-xs font-black text-slate-900">₹40</span>
-
-                                                    {qty === 0 ? (
-                                                        <button
-                                                            onClick={(e) => { e.stopPropagation(); addToCart(mockProduct, mockProduct.units[0]); }}
-                                                            className="px-3 py-1 bg-white border border-emerald-500 text-emerald-600 rounded-md text-[9px] font-black uppercase shadow-sm"
-                                                        >
-                                                            ADD
-                                                        </button>
-                                                    ) : (
-                                                        <div className="flex items-center bg-emerald-500 rounded-md shadow-md h-6">
-                                                            <button
-                                                                onClick={(e) => { e.stopPropagation(); removeFromCart(mockProduct.id, mockProduct.units[0].id); }}
-                                                                className="w-6 h-full flex items-center justify-center text-white"
-                                                            >
-                                                                <i className="fa-solid fa-minus text-[8px]"></i>
-                                                            </button>
-                                                            <span className="text-[9px] font-black text-white px-1">{qty}</span>
-                                                            <button
-                                                                onClick={(e) => { e.stopPropagation(); addToCart(mockProduct, mockProduct.units[0]); }}
-                                                                className="w-6 h-full flex items-center justify-center text-white"
-                                                            >
-                                                                <i className="fa-solid fa-plus text-[8px]"></i>
-                                                            </button>
-                                                        </div>
-                                                    )}
-                                                </div>
+                                            <h4 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-2 min-h-[2.5em]">{p.nameEn}</h4>
+                                            <div className="flex items-center justify-between mt-2">
+                                                <span className="text-xs font-black">₹{p.units[0].price}</span>
+                                                {qty > 0 ? <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-bold">{qty}</span> : <div className="w-5 h-5 bg-green-50 rounded flex items-center justify-center text-green-600"><i className="fa-solid fa-plus text-[10px]"></i></div>}
                                             </div>
                                         </div>
-                                    );
+                                    )
                                 })}
                             </div>
                         </div>
                     ))}
                 </div>
+
+                {/* Desktop Grid */}
+                <div className="hidden md:block pb-32 w-full">
+                    {/* Header with improved spacing */}
+                    <div className="flex items-center justify-between mb-8 py-4 border-b border-transparent">
+                        <div className="flex items-center gap-6">
+                            {/* Filter Toggle Button */}
+                            <button
+                                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${isFiltersOpen ? 'bg-slate-900 text-white border-slate-900 shadow-lg' : 'bg-white text-slate-700 border-slate-200 hover:border-green-500 hover:text-green-600'}`}
+                            >
+                                <i className={`fa-solid ${isFiltersOpen ? 'fa-xmark' : 'fa-filter'}`}></i>
+                                {isFiltersOpen ? 'Close Filters' : 'Filter'}
+                            </button>
+
+                            {/* Line Separator (Optional Gap) */}
+                            <div className="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-2"></div>
+
+                            <div>
+                                <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">{currentDesktopCategory.name}</h1>
+                                <p className="text-sm text-slate-500 font-medium mt-1">
+                                    {filteredProducts.length} products found
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Sort */}
+                        <div className="relative group">
+                            <button
+                                onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                                className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 rounded-xl text-sm font-bold text-slate-600 shadow-sm hover:shadow-md transition-all active:scale-95"
+                            >
+                                <i className={`fa-solid ${sortOrder === 'asc' ? 'fa-arrow-up-short-wide' : 'fa-arrow-down-short-wide'}`}></i>
+                                {sortOrder === 'asc' ? 'Price: Low to High' : sortOrder === 'desc' ? 'Price: High to Low' : 'Sort by Price'}
+                            </button>
+                        </div>
+                    </div>
+
+                    {filteredProducts.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-32 opacity-50">
+                            <i className="fa-solid fa-carrot text-6xl text-slate-300 mb-4"></i>
+                            <p className="text-xl font-bold text-slate-400">No products found here.</p>
+                        </div>
+                    ) : (
+                        // Responsive Grid: Can go very wide
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 Gap-6">
+                            {filteredProducts.map(({ product: p }, idx) => {
+                                const qty = getQuantity(p.id, p.units[0].id);
+                                return (
+                                    <div
+                                        key={p.id}
+                                        onClick={() => onProductClick(p)}
+                                        className="group bg-white dark:bg-slate-900 rounded-[20px] p-4 border border-slate-100 dark:border-slate-800 hover:border-green-500/30 hover:shadow-xl hover:shadow-green-500/5 transition-all duration-300 cursor-pointer flex flex-col h-full"
+                                    >
+                                        <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-slate-50 dark:bg-slate-800">
+                                            <img
+                                                src={p.image}
+                                                alt={p.nameEn}
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                            />
+                                            {/* Quick Add (Hover) */}
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); addToCart(p, p.units[0]); }}
+                                                className="absolute bottom-3 right-3 w-10 h-10 bg-white text-green-600 rounded-full shadow-lg translate-y-14 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center hover:bg-green-600 hover:text-white"
+                                            >
+                                                <i className="fa-solid fa-plus font-bold"></i>
+                                            </button>
+                                        </div>
+
+                                        <div className="flex-1 flex flex-col">
+                                            <h3 className="text-base font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-green-600 transition-colors">
+                                                {p.nameEn} <span className="text-xs font-normal text-slate-400">/ {p.nameTa}</span>
+                                            </h3>
+                                            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mt-1 mb-4">{p.category}</p>
+
+                                            <div className="mt-auto flex items-center justify-between">
+                                                <span className="text-lg font-black text-slate-900 dark:text-white">₹{p.units[0].price}</span>
+                                                {qty > 0 ? (
+                                                    <div className="flex items-center gap-2 bg-green-50 px-2 py-1 rounded-lg">
+                                                        <button onClick={(e) => { e.stopPropagation(); removeFromCart(p.id, p.units[0].id); }} className="text-green-600 text-xs"><i className="fa-solid fa-minus"></i></button>
+                                                        <span className="font-bold text-green-700 text-sm">{qty}</span>
+                                                        <button onClick={(e) => { e.stopPropagation(); addToCart(p, p.units[0]); }} className="text-green-600 text-xs"><i className="fa-solid fa-plus"></i></button>
+                                                    </div>
+                                                ) : (
+                                                    <button onClick={(e) => { e.stopPropagation(); addToCart(p, p.units[0]); }} className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-green-600 hover:text-white transition-colors">ADD</button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer (Desktop Only) */}
+                <Footer />
             </div>
         </div>
     );

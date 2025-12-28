@@ -2,10 +2,12 @@
 import { Product, Category } from './types';
 
 export const CATEGORIES: Category[] = [
-  { id: '1', nameEn: 'Vegetables', nameTa: 'காய்கறிகள்', image: 'https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?w=200&h=200&fit=crop', color: 'bg-green-100' },
-  { id: '2', nameEn: 'Dairy', nameTa: 'பால் பொருட்கள்', image: 'https://images.unsplash.com/photo-1550583724-1255d1426639?w=200&h=200&fit=crop', color: 'bg-blue-100' },
-  { id: '3', nameEn: 'Snacks', nameTa: 'தின்பண்டங்கள்', image: 'https://images.unsplash.com/photo-1599490659213-e2b9527bb087?w=200&h=200&fit=crop', color: 'bg-red-100' },
-  { id: '4', nameEn: 'Ghee & Oil', nameTa: 'நெய் மற்றும் எண்ணெய்', image: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=200&h=200&fit=crop', color: 'bg-yellow-100' },
+  { id: 'dc1', nameEn: 'Farm Fresh Vegetables', nameTa: 'பண்ணை பசுமை காய்கறிகள்', image: '/categories/Vegetables.png', color: 'bg-green-100' },
+  { id: 'dc2', nameEn: 'Organic Fruits', nameTa: 'இயற்கை பழங்கள்', image: '/categories/Fruits.png', color: 'bg-orange-100' },
+  { id: 'dc3', nameEn: 'Herbs & Greens', nameTa: 'கீரை & மூலிகை', image: '/categories/Herbs_Greens.png', color: 'bg-emerald-100' },
+  { id: 'dc4', nameEn: 'Exotic & Premium', nameTa: 'ஏற்றுமதி தரம்', image: '/categories/Exotic_Premium_Produce.png', color: 'bg-purple-100' },
+  { id: 'dc5', nameEn: 'Daily Essentials', nameTa: 'தினசரி அத்தியாவசியங்கள்', image: '/categories/Fresh_Packs_Combos.png', color: 'bg-red-100' },
+  { id: 'dc6', nameEn: 'Flowers', nameTa: 'பூக்கள்', image: 'https://images.unsplash.com/photo-1490750967868-58cb75069faf?w=200&h=200&fit=crop', color: 'bg-pink-100' },
 ];
 
 export const PRODUCTS: Product[] = [
@@ -79,19 +81,9 @@ export const DETAILED_CATEGORIES: DetailedCategory[] = [
     icon: 'fa-carrot',
     subcategories: [
       {
-        id: 'sc1-1',
-        name: 'Leafy Greens & Herbs',
-        items: ['Arai Keerai', 'Spinach / Keerai', 'Basil', 'Coriander', 'Mint', 'Parsley', 'Dill Leaves', 'Rosemary', 'Sage', 'Kaffir Lime Leaves', 'Lemongrass', 'Kale', 'Indian Basil (Tulsi)', 'Lavender']
-      },
-      {
         id: 'sc1-2',
         name: 'Root & Tuber Vegetables',
         items: ['Potato', 'Sweet Potato', 'Yam', 'Tapioca', 'Carrot', 'Baby Carrot', 'Beetroot', 'Radish', 'Turnip', 'Ginger', 'Garlic', 'Garlic (Peeled)', 'Turmeric', 'Lotus Stem', 'Water Chestnut']
-      },
-      {
-        id: 'sc1-3',
-        name: 'Cruciferous Vegetables',
-        items: ['Cabbage', 'Chinese Cabbage', 'Cauliflower', 'Broccoli', 'Brussels Sprouts', 'Knol Khol']
       },
       {
         id: 'sc1-4',
@@ -109,9 +101,14 @@ export const DETAILED_CATEGORIES: DetailedCategory[] = [
         items: ['Beans (French / Long / Avarai)', 'Butter Beans', 'Green Peas', 'Edamame']
       },
       {
+        id: 'sc1-3',
+        name: 'Cruciferous Vegetables',
+        items: ['Cabbage', 'Chinese Cabbage', 'Cauliflower', 'Broccoli', 'Brussels Sprouts', 'Knol Khol']
+      },
+      {
         id: 'sc1-7',
         name: 'Mushrooms',
-        items: ['Button Mushroom']
+        items: ['Button Mushroom', 'Oyster Mushroom']
       }
     ]
   },
@@ -123,57 +120,158 @@ export const DETAILED_CATEGORIES: DetailedCategory[] = [
       {
         id: 'sc2-1',
         name: 'Tropical Fruits',
-        items: ['Banana', 'Mango', 'Papaya', 'Pineapple', 'Guava', 'Sapota (Chikoo)', 'Pomegranate']
-      },
-      {
-        id: 'sc2-2',
-        name: 'Core Fruits',
-        items: ['Apple', 'Pear', 'Plum', 'Persimmon']
-      },
-      {
-        id: 'sc2-3',
-        name: 'Berries',
-        items: ['Strawberry', 'Blueberry', 'Blackberry', 'Raspberry']
+        items: ['Banana', 'Mango', 'Papaya', 'Pineapple', 'Guava', 'Sapota (Chikoo)', 'Pomegranate', 'Jackfruit']
       },
       {
         id: 'sc2-4',
         name: 'Citrus Fruits',
-        items: ['Orange', 'Lemon']
+        items: ['Orange', 'Lemon', 'Lime', 'Sweet Lime (Mosambi)', 'Grapefruit', 'Pomelo']
+      },
+      {
+        id: 'sc2-3',
+        name: 'Berries',
+        items: ['Strawberry', 'Blueberry', 'Blackberry', 'Raspberry', 'Cranberry', 'Mulberry']
       },
       {
         id: 'sc2-5',
         name: 'Melons',
-        items: ['Watermelon', 'Musk Melon', 'Sun Melon']
+        items: ['Watermelon', 'Musk Melon', 'Sun Melon', 'Cantaloupe']
       },
       {
-        id: 'sc2-6',
-        name: 'Exotic & Premium Fruits',
-        items: ['Avocado', 'Kiwi', 'Grapes', 'Dragon Fruit', 'Passion Fruit', 'Jabiticaba']
+        id: 'sc2-2',
+        name: 'Core Fruits',
+        items: ['Apple', 'Pear', 'Quince']
       }
     ]
   },
   {
     id: 'dc3',
-    name: 'Flowers & Specialty',
-    icon: 'fa-spa',
+    name: 'Herbs & Greens',
+    icon: 'fa-leaf',
     subcategories: [
       {
         id: 'sc3-1',
-        name: 'Flowers',
-        items: ['Banana Flower']
+        name: 'Leafy Greens',
+        items: ['Spinach', 'Amaranthus', 'Methi (Fenugreek)', 'Coriander', 'Mint', 'Curry Leaves', 'Spring Onion', 'Lettuce', 'Kale', 'Arugula', 'Bok Choy', 'Swiss Chard', 'Celery', 'Leeks']
+      },
+      {
+        id: 'sc3-2',
+        name: 'Herbs',
+        items: ['Basil', 'Parsley', 'Dill', 'Rosemary', 'Thyme', 'Oregano', 'Sage', 'Lemongrass']
       }
     ]
   },
   {
     id: 'dc4',
+    name: 'Exotic & Premium',
+    icon: 'fa-gem',
+    subcategories: [
+      {
+        id: 'sc4-1',
+        name: 'Exotic Fruits',
+        items: ['Avocado', 'Kiwi', 'Dragon Fruit', 'Mangosteen', 'Rambutan', 'Longan', 'Durian', 'Passion Fruit', 'Persimmon']
+      },
+      {
+        id: 'sc4-2',
+        name: 'Exotic Vegetables',
+        items: ['Asparagus', 'Artichoke', 'Brussels Sprouts', 'Zucchini (Yellow)', 'Bell Pepper (Red/Yellow)', 'Broccoli', 'Cherry Tomato', 'Celery', 'Leeks']
+      }
+    ]
+  },
+  {
+    id: 'dc5',
     name: 'Fresh Packs',
     icon: 'fa-box-open',
     subcategories: [
       {
-        id: 'sc4-1',
-        name: 'Combos',
-        items: ['Vegetable Combo Pack', 'Fruit Combo Pack', 'Mixed Produce Box', 'Herb Box', 'Mushroom Pack']
+        id: 'sc5-1',
+        name: 'Fresh Packs & Combos',
+        items: ['Salad Mix', 'Soup Mix', 'Stir Fry Mix', 'Smoothie Pack', 'Fruit Platter']
+      }
+    ]
+  },
+  {
+    id: 'dc6',
+    name: 'Flowers',
+    icon: 'fa-spa',
+    subcategories: [
+      {
+        id: 'sc6-1',
+        name: 'Flowers & Specialty Items',
+        items: ['Banana Flower', 'Marigold', 'Jasmine', 'Rose Petals', 'Lotus']
       }
     ]
   }
 ];
+
+// Mock Data Utilities
+const PRODUCT_IMAGES = [
+  'product-4-1.jpg', 'product-5-1.jpg', 'product-6-1.jpg', 'product-7-1.jpg',
+  'product-8-1.jpg', 'product-9-1.jpg', 'product-10-1.jpg', 'product-11-1.jpg',
+  'product-13-1.jpg', 'product-15-1.jpg'
+];
+
+const TAMIL_NAMES: { [key: string]: string } = {
+  'Potato': 'உருளைக்கிழங்கு',
+  'Tomato': 'தக்காளி',
+  'Onion': 'வெங்காயம்',
+  'Carrot': 'கேரட்',
+  'Beans': 'பீன்ஸ்',
+  'Brinjal': 'கத்தரிக்காய்',
+  'Ladies Finger': 'வெண்டைக்காய்',
+  'Cabbage': 'முட்டைக்கோஸ்',
+  'Cauliflower': 'பூக்கோசு',
+  'Ginger': 'இஞ்சி',
+  'Garlic': 'பூண்டு',
+  'Chilli': 'மிளகாய்',
+  'Apple': 'ஆப்பிள்',
+  'Orange': 'ஆரஞ்சு',
+  'Banana': 'வாழைப்பழம்',
+  'Grapes': 'திராட்சை',
+  'Mango': 'மாம்பழம்',
+  'Pineapple': 'அன்னாசி',
+  'Watermelon': 'தர்பூசணி',
+  'Spinach': 'பசலைக்கீரை',
+  'Coriander': 'கொத்தமல்லி',
+  'Mint': 'புதினா',
+};
+
+// Generate Global Product List from DETAILED_CATEGORIES
+export const ALL_PRODUCTS = (() => {
+  const products: Product[] = [];
+  DETAILED_CATEGORIES.forEach(cat => {
+    cat.subcategories.forEach(sub => {
+      sub.items.forEach((itemName, index) => {
+        const imageIndex = (itemName.length + index) % PRODUCT_IMAGES.length;
+        const image = `/assets/products/${PRODUCT_IMAGES[imageIndex]}`;
+        const tamilName = TAMIL_NAMES[itemName] || itemName;
+
+        const product: Product = {
+          id: `mock-${itemName.replace(/\s+/g, '-').toLowerCase()}`,
+          nameEn: itemName,
+          nameTa: tamilName,
+          image: image,
+          category: cat.name,
+          brandEn: 'Farm Fresh',
+          brandTa: 'Farm Fresh',
+          isVeg: true,
+          rating: 4.5,
+          ratingCount: 100 + (index * 10),
+          deliveryTime: '15 MINS',
+          units: [{ id: 'u1', weight: '500g', price: 40 + (index * 5), mrp: 50 + (index * 6), discount: '' }],
+          descriptionEn: 'Fresh and organic, sourced directly from farmers.',
+          descriptionTa: ''
+        };
+        products.push(product);
+      });
+    });
+  });
+  // Add the manual PRODUCTS (Trending) to this list too
+  PRODUCTS.forEach(p => {
+    if (!products.find(existing => existing.id === p.id)) {
+      products.push(p);
+    }
+  });
+
+  return products;
+})();

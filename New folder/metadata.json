@@ -1,0 +1,7 @@
+{
+  "name": "Green Trust - Organic Marketplace",
+  "description": "A premium e-commerce mobile application for organic products featuring bilingual support (Tamil & English), rich animations, and a seamless shopping experience.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

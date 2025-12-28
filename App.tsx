@@ -17,7 +17,8 @@ import ProductDetail from './components/ProductDetail.tsx';
 import WishlistView from './components/WishlistView.tsx';
 import LocationPicker from './components/LocationPicker.tsx';
 import BackgroundAnimation from './components/BackgroundAnimation.tsx';
-import DesktopHero from './components/DesktopHero.tsx';
+import DesktopHero from './components/DesktopHero';
+import AIAssistant from './components/AIAssistant';
 
 // Inside App component
 // Inside App component
@@ -100,6 +101,11 @@ const App: React.FC = () => {
   }, []);
 
   const clearCart = useCallback(() => setCart([]), []);
+
+  const handleCategoryClick = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    setCurrentView('categories');
+  };
 
   const openProduct = (product: Product) => {
     setSelectedProduct(product);
@@ -247,64 +253,76 @@ const App: React.FC = () => {
           <div className="pb-32">
             <AnimatedBanner />
             <div className="px-6 pt-10 animate-popIn stagger-1">
-              <div className="flex justify-between items-end mb-6">
-                <div>
-                  <h2 className="text-2xl font-black text-gray-900 dark:text-white leading-none">Fresh Markets</h2>
-                  <p className="text-xs text-gray-400 dark:text-gray-500 font-bold mt-2 uppercase tracking-widest">Selected for you</p>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-black text-gray-800 dark:text-white tracking-tight">Shop by Category</h2>
+                <div className="flex gap-2">
+                  <button className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-400">
+                    <i className="fa-solid fa-chevron-left text-xs"></i>
+                  </button>
+                  <button className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white shadow-lg shadow-green-200">
+                    <i className="fa-solid fa-chevron-right text-xs"></i>
+                  </button>
                 </div>
-                <button onClick={() => setCurrentView('categories')} className="text-[11px] font-black text-green-600 bg-green-50 px-4 py-2 rounded-2xl active:scale-95 transition-all">VIEW ALL</button>
               </div>
-              <CategoryGrid onCategoryClick={(id) => {
-                setSelectedCategory(id);
-                setCurrentView('categories');
-              }} />
+              <CategoryGrid
+                categories={DETAILED_CATEGORIES}
+                onCategoryClick={handleCategoryClick}
+                activeCategory={selectedCategory}
+              />
             </div>
 
             <div className="px-6 mt-12 animate-popIn stagger-2">
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-8 bg-[#f43f76] rounded-full animate-pulse"></div>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <span className="text-[10px] font-black text-green-600 uppercase tracking-widest bg-green-50 px-2 py-1 rounded-md mb-2 inline-block">Hot Picks</span>
                   <h2 className="text-2xl font-black text-gray-900 dark:text-white">Trending Now</h2>
                 </div>
-                <span className="animate-float text-[10px] font-black text-white bg-gradient-to-r from-pink-500 to-orange-400 px-3 py-1.5 rounded-full shadow-lg">HOT</span>
+                <button
+                  onClick={() => setCurrentView('categories')}
+                  className="text-xs font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"
+                >
+                  View All
+                </button>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
+
+              <div className="grid grid-cols-2 gap-4">
                 {ALL_PRODUCTS.slice(0, 10).map((p, idx) => (
-                  <div key={p.id} className="animate-popIn" style={{ animationDelay: `${0.1 * idx}s` }}>
-                    <ProductCard
-                      product={p}
-                      onClick={() => openProduct(p)}
-                      addToCart={() => addToCart(p, p.units[0])}
-                      quantity={cart.reduce((acc, curr) => curr.id === p.id ? acc + curr.cartQuantity : acc, 0)}
-                      removeFromCart={() => {
-                        const item = cart.find(c => c.id === p.id);
-                        if (item) removeFromCart(p.id, item.selectedUnit.id);
-                      }}
-                      isFavorite={wishlist.includes(p.id)}
-                      toggleFavorite={() => toggleWishlist(p.id)}
-                    />
-                  </div>
+                  <ProductCard
+                    key={p.id}
+                    product={p}
+                    onClick={() => openProduct(p)}
+                    addToCart={() => addToCart(p, p.units[0])}
+                    quantity={cart.reduce((acc, curr) => curr.id === p.id ? acc + curr.cartQuantity : acc, 0)}
+                    removeFromCart={() => {
+                      const item = cart.find(c => c.id === p.id);
+                      if (item) removeFromCart(p.id, item.selectedUnit.id);
+                    }}
+                    isFavorite={wishlist.includes(p.id)}
+                    toggleFavorite={() => toggleWishlist(p.id)}
+                  />
                 ))}
               </div>
             </div>
 
-            {/* FARM FRESH VEGETABLES */}
+            {/* Farm Fresh Vegetables Section */}
             <div className="px-6 mt-12 animate-popIn stagger-3">
-              <div className="flex justify-between items-end mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-8 bg-green-500 rounded-full"></div>
+              <div className="flex items-center justify-between mb-6">
+                <div>
                   <h2 className="text-2xl font-black text-gray-900 dark:text-white">Farm Fresh Vegetables</h2>
                 </div>
                 <button
-                  onClick={() => { setSelectedCategory('dc1'); setCurrentView('categories'); }}
-                  className="text-[11px] font-black text-green-600 bg-green-50 px-4 py-2 rounded-2xl active:scale-95 transition-all"
+                  onClick={() => {
+                    setSelectedCategory('vegetables');
+                    setCurrentView('categories');
+                  }}
+                  className="text-xs font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"
                 >
-                  VIEW ALL
+                  View All
                 </button>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
-                {ALL_PRODUCTS.filter(p => p.category === 'Vegetables').slice(0, 5).map((p, idx) => (
-                  <div key={p.id} className="animate-popIn" style={{ animationDelay: `${0.1 * idx}s` }}>
+              <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4">
+                {ALL_PRODUCTS.filter(p => p.category === 'Vegetables').slice(0, 5).map(p => (
+                  <div key={p.id} className="min-w-[160px]">
                     <ProductCard
                       product={p}
                       onClick={() => openProduct(p)}
@@ -322,23 +340,25 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* SEASONAL FRUITS */}
+            {/* Seasonal Fruits Section */}
             <div className="px-6 mt-12 animate-popIn stagger-4">
-              <div className="flex justify-between items-end mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-8 bg-orange-400 rounded-full"></div>
+              <div className="flex items-center justify-between mb-6">
+                <div>
                   <h2 className="text-2xl font-black text-gray-900 dark:text-white">Seasonal Fruits</h2>
                 </div>
                 <button
-                  onClick={() => { setSelectedCategory('dc2'); setCurrentView('categories'); }}
-                  className="text-[11px] font-black text-orange-500 bg-orange-50 px-4 py-2 rounded-2xl active:scale-95 transition-all"
+                  onClick={() => {
+                    setSelectedCategory('fruits');
+                    setCurrentView('categories');
+                  }}
+                  className="text-xs font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"
                 >
-                  VIEW ALL
+                  View All
                 </button>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
-                {ALL_PRODUCTS.filter(p => p.category === 'Fruits').slice(0, 5).map((p, idx) => (
-                  <div key={p.id} className="animate-popIn" style={{ animationDelay: `${0.1 * idx}s` }}>
+              <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4">
+                {ALL_PRODUCTS.filter(p => p.category === 'Fruits').slice(0, 5).map(p => (
+                  <div key={p.id} className="min-w-[160px]">
                     <ProductCard
                       product={p}
                       onClick={() => openProduct(p)}
@@ -356,14 +376,14 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <div className="px-6 mt-12 animate-popIn stagger-3">
-              <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-[3rem] p-8 text-white relative overflow-hidden shadow-2xl group active:scale-95 transition-all cursor-pointer">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32 blur-3xl group-hover:bg-white/20 transition-all duration-1000"></div>
+            <div className="px-6 mt-12 mb-6 animate-popIn stagger-5">
+              <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-[2.5rem] p-8 text-center relative overflow-hidden group cursor-pointer" onClick={() => setCurrentView('categories')}>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16 blur-2xl group-hover:bg-white/10 transition-all"></div>
                 <div className="relative z-10">
-                  <h3 className="text-2xl font-black mb-2">Refer & Earn ₹250</h3>
-                  <p className="text-sm opacity-80 mb-8 max-w-[200px] font-medium">Invite your tribe to the Green life and get instant cashback.</p>
-                  <button className="bg-white text-indigo-700 px-8 py-3.5 rounded-[1.5rem] font-black text-xs uppercase shadow-xl hover:px-10 transition-all">
-                    Invite Now
+                  <span className="text-[10px] font-black text-green-400 uppercase tracking-widest mb-2 block">Explore More</span>
+                  <h3 className="text-2xl font-black text-white mb-6">Fresh Markets</h3>
+                  <button onClick={() => setCurrentView('categories')} className="bg-white text-gray-900 px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
+                    View All
                   </button>
                 </div>
               </div>
@@ -392,6 +412,8 @@ const App: React.FC = () => {
           addToCart={addToCart}
           clearCart={clearCart}
           onExploreProducts={() => setCurrentView('home')}
+          isLoggedIn={isLoggedIn}
+          onLoginReq={() => setShowLogin(true)}
         />;
       case 'location-picker':
         return <LocationPicker
@@ -513,6 +535,11 @@ const App: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <AIAssistant
+        onNavigate={setCurrentView}
+        onSelectCategory={setSelectedCategory}
+      />
     </div>
   );
 };

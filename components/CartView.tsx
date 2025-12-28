@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { CartItem, Product, Unit } from '../types';
+import { db, auth } from '../firebaseConfig';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 interface CartViewProps {
   cart: CartItem[];
@@ -9,12 +11,15 @@ interface CartViewProps {
   addToCart: (product: Product, unit: Unit) => void;
   clearCart: () => void;
   onExploreProducts: () => void;
+  isLoggedIn: boolean;
+  onLoginReq: () => void;
 }
 
-const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCart, addToCart, clearCart, onExploreProducts }) => {
+const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCart, addToCart, clearCart, onExploreProducts, isLoggedIn, onLoginReq }) => {
   const [checkingOut, setCheckingOut] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'gpay' | 'phonepe'>('cod');
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Calculations
   const subtotal = cart.reduce((acc, curr) => acc + (curr.selectedUnit.price * curr.cartQuantity), 0);
@@ -32,7 +37,49 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
   const VPA = 'prasathr3009@oksbi';
   const MERCHANT_NAME = 'Green Trust';
 
-  const handleCheckout = () => {
+  const saveOrderToDB = async () => {
+    try {
+      setIsProcessing(true);
+      const orderData = {
+        userId: auth.currentUser?.uid || 'guest',
+        userPhone: auth.currentUser?.phoneNumber || 'unknown',
+        items: cart.map(item => ({
+          name: item.nameEn,
+          weight: item.selectedUnit.weight,
+          quantity: item.cartQuantity,
+          price: item.selectedUnit.price
+        })),
+        amount: {
+          subtotal,
+          deliveryFee,
+          handlingFee,
+          total
+        },
+        address,
+        paymentMethod,
+        status: 'pending',
+        createdAt: serverTimestamp()
+      };
+
+      await addDoc(collection(db, 'orders'), orderData);
+      return true;
+    } catch (error) {
+      console.error("Error saving order:", error);
+      alert("Note: Could not save order history, but proceeding with checkout.");
+      return true; // Proceed anyway so we don't block sales
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (!isLoggedIn) {
+      onLoginReq();
+      return;
+    }
+
+    await saveOrderToDB();
+
     const orderItems = cart.map(item => `- ${item.nameEn} (${item.selectedUnit.weight}) x ${item.cartQuantity} = ₹${item.selectedUnit.price * item.cartQuantity}`).join('%0A');
     const message = `*NEW ORDER FROM GREEN TRUST*%0A%0A*Items:*%0A${orderItems}%0A%0A*Bill Details:*%0ASubtotal: ₹${subtotal}%0ADelivery: ₹${deliveryFee}%0AHandling: ₹${handlingFee}%0A*Total: ₹${total}*%0A%0A*Payment Mode:* ${paymentMethod.toUpperCase()}%0A*Delivery Address:*%0A${address}%0A%0A_Please confirm my order!_`;
 
@@ -41,7 +88,14 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
     setCheckingOut(true);
   };
 
-  const handleGPay = () => {
+  const handleGPay = async () => {
+    if (!isLoggedIn) {
+      onLoginReq();
+      return;
+    }
+
+    await saveOrderToDB();
+
     // Basic UPI Intent
     const upiUrl = `upi://pay?pa=${VPA}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total}&cu=INR&tn=Order from Green Trust`;
 
@@ -135,6 +189,11 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
 
   return (
     <div className="flex flex-col h-full bg-gray-50 dark:bg-slate-950 animate-fadeIn">
+      {isProcessing && (
+        <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center">
+          <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+        </div>
+      )}
       <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-6 py-6 flex items-center justify-between sticky top-0 z-20 border-b border-gray-100 dark:border-slate-800">
         <div className="flex items-center gap-4">
           <button onClick={onBack} className="w-10 h-10 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center active-pop">

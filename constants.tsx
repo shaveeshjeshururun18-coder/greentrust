@@ -69,3 +69,111 @@ export const PRODUCTS: Product[] = [
     descriptionTa: 'பூச்சிக்கொல்லிகள் இல்லாமல் வளர்க்கப்பட்ட பண்ணை புதிய நாட்டு தக்காளி.'
   }
 ];
+
+import { DetailedCategory } from './types.ts';
+
+export const DETAILED_CATEGORIES: DetailedCategory[] = [
+  {
+    id: 'dc1',
+    name: 'Vegetables',
+    icon: 'fa-carrot',
+    subcategories: [
+      {
+        id: 'sc1-1',
+        name: 'Leafy Greens & Herbs',
+        items: ['Arai Keerai', 'Spinach / Keerai', 'Basil', 'Coriander', 'Mint', 'Parsley', 'Dill Leaves', 'Rosemary', 'Sage', 'Kaffir Lime Leaves', 'Lemongrass', 'Kale', 'Indian Basil (Tulsi)', 'Lavender']
+      },
+      {
+        id: 'sc1-2',
+        name: 'Root & Tuber Vegetables',
+        items: ['Potato', 'Sweet Potato', 'Yam', 'Tapioca', 'Carrot', 'Baby Carrot', 'Beetroot', 'Radish', 'Turnip', 'Ginger', 'Garlic', 'Garlic (Peeled)', 'Turmeric', 'Lotus Stem', 'Water Chestnut']
+      },
+      {
+        id: 'sc1-3',
+        name: 'Cruciferous Vegetables',
+        items: ['Cabbage', 'Chinese Cabbage', 'Cauliflower', 'Broccoli', 'Brussels Sprouts', 'Knol Khol']
+      },
+      {
+        id: 'sc1-4',
+        name: 'Gourds & Squash',
+        items: ['Bottle Gourd', 'Bitter Gourd', 'Snake Gourd', 'Ivy Gourd', 'Pointed Gourd', 'Ash Gourd', 'Pumpkin', 'Butternut Squash', 'Chow Chow (Chayote)']
+      },
+      {
+        id: 'sc1-5',
+        name: 'Fruiting Vegetables',
+        items: ['Tomato', 'Cherry Tomato', 'Brinjal (Eggplant)', 'Ladies Finger (Okra)', 'Cucumber', 'Zucchini', 'Sweet Corn', 'Baby Corn', 'Baby Corn (Peeled)', 'Drumstick (Moringa)', 'Capsicum (Bell Pepper)', 'Chillies']
+      },
+      {
+        id: 'sc1-6',
+        name: 'Beans, Peas & Pods',
+        items: ['Beans (French / Long / Avarai)', 'Butter Beans', 'Green Peas', 'Edamame']
+      },
+      {
+        id: 'sc1-7',
+        name: 'Mushrooms',
+        items: ['Button Mushroom']
+      }
+    ]
+  },
+  {
+    id: 'dc2',
+    name: 'Fruits',
+    icon: 'fa-apple-whole',
+    subcategories: [
+      {
+        id: 'sc2-1',
+        name: 'Tropical Fruits',
+        items: ['Banana', 'Mango', 'Papaya', 'Pineapple', 'Guava', 'Sapota (Chikoo)', 'Pomegranate']
+      },
+      {
+        id: 'sc2-2',
+        name: 'Core Fruits',
+        items: ['Apple', 'Pear', 'Plum', 'Persimmon']
+      },
+      {
+        id: 'sc2-3',
+        name: 'Berries',
+        items: ['Strawberry', 'Blueberry', 'Blackberry', 'Raspberry']
+      },
+      {
+        id: 'sc2-4',
+        name: 'Citrus Fruits',
+        items: ['Orange', 'Lemon']
+      },
+      {
+        id: 'sc2-5',
+        name: 'Melons',
+        items: ['Watermelon', 'Musk Melon', 'Sun Melon']
+      },
+      {
+        id: 'sc2-6',
+        name: 'Exotic & Premium Fruits',
+        items: ['Avocado', 'Kiwi', 'Grapes', 'Dragon Fruit', 'Passion Fruit', 'Jabiticaba']
+      }
+    ]
+  },
+  {
+    id: 'dc3',
+    name: 'Flowers & Specialty',
+    icon: 'fa-spa',
+    subcategories: [
+      {
+        id: 'sc3-1',
+        name: 'Flowers',
+        items: ['Banana Flower']
+      }
+    ]
+  },
+  {
+    id: 'dc4',
+    name: 'Fresh Packs',
+    icon: 'fa-box-open',
+    subcategories: [
+      {
+        id: 'sc4-1',
+        name: 'Combos',
+        items: ['Vegetable Combo Pack', 'Fruit Combo Pack', 'Mixed Produce Box', 'Herb Box', 'Mushroom Pack']
+      }
+    ]
+  }
+];

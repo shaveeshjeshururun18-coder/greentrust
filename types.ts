@@ -45,4 +45,17 @@ export interface UserLocation {
   lng: number;
 }
 
+export interface SubCategory {
+  id: string;
+  name: string;
+  items: string[];
+}
+
+export interface DetailedCategory {
+  id: string;
+  name: string;
+  icon: string;
+  subcategories: SubCategory[];
+}
+
 export type ViewState = 'home' | 'categories' | 'wallet' | 'orders' | 'account' | 'cart' | 'product-detail' | 'wishlist' | 'location-picker';

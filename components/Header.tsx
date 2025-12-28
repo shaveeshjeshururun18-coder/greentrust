@@ -27,33 +27,31 @@ const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onLocat
   };
 
   return (
-    <header className={`sticky top-0 z-[60] transition-all duration-300 ${isScrolled ? 'glass py-2 px-4 shadow-lg' : 'bg-white px-6 pt-6 pb-4'}`}>
-      <div className="flex justify-between items-center mb-5">
-        <div className="flex items-center gap-3.5 group cursor-pointer active-pop" onClick={onLocationClick}>
-          <div className="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-100 group-hover:scale-110 transition-transform">
-            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            </svg>
-          </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="text-base font-extrabold text-slate-900 line-clamp-1 max-w-[160px] leading-tight">{address || 'Select Location'}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-emerald-500 animate-bounce" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
+    <header className={`sticky top-0 z-[60] transition-all duration-300 ${isScrolled ? 'glass py-2 px-4 shadow-lg' : 'bg-[#F2F4F7] px-6 pt-6 pb-4'}`}>
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex flex-col cursor-pointer active-pop" onClick={onLocationClick}>
+          <div className="flex items-center gap-1">
+            <span className="text-2xl font-black text-slate-900 tracking-tighter">8 minutes</span>
+            <div className="flex gap-1">
+              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
+                <i className="fa-solid fa-user text-xs text-slate-400"></i>
+              </div>
             </div>
-            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Express Delivery Point</p>
+          </div>
+          <div className="flex items-center gap-1 mt-1">
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">HOME - {address.split(',')[0]}</span>
+            <i className="fa-solid fa-caret-down text-[10px] text-slate-400"></i>
           </div>
         </div>
 
         <button
           onClick={onProfileClick}
-          className="w-11 h-11 rounded-2xl bg-white p-0.5 shadow-xl transition-all active-pop border-2 border-emerald-500 overflow-hidden relative group"
+          className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg transition-all active-pop border-2 border-white overflow-hidden"
         >
           <img
             src={`https://api.dicebear.com/7.x/avataaars/svg?seed=Lucky`}
             alt="User"
-            className="w-full h-full object-cover rounded-[1rem] group-hover:scale-110 transition-transform"
+            className="w-full h-full object-cover"
           />
         </button>
       </div>

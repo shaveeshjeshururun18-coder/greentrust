@@ -102,54 +102,82 @@ const App: React.FC = () => {
     switch (currentView) {
       case 'home':
         return (
-          <div className="pb-32 animate-fadeIn">
+          <div className="pb-32 bg-[#F2F4F7] min-h-screen">
             <Banner />
 
-            <CategoryGrid
-              categories={CATEGORIES}
-              onCategoryClick={(cat) => setActiveCategory(prev => prev === cat ? 'All' : cat)}
-              activeCategory={activeCategory}
-            />
-
-            <div className="px-6 mt-8">
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-8 bg-emerald-500 rounded-full animate-pulse-soft"></div>
-                  <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-                    {activeCategory === 'All' ? 'Special For You' : activeCategory}
-                  </h2>
+            <div className="bg-white rounded-t-[2.5rem] mt-6 px-6 pt-8 space-y-8">
+              {/* Frequently Bought */}
+              <section>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-black text-slate-900 tracking-tight">Frequently bought</h2>
+                  <button className="text-emerald-500 text-[10px] font-black uppercase tracking-widest">See all</button>
                 </div>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{filteredProducts.length} Items</span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-5">
-                {filteredProducts.map((p, idx) => (
-                  <ProductCard
-                    key={p.id}
-                    product={p}
-                    onProductClick={openProduct}
-                    onAddToCart={addToCart}
-                    onRemoveFromCart={removeFromCart}
-                    getQuantity={getQuantity}
-                    isWishlisted={wishlist.includes(p.id)}
-                    onWishlistToggle={toggleWishlist}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Promo Card */}
-            <div className="px-6 mt-12 mb-8">
-              <div className="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-[3rem] p-8 text-white relative overflow-hidden shadow-2xl group active-pop cursor-pointer">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-32 translate-x-32 blur-3xl group-hover:bg-white/20 transition-all duration-1000"></div>
-                <div className="relative z-10">
-                  <h3 className="text-2xl font-black mb-2 leading-tight">Green Trust<br />Loyalty Club</h3>
-                  <p className="text-sm opacity-80 mb-8 max-w-[180px] font-medium">Join now and get exclusive discounts on every organic purchase.</p>
-                  <button className="bg-white text-emerald-800 px-8 py-3.5 rounded-2xl font-black text-xs uppercase shadow-xl hover:px-10 transition-all">
-                    Join Today
-                  </button>
+                <div className="flex gap-4 overflow-x-auto no-scrollbar py-2 -mx-2 px-2">
+                  {PRODUCTS.slice(0, 4).map(p => (
+                    <div key={p.id} className="min-w-[130px] max-w-[130px]">
+                      <ProductCard
+                        product={p}
+                        onProductClick={openProduct}
+                        onAddToCart={addToCart}
+                        onRemoveFromCart={removeFromCart}
+                        getQuantity={getQuantity}
+                        isWishlisted={wishlist.includes(p.id)}
+                        onWishlistToggle={toggleWishlist}
+                      />
+                    </div>
+                  ))}
                 </div>
-              </div>
+              </section>
+
+              {/* Grocery & Kitchen */}
+              <section>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-black text-slate-900 tracking-tight">Grocery & Kitchen</h2>
+                  <button className="text-emerald-500 text-[10px] font-black uppercase tracking-widest">See all</button>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  {PRODUCTS.filter(p => p.category === 'Vegetables' || p.category === 'Organic').map(p => (
+                    <ProductCard
+                      key={p.id}
+                      product={p}
+                      onProductClick={openProduct}
+                      onAddToCart={addToCart}
+                      onRemoveFromCart={removeFromCart}
+                      getQuantity={getQuantity}
+                      isWishlisted={wishlist.includes(p.id)}
+                      onWishlistToggle={toggleWishlist}
+                    />
+                  ))}
+                </div>
+              </section>
+
+              <CategoryGrid
+                categories={CATEGORIES}
+                onCategoryClick={(cat) => setActiveCategory(prev => prev === cat ? 'All' : cat)}
+                activeCategory={activeCategory}
+              />
+
+              {/* Snacks & Drinks */}
+              <section className="pb-8">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-black text-slate-900 tracking-tight">Snacks & Drinks</h2>
+                  <button className="text-emerald-500 text-[10px] font-black uppercase tracking-widest">See all</button>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  {PRODUCTS.filter(p => p.category === 'Snacks' || p.category === 'Dairy').map(p => (
+                    <ProductCard
+                      key={p.id}
+                      product={p}
+                      onProductClick={openProduct}
+                      onAddToCart={addToCart}
+                      onRemoveFromCart={removeFromCart}
+                      getQuantity={getQuantity}
+                      isWishlisted={wishlist.includes(p.id)}
+                      onWishlistToggle={toggleWishlist}
+                    />
+                  ))}
+                </div>
+              </section>
             </div>
           </div>
         );

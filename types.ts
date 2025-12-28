@@ -1,5 +1,5 @@
 
-export type ViewState = 'home' | 'food' | 'bolt' | '99store' | 'deal-rush' | 'categories' | 'cart' | 'account' | 'product-detail' | 'wishlist' | 'location-picker';
+export type ViewState = 'home' | 'food' | 'bolt' | '99store' | 'deal-rush' | 'categories' | 'cart' | 'account' | 'product-detail' | 'wishlist' | 'location-picker' | 'orders';
 
 export interface Unit {
   id: string;

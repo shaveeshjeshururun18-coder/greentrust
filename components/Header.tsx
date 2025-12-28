@@ -8,7 +8,7 @@ interface HeaderProps {
   address: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onLocationClick, address }) => {
+const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onLocationClick, onVoiceClick, address }) => {
   const [searchValue, setSearchValue] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
 

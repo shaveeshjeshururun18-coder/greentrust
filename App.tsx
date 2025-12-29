@@ -23,7 +23,7 @@ import WishlistView from './components/WishlistView.tsx';
 import LocationPicker from './components/LocationPicker.tsx';
 import BackgroundAnimation from './components/BackgroundAnimation.tsx';
 import DesktopHero from './components/DesktopHero';
-import DeveloperView from './components/DeveloperView.tsx';
+import DeveloperView from './components/DeveloperView';
 import AIAssistant from './components/AIAssistant';
 
 import BasketBuddyView from './components/BasketBuddyView.tsx';
@@ -425,7 +425,7 @@ const App: React.FC = () => {
 
               <div className="grid grid-cols-2 md:flex md:overflow-x-auto md:no-scrollbar md:gap-6 md:pb-4 gap-4">
                 {ALL_PRODUCTS.slice(0, 10).map((p, idx) => (
-                  <div key={p.id} className="md:min-w-[200px] lg:min-w-[220px]">
+                  <div key={p.id} className="md:min-w-[200px] lg:min-w-[220px] h-full">
                     <ProductCard
                       key={p.id}
                       product={p}
@@ -460,9 +460,9 @@ const App: React.FC = () => {
                   View All
                 </button>
               </div>
-              <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4">
+              <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4 h-full">
                 {ALL_PRODUCTS.filter(p => p.category === 'Vegetables').slice(0, 5).map(p => (
-                  <div key={p.id} className="min-w-[160px]">
+                  <div key={p.id} className="min-w-[160px] h-full">
                     <ProductCard
                       product={p}
                       onClick={() => openProduct(p)}
@@ -496,9 +496,9 @@ const App: React.FC = () => {
                   View All
                 </button>
               </div>
-              <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4">
+              <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4 h-full">
                 {ALL_PRODUCTS.filter(p => p.category === 'Fruits').slice(0, 5).map(p => (
-                  <div key={p.id} className="min-w-[160px]">
+                  <div key={p.id} className="min-w-[160px] h-full">
                     <ProductCard
                       product={p}
                       onClick={() => openProduct(p)}

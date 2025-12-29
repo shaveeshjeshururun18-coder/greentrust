@@ -25,7 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const defaultUnit = product.units[0];
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-50 dark:border-slate-700 shadow-[0_10px_30px_rgba(0,0,0,0.03)] dark:shadow-xl overflow-hidden flex flex-col transition-all hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] relative group animate-popIn">
+    <div className="h-full bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-50 dark:border-slate-700 shadow-[0_10px_30px_rgba(0,0,0,0.03)] dark:shadow-xl overflow-hidden flex flex-col transition-all hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] relative group animate-popIn">
       {/* Top badges */}
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-1">
         {product.units.length > 1 && (

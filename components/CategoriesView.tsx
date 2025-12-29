@@ -585,7 +585,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                 <div className="flex items-center justify-between mb-4 sticky top-0 bg-slate-50 dark:bg-slate-950 z-20 py-2 pt-3 shadow-sm md:shadow-none -mx-3 px-3">
                                     <h2 className="text-lg font-black text-slate-900 dark:text-white leading-tight">{activeMobileCategory.name}</h2>
                                     <div className="flex items-center gap-3">
-                                        <button 
+                                        <button
                                             onClick={() => setIsFiltersOpen(true)}
                                             className="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-300"
                                         >
@@ -710,10 +710,10 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                         </div>
                     ) : (
                         // Responsive Grid: Can go very wide
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 h-full">
                             {filteredProducts.map(({ product: p }, idx) => {
                                 return (
-                                    <div key={p.id}>
+                                    <div key={p.id} className="h-full">
                                         <ProductCard
                                             product={p}
                                             onClick={() => onProductClick(p)}

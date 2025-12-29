@@ -469,7 +469,7 @@ const App: React.FC = () => {
       <BackgroundAnimation />
       {showEntrance && <EntranceScreen onComplete={() => setShowEntrance(false)} />}
 
-      {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && (
+      {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && currentView !== 'categories' && (
         <>
           <div className="md:hidden">
             <Header

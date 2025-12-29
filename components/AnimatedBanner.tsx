@@ -75,12 +75,12 @@ const AnimatedBanner: React.FC = () => {
                     {/* Main Text Effect: "GREEN TRUST" - Cinematic Entrance */}
                     <div className="overflow-hidden mb-6 md:mb-8">
                         {/* Changed to brighter green for better visibility */}
-                        <h1 className="text-4xl md:text-8xl font-black text-green-400 uppercase tracking-tighter drop-shadow-2xl mb-0 leading-[0.85] animate-[slideInRight_0.8s_ease-out]" style={{ fontFamily: 'Impact, sans-serif', textShadow: '2px 2px 0px rgba(0,0,0,0.5)' }}>
+                        <h1 className="text-4xl md:text-8xl font-black text-green-400 uppercase tracking-tighter drop-shadow-2xl mb-0 leading-[0.85] animate-[slideInRight_0.8s_ease-out]" style={{ fontFamily: 'Poppins, sans-serif', textShadow: '2px 2px 0px rgba(0,0,0,0.5)' }}>
                             GREEN
                         </h1>
                     </div>
                     <div className="flex items-center gap-4 mb-2 md:mb-6">
-                        <h1 className="text-4xl md:text-8xl font-black text-white uppercase tracking-tighter drop-shadow-2xl leading-[0.85] animate-[slideInRight_1s_ease-out]" style={{ fontFamily: 'Impact, sans-serif' }}>
+                        <h1 className="text-4xl md:text-8xl font-black text-white uppercase tracking-tighter drop-shadow-2xl leading-[0.85] animate-[slideInRight_1s_ease-out]" style={{ fontFamily: 'Poppins, sans-serif' }}>
                             TRUST
                         </h1>
                         <div className="relative hidden md:block group cursor-pointer">

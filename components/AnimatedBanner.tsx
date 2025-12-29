@@ -56,7 +56,7 @@ const AnimatedBanner: React.FC = () => {
                     <div className="absolute inset-0 bg-[url('https://raw.githubusercontent.com/h-s-c/realistic-clouds/master/dist/cloud.png')] bg-cover opacity-10 animate-[panImage_30s_linear_infinite]"></div>
 
                     {/* Marquee Text Layer (Behind content, low opacity) */}
-                    <div className="absolute top-10 left-0 w-full overflow-hidden opacity-10 pointer-events-none">
+                    <div className="absolute top-10 left-0 w-full overflow-hidden opacity-40 pointer-events-none">
                         <div className="whitespace-nowrap animate-[scrollLeft_30s_linear_infinite]">
                             <span className="text-8xl font-black text-white px-4">Freshora • Greensio • Nutrify • Harvesta • Vegora • Purelia • Farmora • Leafora • Ecozia • Freshlet • </span>
                             <span className="text-8xl font-black text-white px-4">Freshora • Greensio • Nutrify • Harvesta • Vegora • Purelia • Farmora • Leafora • Ecozia • Freshlet • </span>
@@ -69,7 +69,7 @@ const AnimatedBanner: React.FC = () => {
                     {/* Brand Badge with Pulse */}
                     <div className="mb-2 md:mb-6 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 md:px-4 md:py-1.5 rounded-full flex items-center gap-2 animate-fadeIn hover:bg-white/20 transition-colors cursor-pointer origin-left scale-75 md:scale-100">
                         <i className="fa-solid fa-leaf text-green-400 animate-bounce"></i>
-                        <span className="text-white font-bold text-[10px] tracking-[0.2em] uppercase">Est. 2026 • Certified Organic</span>
+                        <span className="text-white font-bold text-[10px] tracking-[0.2em] uppercase">www.greentrust.com • Certified Organic</span>
                     </div>
 
                     {/* Main Text Effect: "GREEN TRUST" - Cinematic Entrance */}

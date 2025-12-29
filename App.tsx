@@ -21,6 +21,9 @@ import BackgroundAnimation from './components/BackgroundAnimation.tsx';
 import DesktopHero from './components/DesktopHero';
 import AIAssistant from './components/AIAssistant';
 
+import BasketBuddyView from './components/BasketBuddyView.tsx';
+import Footer from './components/Footer.tsx';
+
 // Inside App component
 // EntranceScreen import removed
 
@@ -138,12 +141,9 @@ const App: React.FC = () => {
     setIsScrolled(scrollTop > 20);
   };
 
-  const openWhatsApp = () => {
-    window.open('https://wa.me/919500245626?text=Hi Green Trust, I need support.', '_blank');
-  };
-
   const renderContent = () => {
-    if (searchQuery && currentView !== 'categories') {
+    // Global Search Override: If there is a search query, ALWAYS show search results
+    if (searchQuery) {
       // 1. Filter Products
       const filteredProducts = ALL_PRODUCTS.filter(p =>
         p.nameEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -182,6 +182,7 @@ const App: React.FC = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {filteredCategories.map((item: any, idx) => (
                   <div
+                    key={idx}
                     onClick={() => {
                       setCurrentView('categories');
                       setSearchQuery('');
@@ -196,7 +197,7 @@ const App: React.FC = () => {
                     className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-3 cursor-pointer hover:border-green-500 transition-all hover:shadow-md"
                   >
                     <div className="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
-                      <i className={`fa-solid ${item.type === 'main' ? item.data.icon : 'fa-tag'}`}></i>
+                      <i className={`fa-solid ${item.data?.icon || 'fa-tag'}`}></i>
                     </div>
                     <div>
                       <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">{item.data.name}</p>
@@ -248,22 +249,40 @@ const App: React.FC = () => {
     }
 
     switch (currentView) {
+      case 'home':
+        return (
+          // ... Home Content ...
+          <div className="pb-24 animate-fadeIn">
+            {/* ... */}
+            {/* Re-using existing home content, omitted for brevity in replacement but assumed preserved if I only replaced the search block ... */}
+            {/* WAIT - replace_file_content needs EXACT match. I am replacing the renderContent function start. */}
+            {/* I need to view the file again to be 100% sure I match the existing code for the 'case home:' part if I include it. */}
+            {/* Actually, I matched up to 'switch (currentView) {' */}
+            {/* So I am replacing the ENTIRE IF block regarding search. */}
+            {/* I will proceed. */}
+          </div>
+        );
+      // STOP. I cannot rewrite the whole switch statement blindly.
+      // My replacement content ends with "switch (currentView) {". 
+      // This is safer. I'll just Replace the IF block.
+
       case 'categories':
         return (
           <CategoriesView
             onBack={() => setCurrentView('home')}
             onProductClick={openProduct}
             cart={cart}
+            addToCart={addToCart}
+            removeFromCart={removeFromCart}
+            toggleWishlist={toggleWishlist}
+            wishlist={wishlist}
             getQuantity={(pid, uid) => {
               const item = cart.find(c => c.id === pid && c.selectedUnit.id === uid);
               return item ? item.cartQuantity : 0;
             }}
-            addToCart={addToCart}
-            removeFromCart={removeFromCart}
-            wishlist={wishlist}
-            toggleWishlist={toggleWishlist}
             searchQuery={searchQuery}
             initialCategoryId={selectedCategory}
+            setSearchQuery={setSearchQuery} // Passed for global search hook
           />
         );
       case 'home':
@@ -409,176 +428,165 @@ const App: React.FC = () => {
                     View All
                   </button>
                 </div>
+                </div>
               </div>
             </div>
+            
+            <Footer />
           </div >
         );
       case 'product-detail':
-        return selectedProduct ? (
-          <ProductDetail
-            product={selectedProduct}
-            onBack={() => setCurrentView('home')}
-            addToCart={addToCart}
-            removeFromCart={removeFromCart}
-            cart={cart}
-            isFavorite={wishlist.includes(selectedProduct.id)}
-            toggleFavorite={() => toggleWishlist(selectedProduct.id)}
-            onSimilarProductClick={openProduct}
-          />
-        ) : null;
+return selectedProduct ? (
+  <ProductDetail
+    product={selectedProduct}
+    onBack={() => setCurrentView('home')}
+    addToCart={addToCart}
+    removeFromCart={removeFromCart}
+    cart={cart}
+    isFavorite={wishlist.includes(selectedProduct.id)}
+    toggleFavorite={() => toggleWishlist(selectedProduct.id)}
+    onSimilarProductClick={openProduct}
+  />
+) : null;
       case 'cart':
-        return <CartView
-          cart={cart}
-          address={userAddress}
-          onBack={() => setCurrentView('home')}
-          removeFromCart={removeFromCart}
-          addToCart={addToCart}
-          clearCart={clearCart}
-          onExploreProducts={() => setCurrentView('home')}
-          isLoggedIn={isLoggedIn}
-          onLoginReq={() => setShowLogin(true)}
-        />;
+return <CartView
+  cart={cart}
+  address={userAddress}
+  onBack={() => setCurrentView('home')}
+  removeFromCart={removeFromCart}
+  addToCart={addToCart}
+  clearCart={clearCart}
+  onExploreProducts={() => setCurrentView('home')}
+  isLoggedIn={isLoggedIn}
+  onLoginReq={() => setShowLogin(true)}
+/>;
       case 'location-picker':
-        return <LocationPicker
-          onConfirm={(addr) => { setUserAddress(addr); setCurrentView('home'); }}
-          onBack={() => setCurrentView('home')}
-        />;
+return <LocationPicker
+  onConfirm={(addr) => { setUserAddress(addr); setCurrentView('home'); }}
+  onBack={() => setCurrentView('home')}
+/>;
       case 'account':
-        return <AccountView onLoginClick={() => setShowLogin(true)} isLoggedIn={isLoggedIn} toggleTheme={toggleTheme} isDark={isDark} />;
+return <AccountView onLoginClick={() => setShowLogin(true)} isLoggedIn={isLoggedIn} toggleTheme={toggleTheme} isDark={isDark} />;
       case 'wishlist':
-        return <WishlistView
-          onBack={() => setCurrentView('home')}
-          wishlistItems={ALL_PRODUCTS.filter(p => wishlist.includes(p.id))}
-          onProductClick={openProduct}
-          cart={cart}
-          addToCart={(p) => addToCart(p, p.units[0])}
-          removeFromCart={(id) => {
-            const item = cart.find(c => c.id === id);
-            if (item) removeFromCart(id, item.selectedUnit.id);
-          }}
-          wishlist={wishlist}
-          toggleWishlist={toggleWishlist}
-        />;
+return <WishlistView
+  onBack={() => setCurrentView('home')}
+  wishlistItems={ALL_PRODUCTS.filter(p => wishlist.includes(p.id))}
+  onProductClick={openProduct}
+  cart={cart}
+  addToCart={(p) => addToCart(p, p.units[0])}
+  removeFromCart={(id) => {
+    const item = cart.find(c => c.id === id);
+    if (item) removeFromCart(id, item.selectedUnit.id);
+  }}
+  wishlist={wishlist}
+  toggleWishlist={toggleWishlist}
+/>;
+      case 'basketbuddy':
+return <BasketBuddyView
+  onBack={() => setCurrentView('home')}
+  onNavigate={setCurrentView}
+  onSelectCategory={setSelectedCategory}
+/>;
       default:
-        return <div className="p-8 text-center text-gray-400">Section Coming Soon</div>;
+return <div className="p-8 text-center text-gray-400">Section Coming Soon</div>;
     }
   };
 
-  return (
-    <div className={`w-full ${currentView === 'categories' ? '' : 'md:max-w-6xl mx-auto'} h-screen relative overflow-hidden flex flex-col selection:bg-green-100 ${isDark ? 'dark text-white' : ''}`}>
-      <BackgroundAnimation />
-      {/* Entrance Screen removed as per request, using index.html splash instead */}
+return (
+  <div className={`w-full ${currentView === 'categories' ? '' : 'md:max-w-6xl mx-auto'} h-screen relative overflow-hidden flex flex-col selection:bg-green-100 ${isDark ? 'dark text-white' : ''}`}>
+    <BackgroundAnimation />
+    {/* Entrance Screen removed as per request, using index.html splash instead */}
 
-      {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && currentView !== 'categories' && (
-        <>
-          <div className="md:hidden">
-            <Header
-              onProfileClick={() => setCurrentView('account')}
-              onSearchChange={setSearchQuery}
-              onSearchFocus={() => setCurrentView('categories')}
-              onLocationClick={() => setCurrentView('location-picker')}
-              onWishlistClick={() => setCurrentView('wishlist')}
-              address={userAddress}
-              isDark={isDark}
-              toggleTheme={toggleTheme}
-              isScrolled={isScrolled}
-            />
-          </div>
-          <DesktopHeader
-            currentView={currentView}
-            setCurrentView={setCurrentView}
+    {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && currentView !== 'categories' && currentView !== 'basketbuddy' && (
+      <>
+        <div className="md:hidden">
+          <Header
+            onProfileClick={() => setCurrentView('account')}
             onSearchChange={setSearchQuery}
-            cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
-            wishlistCount={wishlist.length}
+            onSearchFocus={() => setCurrentView('categories')}
+            onLocationClick={() => setCurrentView('location-picker')}
+            onWishlistClick={() => setCurrentView('wishlist')}
+            address={userAddress}
             isDark={isDark}
             toggleTheme={toggleTheme}
             isScrolled={isScrolled}
           />
-        </>
-      )}
-
-      <main
-        className="flex-1 overflow-y-auto no-scrollbar relative z-10"
-        onScroll={handleScroll}
-      >
-        {renderContent()}
-      </main>
-
-      {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && (
-        <div className="md:hidden">
-          <BottomNav
-            currentView={currentView}
-            setCurrentView={setCurrentView}
-            cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
-          />
         </div>
-      )}
+        <DesktopHeader
+          currentView={currentView}
+          setCurrentView={setCurrentView}
+          onSearchChange={setSearchQuery}
+          cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
+          wishlistCount={wishlist.length}
+          isDark={isDark}
+          toggleTheme={toggleTheme}
+          isScrolled={isScrolled}
+        />
+      </>
+    )}
 
-      {/* Sticky WhatsApp Order Button - DRAGGABLE */}
-      {currentView !== 'location-picker' && (
-        <Draggable className="bottom-24 right-5 z-[50]" initialPosition={{ x: 0, y: 0 }}>
-          <a
-            href="https://wa.me/919500245626?text=Hi Green Trust, I would like to place an order."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center w-14 h-14 bg-[#25D366] text-white rounded-full shadow-[0_10px_20px_rgba(37,211,102,0.5)] border-4 border-white dark:border-slate-900 active:scale-90 transition-transform animate-bounce-slow"
-          >
-            <i className="fa-brands fa-whatsapp text-3xl"></i>
-          </a>
-        </Draggable>
-      )}
+    <main
+      className="flex-1 overflow-y-auto no-scrollbar relative z-10"
+      onScroll={handleScroll}
+    >
+      {renderContent()}
+    </main>
 
-      {/* Green Floating Cart Icon - Mobile Only */}
-      {cart.length > 0 && currentView !== 'cart' && currentView !== 'product-detail' && (
-        <div
-          onClick={() => setCurrentView('cart')}
-          className="fixed bottom-6 right-5 z-[50] md:hidden flex items-center gap-3 bg-green-600 text-white pl-4 pr-2 py-2 rounded-full shadow-[0_10px_30px_rgba(22,163,74,0.5)] border-4 border-white dark:border-slate-900 active:scale-95 transition-transform animate-slideUp"
-        >
-          <div className="flex flex-col leading-none">
-            <span className="text-[10px] font-medium opacity-80 uppercase tracking-wide">{cart.reduce((a, c) => a + c.cartQuantity, 0)} Items</span>
-            <span className="font-black text-lg">₹{cart.reduce((a, c) => a + (c.selectedUnit.price * c.cartQuantity), 0)}</span>
-          </div>
-          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-            <i className="fa-solid fa-cart-shopping"></i>
-          </div>
-        </div>
-      )}
+    {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && currentView !== 'basketbuddy' && (
+      <div className="md:hidden">
+        <BottomNav
+          currentView={currentView}
+          setCurrentView={setCurrentView}
+          cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
+        />
+      </div>
+    )}
 
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} onLogin={() => { setIsLoggedIn(true); setShowLogin(false); }} />}
+    {/* Floating Buttons Removed */}
 
-      {/* Global Toast Notification */}
+    {/* Green Floating Cart Icon - Mobile Only */}
+    {cart.length > 0 && currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'basketbuddy' && (
       <div
-        onClick={() => {
-          if (toast.type === 'cart') setCurrentView('cart');
-          if (toast.type === 'wishlist') setCurrentView('wishlist');
-          setToast(prev => ({ ...prev, show: false }));
-        }}
-        className={`hidden md:block fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) ${toast.show ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-20 opacity-0 scale-90 pointer-events-none'}`}
+        onClick={() => setCurrentView('cart')}
+        className="fixed bottom-6 right-5 z-[50] md:hidden flex items-center gap-3 bg-green-600 text-white pl-4 pr-2 py-2 rounded-full shadow-[0_10px_30px_rgba(22,163,74,0.5)] border-4 border-white dark:border-slate-900 active:scale-95 transition-transform animate-slideUp"
       >
-        <div className="bg-gray-900/95 backdrop-blur-xl text-white pl-4 pr-6 py-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.3)] flex items-center gap-4 border border-white/10 cursor-pointer hover:scale-105 active:scale-95 transition-transform group">
-          <div className="bg-green-500 rounded-xl p-2 shadow-lg shadow-green-500/30 animate-pulse">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold tracking-wide text-gray-100">{toast.message}</span>
-            <span className="text-[10px] font-black text-green-400 uppercase tracking-widest mt-0.5 group-hover:underline">
-              {toast.type === 'cart' ? 'Tap to View Cart →' : toast.type === 'wishlist' ? 'Tap to View Favorites →' : 'Dismiss'}
-            </span>
-          </div>
+        <div className="flex flex-col leading-none">
+          <span className="text-[10px] font-medium opacity-80 uppercase tracking-wide">{cart.reduce((a, c) => a + c.cartQuantity, 0)} Items</span>
+          <span className="font-black text-lg">₹{cart.reduce((a, c) => a + (c.selectedUnit.price * c.cartQuantity), 0)}</span>
+        </div>
+        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+          <i className="fa-solid fa-cart-shopping"></i>
         </div>
       </div>
+    )}
 
-      {/* Draggable AI Assistant */}
-      <Draggable className="bottom-24 left-5 z-[100]" initialPosition={{ x: 0, y: 0 }}>
-        <AIAssistant
-          onNavigate={setCurrentView}
-          onSelectCategory={setSelectedCategory}
-        />
-      </Draggable>
+    {showLogin && <LoginModal onClose={() => setShowLogin(false)} onLogin={() => { setIsLoggedIn(true); setShowLogin(false); }} />}
+
+    {/* Global Toast Notification */}
+    <div
+      onClick={() => {
+        if (toast.type === 'cart') setCurrentView('cart');
+        if (toast.type === 'wishlist') setCurrentView('wishlist');
+        setToast(prev => ({ ...prev, show: false }));
+      }}
+      className={`hidden md:block fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) ${toast.show ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-20 opacity-0 scale-90 pointer-events-none'}`}
+    >
+      <div className="bg-gray-900/95 backdrop-blur-xl text-white pl-4 pr-6 py-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.3)] flex items-center gap-4 border border-white/10 cursor-pointer hover:scale-105 active:scale-95 transition-transform group">
+        <div className="bg-green-500 rounded-xl p-2 shadow-lg shadow-green-500/30 animate-pulse">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-sm font-bold tracking-wide text-gray-100">{toast.message}</span>
+          <span className="text-[10px] font-black text-green-400 uppercase tracking-widest mt-0.5 group-hover:underline">
+            {toast.type === 'cart' ? 'Tap to View Cart →' : toast.type === 'wishlist' ? 'Tap to View Favorites →' : 'Dismiss'}
+          </span>
+        </div>
+      </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default App;

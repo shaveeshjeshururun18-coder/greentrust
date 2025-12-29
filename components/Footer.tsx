@@ -39,6 +39,7 @@ const Footer: React.FC = () => {
                         <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Quick Links</h3>
                         <ul className="space-y-4 font-medium">
                             <li><a href="#" className="hover:text-green-600 transition-colors">Home</a></li>
+                            <li><a href="#" className="hover:text-green-600 transition-colors">BasketBuddy (AI Help)</a></li>
                             <li><a href="#" className="hover:text-green-600 transition-colors">Our Story</a></li>
                             <li><a href="#" className="hover:text-green-600 transition-colors">Contact Us</a></li>
                             <li><a href="#" className="hover:text-green-600 transition-colors">About</a></li>

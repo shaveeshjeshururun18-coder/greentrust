@@ -14,6 +14,7 @@ interface CategoriesViewProps {
     wishlist?: string[];
     getQuantity: (productId: string, unitId: string) => number;
     searchQuery?: string;
+    setSearchQuery?: (query: string) => void;
     initialCategoryId?: string;
 }
 
@@ -265,30 +266,66 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                     <button onClick={onBack} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 flex-shrink-0">
                         <i className="fa-solid fa-arrow-left"></i>
                     </button>
-                    {isFiltersOpen ? (
-                        <div className="flex-1 relative animate-fadeIn">
-                            <input
-                                type="text"
-                                autoFocus
-                                placeholder="Search here..."
-                                className="w-full h-10 rounded-lg bg-slate-100 dark:bg-slate-800 border-none px-4 text-sm font-bold focus:ring-2 focus:ring-green-500"
-                                onChange={(e) => {
-                                    // Handle local search if needed, or pass up
-                                }}
-                            />
-                            <i className="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        </div>
-                    ) : (
-                        <h1 className="text-lg font-black text-slate-900 dark:text-white">Categories</h1>
-                    )}
+                    {/* Search Input always visible or toggled? User wants explicit search. */}
+                    {/* Let's make it a Search Button that expands, OR just put a Search Bar if space allows. */}
+                    {/* Given "search is not working in categry", let's make it a prominent Search Input that directly triggers global search. */}
+                    <div className="flex-1 relative">
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            className="w-full h-10 rounded-full bg-slate-100 dark:bg-slate-800 border-none px-4 pl-10 text-sm font-bold focus:ring-2 focus:ring-green-500 transition-all focus:bg-white dark:focus:bg-slate-900 shadow-sm"
+                            onChange={(e) => {
+                                if (props.setSearchQuery) {
+                                    props.setSearchQuery(e.target.value);
+                                }
+                            }}
+                            onFocus={(e) => {
+                                // Optional: Trigger empty search state or similar if desired
+                            }}
+                        />
+                        <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    </div>
                 </div>
 
                 <button
-                    onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${isFiltersOpen ? 'bg-green-100 text-green-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'}`}
+                    onClick={() => setIsFiltersOpen(true)}
+                    className="w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-green-50 hover:text-green-600 transition-colors"
                 >
-                    <i className={`fa-solid ${isFiltersOpen ? 'fa-xmark' : 'fa-magnifying-glass'}`}></i>
+                    <i className="fa-solid fa-sliders"></i>
                 </button>
+            </div>
+
+            {/* Mobile Filter Sheet/Drawer (Overlay) */}
+            <div className={`fixed inset-0 z-[60] md:hidden transition-all duration-300 ${isFiltersOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+                <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsFiltersOpen(false)}></div>
+                <div className={`absolute right-0 top-0 bottom-0 w-[85%] max-w-[320px] bg-white dark:bg-slate-900 shadow-2xl transform transition-transform duration-300 flex flex-col ${isFiltersOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                    <div className="p-5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+                        <h2 className="text-xl font-black text-slate-900 dark:text-white">Filters</h2>
+                        <button onClick={() => setIsFiltersOpen(false)} className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                            <i className="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    {/* Re-using same internal filter UI structure, simplified for brevity here (could refactor to component but inline for now) */}
+                    <div className="flex-1 overflow-y-auto p-5">
+                        {/* Price Slider Mobile */}
+                        <div className="mb-8">
+                            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Price</h3>
+                            <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl p-4 border border-slate-100 dark:border-slate-700/50">
+                                <p className="text-lg font-black text-slate-900 dark:text-white mb-6">
+                                    ₹{customPriceRange.min || 0} – ₹{customPriceRange.max || 1000}
+                                </p>
+                                <div className="relative h-2 bg-slate-200 dark:bg-slate-700 rounded-full mb-6">
+                                    <div className="absolute h-full bg-green-600 rounded-full opacity-80" style={{ left: `${((parseInt(customPriceRange.min || '0') / 1000) * 100)}%`, right: `${100 - ((parseInt(customPriceRange.max || '1000') / 1000) * 100)}%` }}></div>
+                                    <input type="range" min="0" max="1000" step="10" value={customPriceRange.min || 0} onChange={(e) => { const val = Math.min(parseInt(e.target.value), parseInt(customPriceRange.max || '1000') - 50); setCustomPriceRange(p => ({ ...p, min: val.toString() })); }} className="absolute w-full h-full opacity-0 cursor-pointer z-10" />
+                                    <input type="range" min="0" max="1000" step="10" value={customPriceRange.max || 1000} onChange={(e) => { const val = Math.max(parseInt(e.target.value), parseInt(customPriceRange.min || '0') + 50); setCustomPriceRange(p => ({ ...p, max: val.toString() })); }} className="absolute w-full h-full opacity-0 cursor-pointer z-20" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="p-5 border-t border-slate-100 dark:border-slate-800">
+                        <button onClick={() => setIsFiltersOpen(false)} className="w-full py-3 bg-green-600 text-white font-bold rounded-xl shadow-lg shadow-green-200">Apply Filters</button>
+                    </div>
+                </div>
             </div>
 
             {/* Desktop Sidebar Container */}
@@ -436,18 +473,18 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                 {/* Mobile Split View (Sidebar + Content) */}
                 <div className="md:hidden flex h-[calc(100vh-120px)] overflow-hidden">
 
-                    {/* Level 1: Sidebar (Categories) */}
-                    <div className="w-[85px] flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 overflow-y-auto no-scrollbar pb-24">
+                    {/* Level 1: Sidebar (Categories) - Reduced Size */}
+                    <div className="w-[70px] flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 overflow-y-auto no-scrollbar pb-24">
                         <div className="flex flex-col items-center py-2 space-y-1">
                             <button
                                 onClick={() => setActiveMobileCategoryId('all')}
                                 className={`w-full py-4 flex flex-col items-center justify-center transition-all relative ${activeMobileCategoryId === 'all' ? 'text-green-600' : 'text-slate-400'}`}
                             >
                                 {activeMobileCategoryId === 'all' && <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-600 rounded-r-full"></div>}
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${activeMobileCategoryId === 'all' ? 'bg-green-50 dark:bg-green-900/30' : 'bg-slate-50 dark:bg-slate-800'}`}>
-                                    <i className="fa-solid fa-border-all text-lg"></i>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-1 ${activeMobileCategoryId === 'all' ? 'bg-green-50 dark:bg-green-900/30' : 'bg-slate-50 dark:bg-slate-800'}`}>
+                                    <i className="fa-solid fa-border-all text-sm"></i>
                                 </div>
-                                <span className={`text-[10px] font-bold text-center leading-tight max-w-[60px] ${activeMobileCategoryId === 'all' ? 'text-green-700' : 'text-slate-500'}`}>All</span>
+                                <span className={`text-[8px] font-bold text-center leading-tight max-w-[60px] ${activeMobileCategoryId === 'all' ? 'text-green-700' : 'text-slate-500'}`}>All</span>
                             </button>
 
                             {DETAILED_CATEGORIES.map(cat => {
@@ -462,10 +499,10 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                         className={`w-full py-3 flex flex-col items-center justify-center transition-all relative ${isActive ? 'text-green-600' : 'text-slate-400'}`}
                                     >
                                         {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-600 rounded-r-full"></div>}
-                                        <div className={`w-12 h-12 rounded-full p-2 mb-1 transition-transform ${isActive ? 'bg-green-50 dark:bg-green-900/20 scale-105 shadow-sm' : 'bg-transparent'}`}>
+                                        <div className={`w-10 h-10 rounded-full p-2 mb-1 transition-transform ${isActive ? 'bg-green-50 dark:bg-green-900/20 scale-105 shadow-sm' : 'bg-transparent'}`}>
                                             <img src={cat.image} alt={cat.name} className="w-full h-full object-cover rounded-full mix-blend-multiply opacity-90" />
                                         </div>
-                                        <span className={`text-[9px] font-bold text-center leading-tight px-1 ${isActive ? 'text-green-800 dark:text-green-400' : 'text-slate-500 dark:text-slate-400'}`}>
+                                        <span className={`text-[8px] font-bold text-center leading-tight px-1 ${isActive ? 'text-green-800 dark:text-green-400' : 'text-slate-500 dark:text-slate-400'}`}>
                                             {cat.name}
                                         </span>
                                     </button>

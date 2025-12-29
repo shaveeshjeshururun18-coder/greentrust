@@ -22,9 +22,9 @@ import ProductDetail from './components/ProductDetail.tsx';
 import WishlistView from './components/WishlistView.tsx';
 import LocationPicker from './components/LocationPicker.tsx';
 import BackgroundAnimation from './components/BackgroundAnimation.tsx';
-import DesktopHero from './components/DesktopHero';
-import DeveloperView from './components/DeveloperView';
-import AIAssistant from './components/AIAssistant';
+import DesktopHero from './components/DesktopHero.tsx';
+import DeveloperView from './components/DeveloperView.tsx';
+import AIAssistant from './components/AIAssistant.tsx';
 
 import BasketBuddyView from './components/BasketBuddyView.tsx';
 import Footer from './components/Footer.tsx';

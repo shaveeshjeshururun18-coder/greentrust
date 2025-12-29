@@ -7,9 +7,10 @@ interface AccountViewProps {
   user: any;
   toggleTheme: () => void;
   isDark: boolean;
+  onNavigate: (view: any) => void;
 }
 
-const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, user, toggleTheme, isDark }) => {
+const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, user, toggleTheme, isDark, onNavigate }) => {
   const MenuLink = ({ icon, label, sub }: { icon: React.ReactNode, label: string, sub?: string }) => (
     <div className="flex items-center justify-between p-4 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors">
       <div className="flex items-center gap-4">
@@ -108,7 +109,7 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
           sub="Earn ₹250 for every referral"
           icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
         />
-        <div onClick={() => setCurrentView('developer')}>
+        <div onClick={() => onNavigate('developer')}>
           <MenuLink
             label="Developer"
             sub="Meet the mind behind Green Trust"

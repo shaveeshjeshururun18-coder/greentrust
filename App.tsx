@@ -571,7 +571,7 @@ const App: React.FC = () => {
           onBack={() => setCurrentView('home')}
         />;
       case 'account':
-        return <AccountView onLoginClick={() => setShowLogin(true)} isLoggedIn={isLoggedIn} user={user} toggleTheme={toggleTheme} isDark={isDark} />;
+        return <AccountView onLoginClick={() => setShowLogin(true)} isLoggedIn={isLoggedIn} user={user} toggleTheme={toggleTheme} isDark={isDark} onNavigate={setCurrentView} />;
       case 'wishlist':
         return <WishlistView
           onBack={() => setCurrentView('home')}

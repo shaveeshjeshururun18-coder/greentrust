@@ -218,3 +218,17 @@
 .animate-reverse {
   animation-direction: reverse;
 }
+
+@keyframes slideSlow {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+.animate-slideSlow {
+  animation: slideSlow 60s linear infinite;
+}

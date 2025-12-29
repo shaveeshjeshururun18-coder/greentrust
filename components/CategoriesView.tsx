@@ -219,39 +219,31 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     return (
         <div className="h-screen bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row relative animate-fadeIn transition-all overflow-hidden">
 
-            {/* Mobile Header */}
-            <div className="md:hidden sticky top-0 z-30 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4 flex-1">
-                    <button onClick={onBack} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 flex-shrink-0">
-                        <i className="fa-solid fa-arrow-left"></i>
-                    </button>
-                    {/* Search Input always visible or toggled? User wants explicit search. */}
-                    {/* Let's make it a Search Button that expands, OR just put a Search Bar if space allows. */}
-                    {/* Given "search is not working in categry", let's make it a prominent Search Input that directly triggers global search. */}
-                    <div className="flex-1 relative">
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            className="w-full h-10 rounded-full bg-slate-100 dark:bg-slate-800 border-none px-4 pl-10 text-sm font-bold focus:ring-2 focus:ring-green-500 transition-all focus:bg-white dark:focus:bg-slate-900 shadow-sm"
-                            onChange={(e) => {
-                                if (props.setSearchQuery) {
-                                    props.setSearchQuery(e.target.value);
-                                }
-                            }}
-                            onFocus={(e) => {
-                                // Optional: Trigger empty search state or similar if desired
-                            }}
-                        />
-                        <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            {/* Mobile Header (Custom for Categories) */}
+            <div className="md:hidden sticky top-0 z-30 bg-white dark:bg-slate-900 shadow-sm flex flex-col transition-all">
+                <div className="px-4 py-3 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                        <button onClick={onBack} className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300">
+                            <i className="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <div>
+                            <h2 className="text-lg font-black text-slate-800 dark:text-white leading-tight">{activeMobileCategory.name}</h2>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <button className="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-300">
+                            <i className="fa-solid fa-magnifying-glass"></i>
+                        </button>
                     </div>
                 </div>
 
-                <button
-                    onClick={() => setIsFiltersOpen(true)}
-                    className="w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-green-50 hover:text-green-600 transition-colors"
-                >
-                    <i className="fa-solid fa-sliders"></i>
-                </button>
+                {/* Sub-header Location Line (Like Screenshot) */}
+                <div className="px-4 pb-2 flex items-center gap-1 text-[10px] text-slate-500 border-b border-slate-100 dark:border-slate-800">
+                    <span className="font-bold text-slate-400">Delivering to:</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-200 truncate max-w-[200px]">Vivekananda Nagar, Chennai...</span>
+                    <i className="fa-solid fa-caret-down text-[8px] text-slate-400"></i>
+                </div>
             </div>
 
             {/* Mobile Filter Sheet/Drawer (Overlay) */}

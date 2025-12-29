@@ -2,8 +2,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Draggable from './components/Draggable';
 import { ViewState, Product, Unit, CartItem } from './types.ts';
-import { auth } from './firebaseConfig.ts';
+import { auth, db } from './firebaseConfig.ts';
 import { onAuthStateChanged } from 'firebase/auth';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { PRODUCTS, ALL_PRODUCTS, DETAILED_CATEGORIES } from './constants.tsx';
 import Header from './components/Header.tsx';
 import DesktopHeader from './components/DesktopHeader.tsx';
@@ -60,17 +61,98 @@ const App: React.FC = () => {
   }, [isDark]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setIsLoggedIn(true);
         setUser(firebaseUser);
+
+        // Load data from Firestore
+        try {
+          const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+
+            // Merge local guest cart into account cart if guest cart has items
+            if (cart.length > 0) {
+              const accountCart = userData.cart || [];
+              const mergedCart = [...accountCart];
+
+              cart.forEach(guestItem => {
+                const existingIndex = mergedCart.findIndex(item =>
+                  item.id === guestItem.id && item.selectedUnit.id === guestItem.selectedUnit.id
+                );
+                if (existingIndex > -1) {
+                  mergedCart[existingIndex].cartQuantity += guestItem.cartQuantity;
+                } else {
+                  mergedCart.push(guestItem);
+                }
+              });
+              setCart(mergedCart);
+            } else {
+              setCart(userData.cart || []);
+            }
+
+            // Merge wishlist
+            if (wishlist.length > 0) {
+              const accountWishlist = userData.wishlist || [];
+              const mergedWishlist = Array.from(new Set([...accountWishlist, ...wishlist]));
+              setWishlist(mergedWishlist);
+            } else {
+              setWishlist(userData.wishlist || []);
+            }
+          }
+        } catch (error) {
+          console.error("Error loading user data:", error);
+        }
       } else {
         setIsLoggedIn(false);
         setUser(null);
+        // On logout, should we clear cart? 
+        // Typically yes, or keep it as guest cart. 
+        // Let's keep it as is for a smooth transition back to guest mode.
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, []); // Only run on mount, but uses cart/wishlist refs? 
+  // Actually, wait. Merging logic needs to handle dependencies carefully. 
+
+  // Sync Cart to Firestore
+  useEffect(() => {
+    if (user) {
+      const syncCart = async () => {
+        try {
+          await setDoc(doc(db, 'users', user.uid), {
+            cart: cart,
+            lastUpdated: serverTimestamp()
+          }, { merge: true });
+        } catch (e) {
+          console.error("Error syncing cart:", e);
+        }
+      };
+
+      const timeout = setTimeout(syncCart, 1000); // Debounce sync
+      return () => clearTimeout(timeout);
+    }
+  }, [cart, user]);
+
+  // Sync Wishlist to Firestore
+  useEffect(() => {
+    if (user) {
+      const syncWishlist = async () => {
+        try {
+          await setDoc(doc(db, 'users', user.uid), {
+            wishlist: wishlist,
+            lastUpdated: serverTimestamp()
+          }, { merge: true });
+        } catch (e) {
+          console.error("Error syncing wishlist:", e);
+        }
+      };
+
+      const timeout = setTimeout(syncWishlist, 1000); // Debounce sync
+      return () => clearTimeout(timeout);
+    }
+  }, [wishlist, user]);
 
   const toggleTheme = useCallback(() => setIsDark(prev => !prev), []);
 

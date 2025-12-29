@@ -256,7 +256,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
         : (DETAILED_CATEGORIES.find(c => c.id === activeCategoryId) || DETAILED_CATEGORIES[0]);
 
     return (
-        <div className="h-screen bg-slate-50 dark:bg-slate-950 flex flex-col relative animate-fadeIn transition-all">
+        <div className="h-screen bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row relative animate-fadeIn transition-all overflow-hidden">
 
             {/* Mobile Header */}
             <div className="md:hidden sticky top-0 z-30 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm flex items-center gap-4">
@@ -536,7 +536,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                 </div>
 
                 {/* Desktop Grid */}
-                <div className="hidden md:block pb-32 w-full">
+                <div className="hidden md:block flex-1 h-full overflow-y-auto pb-32 w-full px-8 custom-scrollbar">
                     {/* Header with improved spacing */}
                     <div className="flex items-center justify-between mb-8 py-4 border-b border-transparent">
                         <div className="flex items-center gap-6">

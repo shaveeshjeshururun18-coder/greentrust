@@ -72,12 +72,13 @@ const App: React.FC = () => {
           if (userDoc.exists()) {
             const userData = userDoc.data();
 
-            // Merge local guest cart into account cart if guest cart has items
-            if (cart.length > 0) {
+            // Sync Cart: Merge guest data into account data
+            setCart(currentCart => {
               const accountCart = userData.cart || [];
-              const mergedCart = [...accountCart];
+              if (currentCart.length === 0) return accountCart;
 
-              cart.forEach(guestItem => {
+              const mergedCart = [...accountCart];
+              currentCart.forEach(guestItem => {
                 const existingIndex = mergedCart.findIndex(item =>
                   item.id === guestItem.id && item.selectedUnit.id === guestItem.selectedUnit.id
                 );
@@ -87,19 +88,15 @@ const App: React.FC = () => {
                   mergedCart.push(guestItem);
                 }
               });
-              setCart(mergedCart);
-            } else {
-              setCart(userData.cart || []);
-            }
+              return mergedCart;
+            });
 
-            // Merge wishlist
-            if (wishlist.length > 0) {
+            // Sync Wishlist
+            setWishlist(currentWishlist => {
               const accountWishlist = userData.wishlist || [];
-              const mergedWishlist = Array.from(new Set([...accountWishlist, ...wishlist]));
-              setWishlist(mergedWishlist);
-            } else {
-              setWishlist(userData.wishlist || []);
-            }
+              if (currentWishlist.length === 0) return accountWishlist;
+              return Array.from(new Set([...accountWishlist, ...currentWishlist]));
+            });
           }
         } catch (error) {
           console.error("Error loading user data:", error);

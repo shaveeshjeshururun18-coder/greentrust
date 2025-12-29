@@ -344,7 +344,7 @@ const App: React.FC = () => {
             </div>
 
             {/* Farm Fresh Vegetables Section */}
-            < div className="px-6 mt-12 animate-popIn stagger-3" >
+            <div className="px-6 mt-12 animate-popIn stagger-3">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-2xl font-black text-gray-900 dark:text-white">Farm Fresh Vegetables</h2>
@@ -377,10 +377,10 @@ const App: React.FC = () => {
                   </div>
                 ))}
               </div>
-            </div >
+            </div>
 
             {/* Seasonal Fruits Section */}
-            < div className="px-6 mt-12 animate-popIn stagger-4" >
+            <div className="px-6 mt-12 animate-popIn stagger-4">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-2xl font-black text-gray-900 dark:text-white">Seasonal Fruits</h2>
@@ -413,7 +413,7 @@ const App: React.FC = () => {
                   </div>
                 ))}
               </div>
-            </div >
+            </div>
 
             <div className="px-6 mt-12 mb-6 animate-popIn stagger-5">
               <div className="bg-gradient-to-r from-green-800 to-green-600 rounded-[2.5rem] p-8 text-center relative overflow-hidden group cursor-pointer" onClick={() => setCurrentView('categories')}>
@@ -429,7 +429,7 @@ const App: React.FC = () => {
             </div>
 
             <Footer />
-          </div >
+          </div>
         );
       case 'product-detail':
         return selectedProduct ? (

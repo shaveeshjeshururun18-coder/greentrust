@@ -95,10 +95,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
           <div className="w-16 h-1.5 bg-gray-200 rounded-full mx-auto mb-10"></div>
 
           <div className="text-center mb-10 relative z-10 animate-popIn stagger-1">
-            <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-700 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-green-200 border-4 border-white rotate-6">
+            <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-700 rounded-[2.5rem] flex items-center justify-center mx-auto mb-4 shadow-2xl shadow-green-200 border-4 border-white rotate-6">
               <span className="text-white font-black text-5xl">G</span>
             </div>
-            <h2 className="text-3xl font-black text-gray-900">{showOtpInput ? 'Verify Code' : 'Welcome Back'}</h2>
+            <h1 className="text-3xl font-black text-green-700 font-serif tracking-tight mb-2">Green Trust</h1>
+            <h2 className="text-xl font-bold text-gray-900">{showOtpInput ? 'Verify Code' : 'Welcome Back'}</h2>
             <p className="text-gray-400 text-sm mt-2 font-medium">
               {showOtpInput ? `Enter the code sent to +91 ${phone}` : 'Experience the freshest organic harvest'}
             </p>

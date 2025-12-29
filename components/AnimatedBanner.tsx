@@ -57,10 +57,9 @@ const AnimatedBanner: React.FC = () => {
 
                     {/* Marquee Text Layer (Behind content, low opacity) */}
                     <div className="absolute top-10 left-0 w-full overflow-hidden opacity-10 pointer-events-none">
-                        <div className="whitespace-nowrap animate-[scrollLeft_20s_linear_infinite]">
-                            <span className="text-8xl font-black text-white px-4">GREEN TRUST • ORGANIC • FRESH • </span>
-                            <span className="text-8xl font-black text-white px-4">GREEN TRUST • ORGANIC • FRESH • </span>
-                            <span className="text-8xl font-black text-white px-4">GREEN TRUST • ORGANIC • FRESH • </span>
+                        <div className="whitespace-nowrap animate-[scrollLeft_30s_linear_infinite]">
+                            <span className="text-8xl font-black text-white px-4">Freshora • Greensio • Nutrify • Harvesta • Vegora • Purelia • Farmora • Leafora • Ecozia • Freshlet • </span>
+                            <span className="text-8xl font-black text-white px-4">Freshora • Greensio • Nutrify • Harvesta • Vegora • Purelia • Farmora • Leafora • Ecozia • Freshlet • </span>
                         </div>
                     </div>
                 </div>
@@ -75,7 +74,8 @@ const AnimatedBanner: React.FC = () => {
 
                     {/* Main Text Effect: "GREEN TRUST" - Cinematic Entrance */}
                     <div className="overflow-hidden">
-                        <h1 className="text-4xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-green-200 uppercase tracking-tighter drop-shadow-2xl mb-0 md:mb-2 leading-[0.85] animate-[slideInRight_0.8s_ease-out]" style={{ fontFamily: 'Impact, sans-serif' }}>
+                        {/* Changed to solid white/green with shadow for better visibility */}
+                        <h1 className="text-4xl md:text-8xl font-black text-green-500 uppercase tracking-tighter drop-shadow-2xl mb-0 md:mb-2 leading-[0.85] animate-[slideInRight_0.8s_ease-out]" style={{ fontFamily: 'Impact, sans-serif', textShadow: '2px 2px 0px white' }}>
                             GREEN
                         </h1>
                     </div>

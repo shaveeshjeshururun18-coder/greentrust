@@ -113,7 +113,10 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                             </div>
                             <div className={`text-left hidden lg:block ${isScrolled ? 'hidden xl:block' : ''}`}>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider leading-none mb-1">Account</p>
-                                <p className="text-sm font-bold text-slate-700 dark:text-slate-200 leading-none group-hover:text-green-600 transition-colors">Sign In</p>
+                                <div className="flex items-center gap-1">
+                                    <p className="text-sm font-bold text-slate-700 dark:text-slate-200 leading-none group-hover:text-green-600 transition-colors">Sign In</p>
+                                    <i className="fa-solid fa-angle-down text-xs text-slate-400"></i>
+                                </div>
                             </div>
                         </button>
 

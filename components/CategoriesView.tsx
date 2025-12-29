@@ -67,13 +67,16 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     removeFromCart,
     getQuantity,
     wishlist = [],
-    toggleWishlist = () => { },
+    toggleWishlist = (id) => { },
     initialCategoryId = 'all',
+    searchQuery,
+    setSearchQuery,
     ...props
 }) => {
     // Mobile State: Active Category Tab
     const [activeMobileCategoryId, setActiveMobileCategoryId] = useState(initialCategoryId !== 'all' ? initialCategoryId : DETAILED_CATEGORIES[0].id);
     const [activeMobileSubCategory, setActiveMobileSubCategory] = useState<string>('all'); // NEW: For filtering
+    const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
     // Desktop State: Advanced Filters
     const [isFiltersOpen, setIsFiltersOpen] = useState(false); // Default CLOSED (Slim Mode)

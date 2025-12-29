@@ -55,7 +55,15 @@ export interface DetailedCategory {
   id: string;
   name: string;
   icon: string;
+  image: string;
   subcategories: SubCategory[];
 }
 
-export type ViewState = 'home' | 'categories' | 'cart' | 'account' | 'product-detail' | 'location-picker' | 'wishlist' | 'orders' | 'basketbuddy' | 'wallet';
+export type ViewState = 'home' | 'categories' | 'cart' | 'account' | 'product-detail' | 'location-picker' | 'wishlist' | 'orders' | 'basketbuddy' | 'wallet' | 'all-categories';
+
+// Extend Window interface for ReCaptcha
+declare global {
+  interface Window {
+    recaptchaVerifier: any;
+  }
+}

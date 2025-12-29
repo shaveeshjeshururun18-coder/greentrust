@@ -197,11 +197,4 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
       );
 };
 
-      // Add typescript definition for window.recaptchaVerifier
-      declare global {
-        interface Window {
-        recaptchaVerifier: any;
-  }
-}
-
       export default LoginModal;

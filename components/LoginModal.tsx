@@ -49,7 +49,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
     } catch (error) {
       console.error("Error sending OTP:", error);
       setIsLoading(false);
-      alert("Failed to send SMS. Check console or make sure Firebase Phone Auth is enabled.");
+      alert("Failed to send SMS. If using a custom domain or localhost, please check authorized domains in Firebase Console.");
       // Reset recaptcha on error so user can try again
       if (window.recaptchaVerifier) {
         window.recaptchaVerifier.render().then(widgetId => {

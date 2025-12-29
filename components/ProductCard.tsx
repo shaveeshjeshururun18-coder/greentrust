@@ -25,7 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const defaultUnit = product.units[0];
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-gray-50 dark:border-slate-800 shadow-[0_10px_30px_rgba(0,0,0,0.03)] dark:shadow-none overflow-hidden flex flex-col transition-all hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] relative group animate-popIn">
+    <div className="bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-50 dark:border-slate-700 shadow-[0_10px_30px_rgba(0,0,0,0.03)] dark:shadow-xl overflow-hidden flex flex-col transition-all hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] relative group animate-popIn">
       {/* Top badges */}
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-1">
         {product.units.length > 1 && (
@@ -41,7 +41,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           console.log('Wishlist button clicked, isFavorite:', isFavorite);
           toggleFavorite();
         }}
-        className={`absolute top-3 right-3 z-20 p-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-full shadow-lg transition-all active-pop ${isFavorite ? 'scale-110 shadow-red-100 dark:shadow-none' : ''}`}
+        className={`absolute top-3 right-3 z-20 p-2 bg-white/80 dark:bg-slate-700/80 backdrop-blur-md rounded-full shadow-lg transition-all active-pop ${isFavorite ? 'scale-110 shadow-red-100 dark:shadow-none' : ''}`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-300'}`} viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
@@ -49,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </button>
 
       <div className="relative cursor-pointer overflow-hidden p-3" onClick={onClick}>
-        <div className="aspect-square bg-gray-50/50 dark:bg-slate-800/50 rounded-2xl p-4 flex items-center justify-center relative overflow-hidden group-hover:bg-gray-100/50 dark:group-hover:bg-slate-800 transition-colors">
+        <div className="aspect-square bg-gray-50/50 dark:bg-slate-700/50 rounded-2xl p-4 flex items-center justify-center relative overflow-hidden group-hover:bg-gray-100/50 dark:group-hover:bg-slate-700 transition-colors">
           {/* Animated Background Shimmer on Card */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
 
@@ -61,7 +61,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         {/* ADD Button Floating */}
-        <div className="absolute bottom-5 right-5 z-20">
+        <div className="absolute bottom-5 right-5 z-20 flex items-center gap-2">
           {quantity > 0 ? (
             <div className="flex items-center bg-green-600 rounded-2xl text-white font-black h-9 shadow-xl shadow-green-100 animate-popIn">
               <button onClick={(e) => { e.stopPropagation(); removeFromCart(); }} className="px-3 h-full flex items-center justify-center hover:bg-green-700 transition-colors rounded-l-2xl">
@@ -77,13 +77,24 @@ const ProductCard: React.FC<ProductCardProps> = ({
               </button>
             </div>
           ) : (
-            <button
-              onClick={(e) => { e.stopPropagation(); addToCart(); }}
-              className="bg-white border border-gray-100 text-green-600 font-black px-4 py-2 rounded-2xl text-[11px] shadow-2xl transition-all active-pop hover:bg-green-600 hover:text-white flex flex-col items-center uppercase tracking-widest"
-            >
-              <span>ADD</span>
-              {product.units.length > 1 && <span className="text-[7px] opacity-60 font-medium">Variants</span>}
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={(e) => { e.stopPropagation(); addToCart(); }}
+                className="bg-white border border-gray-100 text-green-600 font-black px-4 py-2 rounded-2xl text-[11px] shadow-lg transition-all active-pop hover:bg-green-600 hover:text-white flex flex-col items-center uppercase tracking-widest"
+              >
+                <span>ADD</span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addToCart();
+                  // Ideally navigate to cart here, but we rely on toast 'View Cart' or global cart for now
+                }}
+                className="bg-green-600 border border-green-600 text-white font-black px-4 py-2 rounded-2xl text-[11px] shadow-lg shadow-green-200 transition-all active-pop hover:bg-green-700 flex flex-col items-center uppercase tracking-widest"
+              >
+                <span>BUY</span>
+              </button>
+            </div>
           )}
         </div>
       </div>

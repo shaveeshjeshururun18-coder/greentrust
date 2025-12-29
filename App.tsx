@@ -25,7 +25,10 @@ import AIAssistant from './components/AIAssistant';
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('home');
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [wishlist, setWishlist] = useState<string[]>([]);
+  const [wishlist, setWishlist] = useState<string[]>(() => {
+    const saved = localStorage.getItem('wishlist');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -55,7 +58,7 @@ const App: React.FC = () => {
     }
   }, [cart]);
 
-  const [toast, setToast] = useState<{ show: boolean; message: string }>({ show: false, message: '' });
+  const [toast, setToast] = useState<{ show: boolean; message: string; type: 'cart' | 'wishlist' | 'info' }>({ show: false, message: '', type: 'info' });
 
   // Toast is now persistent until clicked or replaced
 
@@ -76,7 +79,7 @@ const App: React.FC = () => {
       const updatedItem = newCart.find(item => item.id === product.id && item.selectedUnit.id === unit.id);
       const itemQty = updatedItem ? updatedItem.cartQuantity : 1;
 
-      setToast({ show: true, message: `Added ${product.nameEn} (Qty: ${itemQty})` });
+      setToast({ show: true, message: `Added ${product.nameEn} (Qty: ${itemQty})`, type: 'cart' });
 
       return newCart;
     });
@@ -95,11 +98,21 @@ const App: React.FC = () => {
   }, []);
 
   const toggleWishlist = useCallback((productId: string) => {
-    console.log('toggleWishlist called with productId:', productId);
     setWishlist(prev => {
-      const newWishlist = prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId];
-      console.log('Previous wishlist:', prev);
-      console.log('New wishlist:', newWishlist);
+      const isRemoving = prev.includes(productId);
+      const newWishlist = isRemoving ? prev.filter(id => id !== productId) : [...prev, productId];
+
+      localStorage.setItem('wishlist', JSON.stringify(newWishlist));
+
+      const product = ALL_PRODUCTS.find(p => p.id === productId);
+      const name = product ? product.nameEn : 'Item';
+
+      setToast({
+        show: true,
+        message: isRemoving ? `Removed ${name} from Favorites 💔` : `Added ${name} to Favorites ❤️`,
+        type: 'wishlist'
+      });
+
       return newWishlist;
     });
   }, []);
@@ -426,7 +439,7 @@ const App: React.FC = () => {
       case 'wishlist':
         return <WishlistView
           onBack={() => setCurrentView('home')}
-          wishlistItems={PRODUCTS.filter(p => wishlist.includes(p.id))}
+          wishlistItems={ALL_PRODUCTS.filter(p => wishlist.includes(p.id))}
           onProductClick={openProduct}
           cart={cart}
           addToCart={(p) => addToCart(p, p.units[0])}
@@ -521,8 +534,12 @@ const App: React.FC = () => {
 
       {/* Global Toast Notification - Persistent & Interactive */}
       <div
-        onClick={() => { setCurrentView('cart'); setToast(prev => ({ ...prev, show: false })); }}
-        className={`fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) ${toast.show ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-20 opacity-0 scale-90 pointer-events-none'}`}
+        onClick={() => {
+          if (toast.type === 'cart') setCurrentView('cart');
+          if (toast.type === 'wishlist') setCurrentView('wishlist');
+          setToast(prev => ({ ...prev, show: false }));
+        }}
+        className={`hidden md:block fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) ${toast.show ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-20 opacity-0 scale-90 pointer-events-none'}`}
       >
         <div className="bg-gray-900/95 backdrop-blur-xl text-white pl-4 pr-6 py-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.3)] flex items-center gap-4 border border-white/10 cursor-pointer hover:scale-105 active:scale-95 transition-transform group">
           <div className="bg-green-500 rounded-xl p-2 shadow-lg shadow-green-500/30 animate-pulse">
@@ -532,7 +549,9 @@ const App: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-bold tracking-wide text-gray-100">{toast.message}</span>
-            <span className="text-[10px] font-black text-green-400 uppercase tracking-widest mt-0.5 group-hover:underline">Tap to View Cart &rarr;</span>
+            <span className="text-[10px] font-black text-green-400 uppercase tracking-widest mt-0.5 group-hover:underline">
+              {toast.type === 'cart' ? 'Tap to View Cart →' : toast.type === 'wishlist' ? 'Tap to View Favorites →' : 'Dismiss'}
+            </span>
           </div>
         </div>
       </div>

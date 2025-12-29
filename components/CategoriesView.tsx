@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
+import ProductCard from './ProductCard';
 import { DETAILED_CATEGORIES } from '../constants.tsx';
 import Footer from './Footer.tsx';
 import { Product, Unit } from '../types.ts';
@@ -255,7 +256,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
         : (DETAILED_CATEGORIES.find(c => c.id === activeCategoryId) || DETAILED_CATEGORIES[0]);
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row relative animate-fadeIn">
+        <div className="h-screen bg-slate-50 dark:bg-slate-950 flex flex-col relative animate-fadeIn transition-all">
 
             {/* Mobile Header */}
             <div className="md:hidden sticky top-0 z-30 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm flex items-center gap-4">
@@ -267,8 +268,9 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
 
             {/* Desktop Sidebar Container */}
             <div className={`
+                hidden md:flex
                 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800
-                flex flex-row md:h-screen md:sticky md:top-0 h-auto
+                flex flex-row md:h-full
                 transition-all duration-300 ease-in-out
                 ${isFiltersOpen ? 'w-[320px]' : 'w-[88px]'}
                 overflow-hidden z-30
@@ -408,35 +410,79 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
 
                 {/* Mobile View */}
                 <div className="md:hidden pb-20">
-                    <h2 className="text-xl font-black text-slate-900 dark:text-white mb-6 animate-fadeIn">{activeMobileCategory.name}</h2>
-                    {activeMobileCategory.subcategories.map((sub) => (
-                        <div key={sub.id} className="mb-8">
-                            <h3 className="text-sm font-black text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                                {sub.name}
-                            </h3>
-                            <div className="grid grid-cols-2 gap-4">
-                                {sub.items.map((itemName, idx) => {
-                                    const productEntry = allProducts.find(p => p.product.nameEn === itemName && p.categoryId === activeMobileCategory.id);
-                                    if (!productEntry) return null;
-                                    const p = productEntry.product;
-                                    const qty = getQuantity(p.id, p.units[0].id);
-                                    return (
-                                        <div key={p.id} onClick={() => onProductClick(p)} className="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-100 dark:border-slate-700/50 hover:shadow-md transition-all">
-                                            <div className="w-full aspect-square rounded-xl bg-slate-50 dark:bg-slate-900 mb-3 overflow-hidden">
-                                                <img src={p.image} className="w-full h-full object-cover" alt={p.nameEn} />
+                    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar mb-6 pb-2">
+                        <button
+                            onClick={() => setActiveMobileCategoryId('all')}
+                            className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${activeMobileCategoryId === 'all' ? 'bg-slate-900 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'}`}
+                        >
+                            All
+                        </button>
+                        {DETAILED_CATEGORIES.map(cat => (
+                            <button
+                                key={cat.id}
+                                onClick={() => setActiveMobileCategoryId(cat.id)}
+                                className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${activeMobileCategoryId === cat.id ? 'bg-green-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'}`}
+                            >
+                                {cat.name}
+                            </button>
+                        ))}
+                    </div>
+
+                    {activeMobileCategoryId === 'all' ? (
+                        <div className="space-y-6">
+                            {DETAILED_CATEGORIES.map((cat) => (
+                                <div key={cat.id}>
+                                    <h3 className="text-lg font-black text-slate-900 dark:text-white mb-4">{cat.name}</h3>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {allProducts.filter(p => p.categoryId === cat.id).slice(0, 4).map(({ product: p }) => (
+                                            <div key={p.id}>
+                                                <ProductCard
+                                                    product={p}
+                                                    onClick={() => onProductClick(p)}
+                                                    addToCart={() => addToCart(p, p.units[0])}
+                                                    quantity={getQuantity(p.id, p.units[0].id)}
+                                                    removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
+                                                    isFavorite={wishlist.includes(p.id)}
+                                                    toggleFavorite={() => toggleWishlist(p.id)}
+                                                />
                                             </div>
-                                            <h4 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-2 min-h-[2.5em]">{p.nameEn}</h4>
-                                            <div className="flex items-center justify-between mt-2">
-                                                <span className="text-xs font-black">₹{p.units[0].price}</span>
-                                                {qty > 0 ? <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-bold">{qty}</span> : <div className="w-5 h-5 bg-green-50 rounded flex items-center justify-center text-green-600"><i className="fa-solid fa-plus text-[10px]"></i></div>}
-                                            </div>
-                                        </div>
-                                    )
-                                })}
-                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                    ) : (
+                        <>
+                            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-6 animate-fadeIn">{activeMobileCategory.name}</h2>
+                            {activeMobileCategory.subcategories.map((sub) => {
+                                const subProps = allProducts.filter(p => p.product.nameEn && p.categoryId === activeMobileCategory.id && p.subCategoryName === sub.name);
+                                if (subProps.length === 0) return null;
+                                return (
+                                    <div key={sub.id} className="mb-8">
+                                        <h3 className="text-sm font-black text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
+                                            <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                                            {sub.name}
+                                        </h3>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {subProps.map(({ product: p }) => (
+                                                <div key={p.id}>
+                                                    <ProductCard
+                                                        product={p}
+                                                        onClick={() => onProductClick(p)}
+                                                        addToCart={() => addToCart(p, p.units[0])}
+                                                        quantity={getQuantity(p.id, p.units[0].id)}
+                                                        removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
+                                                        isFavorite={wishlist.includes(p.id)}
+                                                        toggleFavorite={() => toggleWishlist(p.id)}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </>
+                    )}
                 </div>
 
                 {/* Desktop Grid */}
@@ -485,49 +531,19 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                         // Responsive Grid: Can go very wide
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 Gap-6">
                             {filteredProducts.map(({ product: p }, idx) => {
-                                const qty = getQuantity(p.id, p.units[0].id);
                                 return (
-                                    <div
-                                        key={p.id}
-                                        onClick={() => onProductClick(p)}
-                                        className="group bg-white dark:bg-slate-900 rounded-[20px] p-4 border border-slate-100 dark:border-slate-800 hover:border-green-500/30 hover:shadow-xl hover:shadow-green-500/5 transition-all duration-300 cursor-pointer flex flex-col h-full"
-                                    >
-                                        <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-slate-50 dark:bg-slate-800">
-                                            <img
-                                                src={p.image}
-                                                alt={p.nameEn}
-                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                            />
-                                            {/* Quick Add (Hover) */}
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); addToCart(p, p.units[0]); }}
-                                                className="absolute bottom-3 right-3 w-10 h-10 bg-white text-green-600 rounded-full shadow-lg translate-y-14 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center hover:bg-green-600 hover:text-white"
-                                            >
-                                                <i className="fa-solid fa-plus font-bold"></i>
-                                            </button>
-                                        </div>
-
-                                        <div className="flex-1 flex flex-col">
-                                            <h3 className="text-base font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-green-600 transition-colors">
-                                                {p.nameEn} <span className="text-xs font-normal text-slate-400">/ {p.nameTa}</span>
-                                            </h3>
-                                            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mt-1 mb-4">{p.category}</p>
-
-                                            <div className="mt-auto flex items-center justify-between">
-                                                <span className="text-lg font-black text-slate-900 dark:text-white">₹{p.units[0].price}</span>
-                                                {qty > 0 ? (
-                                                    <div className="flex items-center gap-2 bg-green-50 px-2 py-1 rounded-lg">
-                                                        <button onClick={(e) => { e.stopPropagation(); removeFromCart(p.id, p.units[0].id); }} className="text-green-600 text-xs"><i className="fa-solid fa-minus"></i></button>
-                                                        <span className="font-bold text-green-700 text-sm">{qty}</span>
-                                                        <button onClick={(e) => { e.stopPropagation(); addToCart(p, p.units[0]); }} className="text-green-600 text-xs"><i className="fa-solid fa-plus"></i></button>
-                                                    </div>
-                                                ) : (
-                                                    <button onClick={(e) => { e.stopPropagation(); addToCart(p, p.units[0]); }} className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-green-600 hover:text-white transition-colors">ADD</button>
-                                                )}
-                                            </div>
-                                        </div>
+                                    <div key={p.id}>
+                                        <ProductCard
+                                            product={p}
+                                            onClick={() => onProductClick(p)}
+                                            addToCart={() => addToCart(p, p.units[0])}
+                                            quantity={getQuantity(p.id, p.units[0].id)}
+                                            removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
+                                            isFavorite={wishlist.includes(p.id)}
+                                            toggleFavorite={() => toggleWishlist(p.id)}
+                                        />
                                     </div>
-                                );
+                                )
                             })}
                         </div>
                     )}

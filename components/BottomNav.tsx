@@ -26,7 +26,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ currentView, setCurrentView, cart
   );
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 flex items-center justify-around px-2 pb-6 pt-2 z-50 max-w-md mx-auto shadow-[0_-5px_15px_rgba(0,0,0,0.05)] transition-colors duration-300">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 flex items-center justify-around px-2 py-2 z-50 max-w-md mx-auto shadow-[0_-5px_15px_rgba(0,0,0,0.05)] transition-colors duration-300">
       <NavItem
         view="home"
         label="Home"

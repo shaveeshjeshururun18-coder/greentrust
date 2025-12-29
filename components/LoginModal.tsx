@@ -92,6 +92,14 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
 
         {/* Content Container */}
         <div className="relative z-10">
+          {/* Back Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-0 left-0 w-10 h-10 rounded-full bg-slate-100/50 hover:bg-slate-100 flex items-center justify-center text-slate-600 transition-all z-20"
+          >
+            <i className="fa-solid fa-arrow-left"></i>
+          </button>
+
           <div className="w-16 h-1.5 bg-gray-200 rounded-full mx-auto mb-10"></div>
 
           <div className="text-center mb-10 relative z-10 animate-popIn stagger-1">

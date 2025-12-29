@@ -61,6 +61,8 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
         setExpandedCategoryIds(prev => prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]);
     };
 
+    const [isSidebarHidden, setIsSidebarHidden] = useState(false);
+
     const toggleSubCategory = (subCatName: string) => {
         setSelectedSubCategories(prev =>
             prev.includes(subCatName)
@@ -174,7 +176,10 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
             }
 
             // 1. Main Category
-            const categoryMatch = activeCategoryId === 'all' || activeCategoryId === categoryId;
+            // If searching, we search GLOBALLY (ignore category), unless user explicitly wants to filter within category?
+            // User feedback implies they want global search.
+            const isSearching = props.searchQuery && props.searchQuery.length > 0;
+            const categoryMatch = isSearching ? true : (activeCategoryId === 'all' || activeCategoryId === categoryId);
 
             // 1. Subcategory (Only applies if not 'All', or if we want global subcat filter?)
             // Usually subcats are specific to a category. If 'All' is selected, we might clear subcats or strictly filter by name if they are global (unlikely).
@@ -292,7 +297,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800
                 flex flex-row md:h-full
                 transition-all duration-300 ease-in-out
-                ${isFiltersOpen ? 'w-[320px]' : 'w-[88px]'}
+                ${isSidebarHidden ? 'w-0 border-r-0 opacity-0' : (isFiltersOpen ? 'w-[320px]' : 'w-[88px]')}
                 overflow-hidden z-30
             `}>
 
@@ -327,6 +332,16 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                 </button>
                             )
                         })}
+
+                        {/* Collapse Button */}
+                        <div className="flex-1"></div>
+                        <button
+                            onClick={() => setIsSidebarHidden(true)}
+                            className="w-10 h-10 mt-auto rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors"
+                            title="Collapse Menu"
+                        >
+                            <i className="fa-solid fa-arrow-left-long"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -627,6 +642,17 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                 <i className={`fa-solid ${isFiltersOpen ? 'fa-xmark' : 'fa-filter'}`}></i>
                                 {isFiltersOpen ? 'Close Filters' : 'Filter'}
                             </button>
+
+                            {/* Show Menu Button (if hidden) */}
+                            {isSidebarHidden && (
+                                <button
+                                    onClick={() => setIsSidebarHidden(false)}
+                                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-white text-slate-700 border border-slate-200 hover:border-green-500 hover:text-green-600 transition-all animate-fadeIn"
+                                >
+                                    <i className="fa-solid fa-bars"></i>
+                                    Show Menu
+                                </button>
+                            )}
 
                             {/* Line Separator (Optional Gap) */}
                             <div className="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-2"></div>

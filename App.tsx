@@ -148,8 +148,8 @@ const App: React.FC = () => {
   };
 
   const renderContent = () => {
-    // Global Search Override: If there is a search query, ALWAYS show search results
-    if (searchQuery) {
+    // Global Search Override: If there is a search query AND we are not in categories view, show search results
+    if (searchQuery && currentView !== 'categories') {
       // 1. Filter Products
       const filteredProducts = ALL_PRODUCTS.filter(p =>
         p.nameEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -277,6 +277,8 @@ const App: React.FC = () => {
             wishlist={wishlist}
             toggleWishlist={toggleWishlist}
             initialCategoryId={selectedCategory}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
           />
         );
       case 'home':

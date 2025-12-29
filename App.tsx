@@ -46,6 +46,7 @@ const App: React.FC = () => {
   const [isDark, setIsDark] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [shouldOpenFilter, setShouldOpenFilter] = useState(false);
 
   useEffect(() => {
     if (isDark) {
@@ -129,6 +130,7 @@ const App: React.FC = () => {
 
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategory(categoryId);
+    setShouldOpenFilter(false);
     setCurrentView('categories');
   };
 
@@ -279,6 +281,7 @@ const App: React.FC = () => {
             initialCategoryId={selectedCategory}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
+            initialFilterOpen={shouldOpenFilter}
           />
         );
       case 'home':
@@ -509,6 +512,10 @@ const App: React.FC = () => {
                 isDark={isDark}
                 toggleTheme={toggleTheme}
                 isScrolled={isScrolled}
+                onFilterClick={() => {
+                  setShouldOpenFilter(true);
+                  setCurrentView('categories');
+                }}
               />
             </div>
           )}
@@ -523,6 +530,10 @@ const App: React.FC = () => {
             isDark={isDark}
             toggleTheme={toggleTheme}
             isScrolled={isScrolled}
+            onFilterClick={() => {
+              setShouldOpenFilter(true);
+              setCurrentView('categories');
+            }}
           />
         </>
       )}

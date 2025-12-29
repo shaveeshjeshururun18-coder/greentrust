@@ -6,6 +6,7 @@ interface HeaderProps {
   onSearchFocus?: () => void;
   onLocationClick: () => void;
   onWishlistClick?: () => void;
+  onFilterClick?: () => void;
   address: string;
   isDark?: boolean;
   toggleTheme?: () => void;
@@ -21,7 +22,7 @@ const SEARCH_PLACEHOLDERS = [
   "Search 'Dosa'"
 ];
 
-const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onSearchFocus, onLocationClick, onWishlistClick, address, isDark, toggleTheme, isScrolled = false }) => {
+const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onSearchFocus, onLocationClick, onWishlistClick, onFilterClick, address, isDark, toggleTheme, isScrolled = false }) => {
   const [searchValue, setSearchValue] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isVegMode, setIsVegMode] = useState(false);
@@ -124,6 +125,14 @@ const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onSearc
               {isVegMode && <div className="w-1.5 h-1.5 bg-green-600 rounded-full m-auto mt-[3px]"></div>}
             </div>
           </div>
+        </button>
+
+        {/* Filter Button (Mobile/Desktop) */}
+        <button
+          onClick={onFilterClick}
+          className="flex flex-col items-center justify-center h-12 w-12 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 active:scale-95 transition-all"
+        >
+          <i className="fa-solid fa-sliders text-lg"></i>
         </button>
       </div>
     </header>

@@ -17,6 +17,7 @@ interface CategoriesViewProps {
     searchQuery?: string;
     setSearchQuery?: (query: string) => void;
     initialCategoryId?: string;
+    initialFilterOpen?: boolean;
 }
 
 // Product Images and Names are now handled in constants.tsx globally
@@ -40,15 +41,16 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     initialCategoryId = 'all',
     searchQuery,
     setSearchQuery,
+    initialFilterOpen = false,
     ...props
 }) => {
     // Mobile State: Active Category Tab
     const [activeMobileCategoryId, setActiveMobileCategoryId] = useState(initialCategoryId);
     const [activeMobileSubCategory, setActiveMobileSubCategory] = useState<string>('all'); // NEW: For filtering
-    const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+    const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(initialFilterOpen);
 
     // Desktop State: Advanced Filters
-    const [isFiltersOpen, setIsFiltersOpen] = useState(false); // Default CLOSED (Slim Mode)
+    const [isFiltersOpen, setIsFiltersOpen] = useState(initialFilterOpen); // Default CLOSED (Slim Mode)
     const [activeCategoryId, setActiveCategoryId] = useState<string>(initialCategoryId); // Default from prop
     const [expandedCategoryIds, setExpandedCategoryIds] = useState<string[]>(initialCategoryId !== 'all' ? [initialCategoryId] : [DETAILED_CATEGORIES[0].id]);
     const [selectedSubCategories, setSelectedSubCategories] = useState<string[]>([]);

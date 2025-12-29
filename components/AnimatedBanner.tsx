@@ -73,7 +73,7 @@ const AnimatedBanner: React.FC = () => {
                     </div>
 
                     {/* Main Text Effect: "GREEN TRUST" - Cinematic Entrance */}
-                    <div className="overflow-hidden mb-2 md:mb-4">
+                    <div className="overflow-hidden mb-6 md:mb-8">
                         {/* Changed to brighter green for better visibility */}
                         <h1 className="text-4xl md:text-8xl font-black text-green-400 uppercase tracking-tighter drop-shadow-2xl mb-0 leading-[0.85] animate-[slideInRight_0.8s_ease-out]" style={{ fontFamily: 'Impact, sans-serif', textShadow: '2px 2px 0px rgba(0,0,0,0.5)' }}>
                             GREEN

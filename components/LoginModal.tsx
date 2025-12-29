@@ -82,10 +82,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
       <div className="relative bg-white rounded-t-[3.5rem] p-10 pb-16 shadow-[0_-20px_60px_rgba(0,0,0,0.3)] animate-slideUpModal overflow-hidden">
 
         {/* Invisible Recaptcha Container */}
-        <div id="recaptcha-container" ref={recaptchaWrapperRef}></div>
-
-        {/* Invisible Recaptcha Container */}
-        <div id="recaptcha-container" ref={recaptchaWrapperRef}></div>
+        <div id="recaptcha-container" ref={recaptchaWrapperRef} className="absolute inset-0 pointer-events-none opacity-0"></div>
 
         {/* --- BACKGROUND REDUCED (Clean White) --- */}
         <div className="absolute inset-0 z-0 bg-white"></div>
@@ -113,7 +110,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
             </p>
           </div>
 
-          <div className="space-y-5 relative z-10">
+          <div className="flex flex-col gap-5 relative z-10">
             {!showOtpInput ? (
               // PHONE INPUT
               <div className="animate-popIn stagger-2">
@@ -144,7 +141,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
                     className="w-full text-center py-5 bg-gray-50 border-2 border-gray-50 group-focus-within:border-green-500 group-focus-within:bg-white rounded-[1.5rem] outline-none font-black tracking-[1em] text-2xl transition-all shadow-inner placeholder:tracking-[1em]"
                   />
                 </div>
-                <button onClick={() => setShowOtpInput(false)} className="mx-auto block mt-4 text-xs font-bold text-green-600 uppercase tracking-widest">Change Number</button>
+                <button onClick={() => { setShowOtpInput(false); setOtp(''); }} className="mx-auto block mt-4 text-xs font-bold text-green-600 uppercase tracking-widest">Change Number</button>
               </div>
             )}
 
@@ -171,12 +168,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
                 <div className="flex-1 h-[1.5px] bg-gray-100"></div>
               </div>
 
-              <div className="grid grid-cols-2 gap-5 mt-8 animate-popIn stagger-5 relative z-10 opacity-0">
-                <button className="flex items-center justify-center gap-3 py-4 bg-white border-2 border-gray-50 rounded-[1.5rem] hover:bg-gray-50 hover:border-gray-200 transition-all active-pop shadow-sm">
+              <div className="grid grid-cols-2 gap-5 mt-8 animate-popIn stagger-5 relative z-10">
+                <button className="flex items-center justify-center gap-3 py-4 bg-white border-2 border-slate-100 rounded-[1.5rem] hover:bg-gray-50 hover:border-slate-200 transition-all active:scale-95 shadow-sm">
                   <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-6 h-6" alt="Google" />
                   <span className="text-sm font-black text-gray-700 uppercase tracking-tighter">Google</span>
                 </button>
-                <button className="flex items-center justify-center gap-3 py-4 bg-white border-2 border-gray-50 rounded-[1.5rem] hover:bg-gray-50 hover:border-gray-200 transition-all active-pop shadow-sm">
+                <button className="flex items-center justify-center gap-3 py-4 bg-white border-2 border-slate-100 rounded-[1.5rem] hover:bg-gray-50 hover:border-slate-200 transition-all active:scale-95 shadow-sm">
                   <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" className="w-6 h-6" alt="FB" />
                   <span className="text-sm font-black text-gray-700 uppercase tracking-tighter">Facebook</span>
                 </button>

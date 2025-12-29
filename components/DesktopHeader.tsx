@@ -75,7 +75,7 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                     </div>
 
                     {/* Search Bar (Centered & Wide) */}
-                    <div className="flex-1 max-w-2xl relative">
+                    <div className="flex-1 max-w-2xl relative flex items-center">
                         <input
                             type="text"
                             value={searchValue}
@@ -83,7 +83,7 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                             className={`w-full bg-slate-100 dark:bg-slate-800 border-none rounded-full pl-6 pr-14 text-sm font-semibold text-slate-800 dark:text-white placeholder-slate-400 outline-none focus:ring-2 focus:ring-green-500/20 transition-all ${isScrolled ? 'py-2.5' : 'py-3'}`}
                             placeholder="Search among 200+ organic products..."
                         />
-                        <button className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-white hover:bg-green-700 active:scale-95 transition-all shadow-md shadow-green-600/20">
+                        <button className="absolute right-1.5 w-9 h-9 bg-green-600 rounded-full flex items-center justify-center text-white hover:bg-green-700 active:scale-95 transition-all shadow-md shadow-green-600/20 z-10">
                             <i className="fa-solid fa-magnifying-glass text-sm"></i>
                         </button>
                     </div>

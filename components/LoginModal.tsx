@@ -22,10 +22,20 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
       await signInWithPopup(auth, googleProvider);
       setIsLoading(false);
       onLogin(); // App.tsx onAuthStateChanged will actually handle state, but we close modal
-    } catch (error) {
+    } catch (error: any) {
       console.error("Google login failed:", error);
       setIsLoading(false);
-      alert("Google login failed. Please try again.");
+
+      let message = "Google login failed. Please try again.";
+      if (error.code === 'auth/unauthorized-domain') {
+        message = "This domain is not authorized. Please add it in Firebase Console (Authentication > Settings > Authorized Domains).";
+      } else if (error.code === 'auth/popup-closed-by-user') {
+        message = "Login popup closed. Please try again.";
+      } else if (error.code === 'auth/operation-not-allowed') {
+        message = "Google Sign-in is not enabled in Firebase Console.";
+      }
+
+      alert(message);
     }
   };
 

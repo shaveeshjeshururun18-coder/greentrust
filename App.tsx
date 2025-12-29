@@ -296,7 +296,10 @@ const App: React.FC = () => {
                   <h2 className="text-2xl font-black text-gray-900 dark:text-white">Trending Now</h2>
                 </div>
                 <button
-                  onClick={() => setCurrentView('categories')}
+                  onClick={() => {
+                    setSelectedCategory('all');
+                    setCurrentView('categories');
+                  }}
                   className="text-xs font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"
                 >
                   View All
@@ -332,7 +335,7 @@ const App: React.FC = () => {
                 </div>
                 <button
                   onClick={() => {
-                    setSelectedCategory('vegetables');
+                    setSelectedCategory('dc1');
                     setCurrentView('categories');
                   }}
                   className="text-xs font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"
@@ -368,7 +371,7 @@ const App: React.FC = () => {
                 </div>
                 <button
                   onClick={() => {
-                    setSelectedCategory('fruits');
+                    setSelectedCategory('dc2');
                     setCurrentView('categories');
                   }}
                   className="text-xs font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"

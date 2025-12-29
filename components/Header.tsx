@@ -47,23 +47,6 @@ const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onSearc
   return (
     <header className={`sticky top-0 z-[60] transition-all duration-300 ${isScrolled ? 'bg-white/95 dark:bg-[#120f26]/95 backdrop-blur-md shadow-md pb-2' : 'bg-transparent pb-4'}`}>
 
-      {/* Animated Background Layer (Disappears on Scroll) */}
-      <div
-        className="absolute inset-x-0 top-0 h-[140%] z-[-1] overflow-hidden pointer-events-none transition-opacity duration-300"
-        style={{ opacity: isScrolled ? 0 : 1 }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-green-50/90 via-white/80 to-transparent dark:from-slate-800/90 dark:via-slate-900/80"></div>
-        {/* City Skyline / Fresh Pattern Mock */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-32 opacity-15 bg-repeat-x animate-slideSlow"
-          style={{
-            backgroundImage: "url('https://cdn-icons-png.flaticon.com/512/2942/2942544.png')",
-            backgroundSize: 'contain',
-            backgroundPosition: 'bottom'
-          }}
-        ></div>
-      </div>
-
       {/* Top Row: Location & Actions */}
       <div className={`px-4 pt-4 pb-2 flex justify-between items-center transition-all duration-300 ${isScrolled ? 'h-0 opacity-0 overflow-hidden pt-0 pb-0' : 'h-auto opacity-100'}`}>
         {/* Location */}

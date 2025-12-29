@@ -245,10 +245,17 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                        <button className="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-300">
-                            <i className="fa-solid fa-magnifying-glass"></i>
-                        </button>
+                    <div className="flex items-center gap-3 flex-1 justify-end ml-4">
+                        <div className="relative w-full max-w-[150px]">
+                            <input
+                                type="text"
+                                value={props.searchQuery || ''}
+                                onChange={(e) => props.setSearchQuery && props.setSearchQuery(e.target.value)}
+                                placeholder="Search..."
+                                className="w-full h-8 bg-slate-100 dark:bg-slate-800 rounded-full pl-8 pr-3 text-xs outline-none focus:ring-1 focus:ring-green-500"
+                            />
+                            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400"></i>
+                        </div>
                     </div>
                 </div>
 
@@ -319,15 +326,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                             <span className="text-[9px] font-bold text-center leading-none">All</span>
                         </button>
 
-                        {/* Collapse Button (Moved to Top) */}
-                        <button
-                            onClick={() => setIsSidebarHidden(true)}
-                            className="group flex flex-col items-center justify-center w-full aspect-square rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors"
-                            title="Collapse Menu"
-                        >
-                            <i className="fa-solid fa-arrow-left-long text-lg"></i>
-                            <span className="text-[8px] font-bold mt-1">Hide</span>
-                        </button>
+
 
                         <div className="h-px w-10 bg-slate-200 dark:bg-slate-700 my-2"></div>
 

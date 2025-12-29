@@ -11,6 +11,7 @@ interface HeaderProps {
   isDark?: boolean;
   toggleTheme?: () => void;
   isScrolled?: boolean;
+  showFilter?: boolean; // NEW PROP
 }
 
 const SEARCH_PLACEHOLDERS = [
@@ -22,7 +23,19 @@ const SEARCH_PLACEHOLDERS = [
   "Search 'Dosa'"
 ];
 
-const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onSearchFocus, onLocationClick, onWishlistClick, onFilterClick, address, isDark, toggleTheme, isScrolled = false }) => {
+const Header: React.FC<HeaderProps> = ({
+  onProfileClick,
+  onSearchChange,
+  onSearchFocus,
+  onLocationClick,
+  onWishlistClick,
+  onFilterClick,
+  address,
+  isDark,
+  toggleTheme,
+  isScrolled = false,
+  showFilter = true // Default to true
+}) => {
   const [searchValue, setSearchValue] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isVegMode, setIsVegMode] = useState(false);
@@ -109,8 +122,7 @@ const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onSearc
                 <i className="fa-solid fa-xmark"></i>
               </button>
             )}
-            <div className="h-4 w-[1px] bg-slate-300"></div>
-            <i className="fa-solid fa-microphone text-orange-500"></i>
+            {/* Microphone Removed */}
           </div>
         </div>
 
@@ -127,13 +139,15 @@ const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onSearc
           </div>
         </button>
 
-        {/* Filter Button (Mobile/Desktop) */}
-        <button
-          onClick={onFilterClick}
-          className="flex flex-col items-center justify-center h-12 w-12 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 active:scale-95 transition-all"
-        >
-          <i className="fa-solid fa-sliders text-lg"></i>
-        </button>
+        {/* Filter Button (Mobile/Desktop) - Conditionally Rendered */}
+        {showFilter && (
+          <button
+            onClick={onFilterClick}
+            className="flex flex-col items-center justify-center h-12 w-12 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 active:scale-95 transition-all"
+          >
+            <i className="fa-solid fa-sliders text-lg"></i>
+          </button>
+        )}
       </div>
     </header>
   );

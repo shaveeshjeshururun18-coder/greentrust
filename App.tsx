@@ -516,6 +516,7 @@ const App: React.FC = () => {
                   setShouldOpenFilter(true);
                   setCurrentView('categories');
                 }}
+                showFilter={false} // Hide Filter on Home
               />
             </div>
           )}

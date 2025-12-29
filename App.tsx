@@ -249,22 +249,7 @@ const App: React.FC = () => {
     }
 
     switch (currentView) {
-      case 'home':
-        return (
-          // ... Home Content ...
-          <div className="pb-24 animate-fadeIn">
-            {/* ... */}
-            {/* Re-using existing home content, omitted for brevity in replacement but assumed preserved if I only replaced the search block ... */}
-            {/* WAIT - replace_file_content needs EXACT match. I am replacing the renderContent function start. */}
-            {/* I need to view the file again to be 100% sure I match the existing code for the 'case home:' part if I include it. */}
-            {/* Actually, I matched up to 'switch (currentView) {' */}
-            {/* So I am replacing the ENTIRE IF block regarding search. */}
-            {/* I will proceed. */}
-          </div>
-        );
-      // STOP. I cannot rewrite the whole switch statement blindly.
-      // My replacement content ends with "switch (currentView) {". 
-      // This is safer. I'll just Replace the IF block.
+
 
       case 'categories':
         return (

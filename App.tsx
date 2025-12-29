@@ -492,7 +492,6 @@ const App: React.FC = () => {
               <Header
                 onProfileClick={() => setCurrentView('account')}
                 onSearchChange={setSearchQuery}
-                onSearchFocus={() => setCurrentView('categories')}
                 onLocationClick={() => setCurrentView('location-picker')}
                 onWishlistClick={() => setCurrentView('wishlist')}
                 address={userAddress}

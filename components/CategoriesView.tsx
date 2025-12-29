@@ -319,6 +319,16 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                             <span className="text-[9px] font-bold text-center leading-none">All</span>
                         </button>
 
+                        {/* Collapse Button (Moved to Top) */}
+                        <button
+                            onClick={() => setIsSidebarHidden(true)}
+                            className="group flex flex-col items-center justify-center w-full aspect-square rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors"
+                            title="Collapse Menu"
+                        >
+                            <i className="fa-solid fa-arrow-left-long text-lg"></i>
+                            <span className="text-[8px] font-bold mt-1">Hide</span>
+                        </button>
+
                         <div className="h-px w-10 bg-slate-200 dark:bg-slate-700 my-2"></div>
 
                         {DETAILED_CATEGORIES.map(cat => {
@@ -335,15 +345,6 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                             )
                         })}
 
-                        {/* Collapse Button */}
-                        <div className="flex-1"></div>
-                        <button
-                            onClick={() => setIsSidebarHidden(true)}
-                            className="w-10 h-10 mt-auto rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors"
-                            title="Collapse Menu"
-                        >
-                            <i className="fa-solid fa-arrow-left-long"></i>
-                        </button>
                     </div>
                 </div>
 

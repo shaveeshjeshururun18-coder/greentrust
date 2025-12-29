@@ -424,16 +424,11 @@
       margin: 0 6px;
       display: inline-block;
       transform: rotate(-5deg) scale(1.05);
+      text-shadow: 0 0 15px rgba(124, 255, 178, 0);
+      will-change: clip-path, transform, text-shadow;
       animation:
         penWrite 5s cubic-bezier(.22, 1, .36, 1) 1.5s forwards,
-        signatureSettle 1.2s ease-out 6s forwards;
-    }
-
-    .ssj {
-      margin-top: 6px;
-      font-size: 1.2rem;
-      font-weight: 800;
-      letter-spacing: 3px;
+        letter-spacing: 3px;
       color: #ffffff;
       opacity: 0;
       animation: ssjReveal 0.9s ease-out 6.5s forwards;

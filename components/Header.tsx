@@ -95,9 +95,6 @@ const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onSearc
             type="text"
             value={searchValue}
             onChange={handleChange}
-            onFocus={onSearchFocus}
-            onClick={onSearchFocus}
-            onClick={onSearchFocus}
             className="w-full h-12 rounded-xl bg-green-50 dark:bg-slate-800 border-none pl-12 pr-10 text-sm font-semibold outline-none focus:ring-2 focus:ring-green-500/50 transition-colors text-slate-800 dark:text-white placeholder-slate-400/80"
             placeholder={SEARCH_PLACEHOLDERS[placeholderIndex]}
           />

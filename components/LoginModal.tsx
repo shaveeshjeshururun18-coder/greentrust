@@ -194,7 +194,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
           </p>
         </div>
       </div>
-      );
+    </div>
+  );
 };
 
-      export default LoginModal;
+export default LoginModal;

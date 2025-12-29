@@ -22,12 +22,12 @@ import DesktopHero from './components/DesktopHero';
 import AIAssistant from './components/AIAssistant';
 
 // Inside App component
-import EntranceScreen from './components/EntranceScreen';
+// EntranceScreen import removed
 
 // Inside App component
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('home');
-  const [showEntrance, setShowEntrance] = useState(true); // Default true for mobile splash
+  // showEntrance state removed
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>(() => {
     const saved = localStorage.getItem('wishlist');
@@ -467,7 +467,7 @@ const App: React.FC = () => {
   return (
     <div className={`w-full ${currentView === 'categories' ? '' : 'md:max-w-6xl mx-auto'} h-screen relative overflow-hidden flex flex-col selection:bg-green-100 ${isDark ? 'dark text-white' : ''}`}>
       <BackgroundAnimation />
-      {showEntrance && <EntranceScreen onComplete={() => setShowEntrance(false)} />}
+      {/* Entrance Screen removed as per request, using index.html splash instead */}
 
       {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && currentView !== 'categories' && (
         <>

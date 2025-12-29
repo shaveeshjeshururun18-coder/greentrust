@@ -98,37 +98,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </div>
           </div>
 
-          {/* Moved Buttons Here */}
           <div className="flex items-end z-10">
-            {quantity > 0 ? (
-              <div className="flex items-center bg-green-600 rounded-lg text-white font-black h-8 shadow-lg shadow-green-100 animate-popIn">
-                <button onClick={(e) => { e.stopPropagation(); removeFromCart(); }} className="px-2 h-full flex items-center justify-center hover:bg-green-700 transition-colors rounded-l-lg">
-                  <i className="fa-solid fa-minus text-[8px]"></i>
-                </button>
-                <span className="px-1 text-xs tabular-nums">{quantity}</span>
-                <button onClick={(e) => { e.stopPropagation(); addToCart(); }} className="px-2 h-full flex items-center justify-center hover:bg-green-700 transition-colors rounded-r-lg">
-                  <i className="fa-solid fa-plus text-[8px]"></i>
-                </button>
-              </div>
-            ) : (
-              <div className="flex gap-1">
-                <button
-                  onClick={(e) => { e.stopPropagation(); addToCart(); }}
-                  className="bg-white border-2 border-green-50 text-green-600 font-black px-2 py-1.5 rounded-lg text-[10px] shadow-sm transition-all active:scale-95 hover:bg-green-50 leading-none"
-                >
-                  ADD
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addToCart();
-                  }}
-                  className="bg-green-600 border border-green-600 text-white font-black px-2 py-1.5 rounded-lg text-[10px] shadow-md shadow-green-100 transition-all active:scale-95 hover:bg-green-700 leading-none"
-                >
-                  BUY
-                </button>
-              </div>
-            )}
+            {/* Buttons removed for card view */}
           </div>
         </div>
       </div>

@@ -361,8 +361,8 @@
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      animation: fadeOut 0.6s ease-in-out 2.4s forwards;
-      /* 3s total duration approx: 2.4s delay + 0.6s fade */
+      animation: slideUpOut 0.5s cubic-bezier(0.65, 0, 0.35, 1) 2.5s forwards;
+      /* Sudden slide up */
     }
 
     .glow {
@@ -529,6 +529,12 @@
       to {
         opacity: 0;
         visibility: hidden;
+      }
+    }
+
+    @keyframes slideUpOut {
+      to {
+        transform: translateY(-100%);
       }
     }
   </style>

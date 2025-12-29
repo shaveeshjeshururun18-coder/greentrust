@@ -71,6 +71,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
 }) => {
     // Mobile State: Active Category Tab
     const [activeMobileCategoryId, setActiveMobileCategoryId] = useState(initialCategoryId !== 'all' ? initialCategoryId : DETAILED_CATEGORIES[0].id);
+    const [activeMobileSubCategory, setActiveMobileSubCategory] = useState<string>('all'); // NEW: For filtering
 
     // Desktop State: Advanced Filters
     const [isFiltersOpen, setIsFiltersOpen] = useState(false); // Default CLOSED (Slim Mode)
@@ -454,7 +455,10 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                 return (
                                     <button
                                         key={cat.id}
-                                        onClick={() => setActiveMobileCategoryId(cat.id)}
+                                        onClick={() => {
+                                            setActiveMobileCategoryId(cat.id);
+                                            setActiveMobileSubCategory('all'); // Reset subcat on cat change
+                                        }}
                                         className={`w-full py-3 flex flex-col items-center justify-center transition-all relative ${isActive ? 'text-green-600' : 'text-slate-400'}`}
                                     >
                                         {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-600 rounded-r-full"></div>}
@@ -500,9 +504,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                 <div className="flex items-center justify-between mb-4 sticky top-0 bg-slate-50 dark:bg-slate-950 z-20 py-2 pt-3 shadow-sm md:shadow-none -mx-3 px-3">
                                     <h2 className="text-lg font-black text-slate-900 dark:text-white leading-tight">{activeMobileCategory.name}</h2>
                                     <div className="flex items-center gap-3">
-                                        <button className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-slate-400">
-                                            <i className="fa-solid fa-magnifying-glass text-xs"></i>
-                                        </button>
+                                        {/* Search removed */}
                                         <button className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-slate-400">
                                             <i className="fa-solid fa-sliders text-xs"></i>
                                         </button>
@@ -511,14 +513,17 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
 
                                 {/* Horizontal Subcategory Pills (The "Previous Filter") */}
                                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar mb-4 -mx-3 px-3 pb-2 sticky top-[52px] z-10 bg-slate-50 dark:bg-slate-950/95 backdrop-blur-sm">
+                                    <button
+                                        onClick={() => setActiveMobileSubCategory('all')}
+                                        className={`whitespace-nowrap px-3 py-1.5 rounded-lg border text-[10px] font-bold shadow-sm transition-all flex-shrink-0 ${activeMobileSubCategory === 'all' ? 'bg-green-600 border-green-600 text-white' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'}`}
+                                    >
+                                        All
+                                    </button>
                                     {activeMobileCategory.subcategories.map((sub) => (
                                         <button
                                             key={sub.id}
-                                            onClick={() => {
-                                                const el = document.getElementById(`sub-${sub.id}`);
-                                                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                            }}
-                                            className="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold text-slate-600 dark:text-slate-300 shadow-sm hover:border-green-500 hover:text-green-600 transition-all flex-shrink-0"
+                                            onClick={() => setActiveMobileSubCategory(sub.name)}
+                                            className={`whitespace-nowrap px-3 py-1.5 rounded-lg border text-[10px] font-bold shadow-sm transition-all flex-shrink-0 ${activeMobileSubCategory === sub.name ? 'bg-green-600 border-green-600 text-white' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-green-500 hover:text-green-600'}`}
                                         >
                                             {sub.name}
                                         </button>
@@ -527,6 +532,9 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
 
                                 <div className="space-y-6 pb-24">
                                     {activeMobileCategory.subcategories.map((sub) => {
+                                        // Filter Logic: Show if 'all' or matches selected subcat
+                                        if (activeMobileSubCategory !== 'all' && activeMobileSubCategory !== sub.name) return null;
+
                                         const subProps = allProducts.filter(p => p.categoryId === activeMobileCategory.id && p.subCategoryName === sub.name);
                                         if (subProps.length === 0) return null;
                                         return (

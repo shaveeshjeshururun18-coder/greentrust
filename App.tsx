@@ -23,6 +23,7 @@ import WishlistView from './components/WishlistView.tsx';
 import LocationPicker from './components/LocationPicker.tsx';
 import BackgroundAnimation from './components/BackgroundAnimation.tsx';
 import DesktopHero from './components/DesktopHero';
+import DeveloperView from './components/DeveloperView.tsx';
 import AIAssistant from './components/AIAssistant';
 
 import BasketBuddyView from './components/BasketBuddyView.tsx';
@@ -583,6 +584,8 @@ const App: React.FC = () => {
           onNavigate={setCurrentView}
           onSelectCategory={setSelectedCategory}
         />;
+      case 'developer':
+        return <DeveloperView onBack={() => setCurrentView('account')} />;
       default:
         return <div className="p-8 text-center text-gray-400">Section Coming Soon</div>;
     }

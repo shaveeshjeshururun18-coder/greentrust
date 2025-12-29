@@ -428,11 +428,31 @@
       will-change: clip-path, transform, text-shadow;
       animation:
         penWrite 5s cubic-bezier(.22, 1, .36, 1) 1.5s forwards,
-        letter-spacing: 3px;
+        signatureSettle 1.2s ease-out 6.4s forwards,
+        pulseGlow 2s ease-in-out 7s infinite;
+    }
+
+    .ssj {
+      margin-top: 6px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 3px;
       color: #ffffff;
       opacity: 0;
-      animation: ssjReveal 0.9s ease-out 6.5s forwards;
+      animation: ssjReveal 0.9s ease-out 6.8s forwards;
       font-family: 'Poppins', sans-serif;
+    }
+
+    @keyframes pulseGlow {
+
+      0%,
+      100% {
+        text-shadow: 0 0 10px rgba(124, 255, 178, 0.4);
+      }
+
+      50% {
+        text-shadow: 0 0 25px rgba(124, 255, 178, 0.8), 0 0 40px rgba(124, 255, 178, 0.3);
+      }
     }
 
     @keyframes leafPop {

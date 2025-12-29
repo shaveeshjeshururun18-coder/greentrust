@@ -72,6 +72,15 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                             <img src="/basket_buddy_logo.png" alt="Buddy" className="w-6 h-6 object-contain" />
                             BasketBuddy
                         </button>
+
+                        {/* Developer Button */}
+                        <button
+                            onClick={() => setCurrentView('developer')}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-sm transition-all ${currentView === 'developer' ? 'bg-green-50 text-green-700' : 'hover:bg-slate-50 text-slate-700'}`}
+                        >
+                            <i className="fa-solid fa-code text-lg"></i>
+                            Developer
+                        </button>
                     </div>
 
                     {/* Search Bar (Centered & Wide) */}

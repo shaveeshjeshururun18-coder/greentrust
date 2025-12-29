@@ -172,7 +172,35 @@ const App: React.FC = () => {
       return (
         <div className="px-4 py-6 animate-fadeIn pb-24 md:pb-6">
 
-          {/* Display Matching Categories */}
+
+          {/* Display Matching Products First */}
+          {filteredProducts.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-lg font-bold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2">
+                <i className="fa-solid fa-carrot text-green-600"></i>
+                Matching Products ({filteredProducts.length})
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6 max-w-[1920px] mx-auto">
+                {filteredProducts.map(product => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onClick={() => openProduct(product)}
+                    addToCart={() => addToCart(product, product.units[0])}
+                    removeFromCart={() => {
+                      const item = cart.find(c => c.id === product.id);
+                      if (item) removeFromCart(product.id, item.selectedUnit.id);
+                    }}
+                    quantity={cart.reduce((acc, curr) => curr.id === product.id ? acc + curr.cartQuantity : acc, 0)}
+                    isFavorite={wishlist.includes(product.id)}
+                    toggleFavorite={() => toggleWishlist(product.id)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Display Matching Categories Second */}
           {filteredCategories.length > 0 && (
             <div className="mb-8">
               <h2 className="text-lg font-bold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2">
@@ -209,40 +237,15 @@ const App: React.FC = () => {
             </div>
           )}
 
-          {filteredProducts.length > 0 ? (
-            <div>
-              <h2 className="text-lg font-bold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2">
-                <i className="fa-solid fa-carrot text-green-600"></i>
-                Matching Products ({filteredProducts.length})
-              </h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6 max-w-[1920px] mx-auto">
-                {filteredProducts.map(product => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onClick={() => openProduct(product)}
-                    addToCart={() => addToCart(product, product.units[0])}
-                    removeFromCart={() => {
-                      const item = cart.find(c => c.id === product.id);
-                      if (item) removeFromCart(product.id, item.selectedUnit.id);
-                    }}
-                    quantity={cart.reduce((acc, curr) => curr.id === product.id ? acc + curr.cartQuantity : acc, 0)}
-                    isFavorite={wishlist.includes(product.id)}
-                    toggleFavorite={() => toggleWishlist(product.id)}
-                  />
-                ))}
+          {/* Empty State */}
+          {filteredProducts.length === 0 && filteredCategories.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-20 text-center opacity-60">
+              <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 text-3xl">
+                🤷‍♂️
               </div>
+              <p className="text-lg font-bold text-slate-600 dark:text-slate-400">No products found for "{searchQuery}"</p>
+              <p className="text-sm text-slate-400">Try searching for "Tomato", "Apple", or "Snacks"</p>
             </div>
-          ) : (
-            filteredCategories.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-20 text-center opacity-60">
-                <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 text-3xl">
-                  🤷‍♂️
-                </div>
-                <p className="text-lg font-bold text-slate-600 dark:text-slate-400">No products found for "{searchQuery}"</p>
-                <p className="text-sm text-slate-400">Try searching for "Tomato", "Apple", or "Snacks"</p>
-              </div>
-            )
           )}
         </div>
       );
@@ -404,7 +407,7 @@ const App: React.FC = () => {
             </div>
 
             <div className="px-6 mt-12 mb-6 animate-popIn stagger-5">
-              <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-[2.5rem] p-8 text-center relative overflow-hidden group cursor-pointer" onClick={() => setCurrentView('categories')}>
+              <div className="bg-gradient-to-r from-green-800 to-green-600 rounded-[2.5rem] p-8 text-center relative overflow-hidden group cursor-pointer" onClick={() => setCurrentView('categories')}>
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16 blur-2xl group-hover:bg-white/10 transition-all"></div>
                 <div className="relative z-10">
                   <span className="text-[10px] font-black text-green-400 uppercase tracking-widest mb-2 block">Explore More</span>

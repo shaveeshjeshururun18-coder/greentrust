@@ -55,8 +55,16 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                             onClick={() => setCurrentView('categories')}
                             className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-sm transition-all ${currentView === 'categories' ? 'bg-green-50 text-green-700' : 'hover:bg-slate-50 text-slate-700'}`}
                         >
-                            <i className="fa-solid fa-border-all"></i>
                             Categories
+                        </button>
+
+                        {/* BasketBuddy Button */}
+                        <button
+                            onClick={() => setCurrentView('basketbuddy')}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-sm transition-all ${currentView === 'basketbuddy' ? 'bg-green-50 text-green-700' : 'hover:bg-slate-50 text-slate-700'}`}
+                        >
+                            <span className="text-lg">🧺</span>
+                            BasketBuddy
                         </button>
                     </div>
 

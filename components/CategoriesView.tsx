@@ -542,9 +542,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                     <h2 className="text-lg font-black text-slate-900 dark:text-white leading-tight">{activeMobileCategory.name}</h2>
                                     <div className="flex items-center gap-3">
                                         {/* Search removed */}
-                                        <button className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-slate-400">
-                                            <i className="fa-solid fa-sliders text-xs"></i>
-                                        </button>
+                                        {/* Filter Icon Removed as requested */}
                                     </div>
                                 </div>
 

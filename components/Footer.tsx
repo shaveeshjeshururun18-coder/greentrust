@@ -111,7 +111,7 @@ const Footer: React.FC = () => {
                     </div>
 
                     <p className="text-xs font-medium opacity-80">
-                        Powered by Antigravity
+                        Powered by S.Shaveesh Jeshurun SSJ
                     </p>
                 </div>
             </div>

@@ -69,13 +69,13 @@ const AnimatedBanner: React.FC = () => {
                     {/* Brand Badge with Pulse */}
                     <div className="mb-2 md:mb-6 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 md:px-4 md:py-1.5 rounded-full flex items-center gap-2 animate-fadeIn hover:bg-white/20 transition-colors cursor-pointer origin-left scale-75 md:scale-100">
                         <i className="fa-solid fa-leaf text-green-400 animate-bounce"></i>
-                        <span className="text-white font-bold text-[10px] tracking-[0.2em] uppercase">www.greentrust.com • Certified Organic</span>
+                        <span className="text-white font-bold text-[10px] tracking-[0.2em] uppercase">www.greentrust.com • Est. 2026 • Certified Organic</span>
                     </div>
 
                     {/* Main Text Effect: "GREEN TRUST" - Cinematic Entrance */}
                     <div className="overflow-hidden">
-                        {/* Changed to solid white/green with shadow for better visibility */}
-                        <h1 className="text-4xl md:text-8xl font-black text-green-500 uppercase tracking-tighter drop-shadow-2xl mb-0 md:mb-2 leading-[0.85] animate-[slideInRight_0.8s_ease-out]" style={{ fontFamily: 'Impact, sans-serif', textShadow: '2px 2px 0px white' }}>
+                        {/* Changed to brighter green for better visibility */}
+                        <h1 className="text-4xl md:text-8xl font-black text-green-400 uppercase tracking-tighter drop-shadow-2xl mb-0 md:mb-2 leading-[0.85] animate-[slideInRight_0.8s_ease-out]" style={{ fontFamily: 'Impact, sans-serif', textShadow: '2px 2px 0px rgba(0,0,0,0.5)' }}>
                             GREEN
                         </h1>
                     </div>

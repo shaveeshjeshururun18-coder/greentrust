@@ -1,5 +1,5 @@
-
 import React from 'react';
+import Footer from './Footer';
 
 interface AccountViewProps {
   onLoginClick: () => void;
@@ -135,6 +135,10 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, tog
       <div className="p-8 text-center text-gray-300">
         <p className="text-xs font-bold tracking-widest uppercase mb-1">Green Trust</p>
         <p className="text-[10px]">App Version 3.4.2 (2025)</p>
+      </div>
+
+      <div className="hidden md:block">
+        <Footer />
       </div>
     </div>
   );

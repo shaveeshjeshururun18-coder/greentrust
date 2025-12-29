@@ -212,9 +212,16 @@ export const DETAILED_CATEGORIES: DetailedCategory[] = [
 
 // Mock Data Utilities
 const PRODUCT_IMAGES = [
-  'product-4-1.jpg', 'product-5-1.jpg', 'product-6-1.jpg', 'product-7-1.jpg',
-  'product-8-1.jpg', 'product-9-1.jpg', 'product-10-1.jpg', 'product-11-1.jpg',
-  'product-13-1.jpg', 'product-15-1.jpg'
+  'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=500&h=500&fit=crop', // Potato
+  'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=500&h=500&fit=crop', // Tomato
+  'https://images.unsplash.com/photo-1620574387735-36473550e6be?w=500&h=500&fit=crop', // Onion
+  'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500&h=500&fit=crop', // Carrot
+  'https://images.unsplash.com/photo-1528751014936-863e6e7a319c?w=500&h=500&fit=crop', // Snacks
+  'https://images.unsplash.com/photo-1597362925123-77861d3fbac7?w=500&h=500&fit=crop', // Vegetables
+  'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=500&h=500&fit=crop', // Fruit
+  'https://images.unsplash.com/photo-1563565375-f3fdf5efa269?w=500&h=500&fit=crop', // Grapes
+  'https://images.unsplash.com/photo-1557800636-894a64c1696f?w=500&h=500&fit=crop', // Orange
+  'https://images.unsplash.com/photo-1519999482648-25049ddd37b1?w=500&h=500&fit=crop'  // Berries
 ];
 
 const TAMIL_NAMES: { [key: string]: string } = {

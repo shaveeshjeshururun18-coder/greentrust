@@ -200,3 +200,21 @@
 .animate-heartBeat {
   animation: heartBeat 1s ease-in-out;
 }
+
+@keyframes scrollVertical {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-scrollVertical {
+  animation: scrollVertical linear infinite;
+}
+
+.animate-reverse {
+  animation-direction: reverse;
+}

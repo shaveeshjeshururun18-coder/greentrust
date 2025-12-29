@@ -1,7 +1,7 @@
 import React, { useState, useMemo, Suspense } from 'react';
 import ProductCard from './ProductCard';
 import MobileFilterModal from './MobileFilterModal';
-import { DETAILED_CATEGORIES } from '../constants.tsx';
+import { DETAILED_CATEGORIES, ALL_PRODUCTS } from '../constants.tsx';
 import Footer from './Footer.tsx';
 import { Product, Unit } from '../types.ts';
 
@@ -19,38 +19,7 @@ interface CategoriesViewProps {
     initialCategoryId?: string;
 }
 
-// Product Images Mock
-const PRODUCT_IMAGES = [
-    'product-4-1.jpg', 'product-5-1.jpg', 'product-6-1.jpg', 'product-7-1.jpg',
-    'product-8-1.jpg', 'product-9-1.jpg', 'product-10-1.jpg', 'product-11-1.jpg',
-    'product-13-1.jpg', 'product-15-1.jpg'
-];
-
-// Simple dictionary for demo purposes
-const TAMIL_NAMES: { [key: string]: string } = {
-    'Potato': 'உருளைக்கிழங்கு',
-    'Tomato': 'தக்காளி',
-    'Onion': 'வெங்காயம்',
-    'Carrot': 'கேரட்',
-    'Beans': 'பீன்ஸ்',
-    'Brinjal': 'கத்தரிக்காய்',
-    'Ladies Finger': 'வெண்டைக்காய்',
-    'Cabbage': 'முட்டைக்கோஸ்',
-    'Cauliflower': 'பூக்கோசு',
-    'Ginger': 'இஞ்சி',
-    'Garlic': 'பூண்டு',
-    'Chilli': 'மிளகாய்',
-    'Apple': 'ஆப்பிள்',
-    'Orange': 'ஆரஞ்சு',
-    'Banana': 'வாழைப்பழம்',
-    'Grapes': 'திராட்சை',
-    'Mango': 'மாம்பழம்',
-    'Pineapple': 'அன்னாசி',
-    'Watermelon': 'தர்பூசணி',
-    'Spinach': 'பசலைக்கீரை',
-    'Coriander': 'கொத்தமல்லி',
-    'Mint': 'புதினா',
-};
+// Product Images and Names are now handled in constants.tsx globally
 
 // Price Ranges
 const PRICE_RANGES = [
@@ -132,39 +101,25 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
         setSortOrder(null);
     };
 
-    // Flatten all products
+    // Filter Logic
     const allProducts = useMemo(() => {
-        const products: { product: Product, categoryId: string, subCategoryName: string }[] = [];
-        DETAILED_CATEGORIES.forEach(cat => {
-            cat.subcategories.forEach(sub => {
-                sub.items.forEach((itemName, index) => {
-                    const imageIndex = (itemName.length + index) % PRODUCT_IMAGES.length;
-                    const image = `/assets/products/${PRODUCT_IMAGES[imageIndex]}`;
+        // Map global ALL_PRODUCTS to include categoryId and subCategoryName for filtering
+        return ALL_PRODUCTS.map(p => {
+            const category = DETAILED_CATEGORIES.find(c => c.name === p.category);
+            let subCategoryName = '';
 
-                    // Simple lookup or default fallback
-                    const tamilName = TAMIL_NAMES[itemName] || itemName;
+            if (category) {
+                // Find which subcategory this product belongs to based on name match
+                const sub = category.subcategories.find(s => s.items.includes(p.nameEn));
+                if (sub) subCategoryName = sub.name;
+            }
 
-                    const product: Product = {
-                        id: `mock-${itemName.replace(/\s+/g, '-').toLowerCase()}`,
-                        nameEn: itemName,
-                        nameTa: tamilName,
-                        image: image,
-                        category: cat.name,
-                        brandEn: 'Farm Fresh', // default
-                        brandTa: 'Farm Fresh',
-                        isVeg: true,
-                        rating: 4.5,
-                        ratingCount: 100,
-                        deliveryTime: '15 MINS',
-                        units: [{ id: 'u1', weight: '500g', price: 40 + (index * 5), mrp: 50 + (index * 6), discount: '' }],
-                        descriptionEn: 'Fresh and organic, sourced directly from farmers.',
-                        descriptionTa: ''
-                    };
-                    products.push({ product, categoryId: cat.id, subCategoryName: sub.name });
-                });
-            });
+            return {
+                product: p,
+                categoryId: category ? category.id : 'unknown',
+                subCategoryName
+            };
         });
-        return products;
     }, []);
 
     // Filter Logic

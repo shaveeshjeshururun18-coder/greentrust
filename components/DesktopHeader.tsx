@@ -84,7 +84,7 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                             placeholder="Search among 200+ organic products..."
                         />
                         <button className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-white hover:bg-green-700 active:scale-95 transition-all shadow-md shadow-green-600/20">
-                            <i className="fa-solid fa-magnifying-glass text-xs"></i>
+                            <i className="fa-solid fa-magnifying-glass text-sm"></i>
                         </button>
                     </div>
 

@@ -473,9 +473,9 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                 {/* Mobile Split View (Sidebar + Content) */}
                 <div className="md:hidden flex h-[calc(100vh-120px)] overflow-hidden">
 
-                    {/* Level 1: Sidebar (Categories) - Reduced Size */}
-                    <div className="w-[70px] flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 overflow-y-auto no-scrollbar pb-24">
-                        <div className="flex flex-col items-center py-2 space-y-1">
+                    {/* Level 1: Categories Sidebar */}
+                    <div className="w-[85px] bg-white dark:bg-slate-900 overflow-y-auto no-scrollbar border-r border-slate-100 dark:border-slate-800 flex-shrink-0 z-20 pb-24">
+                        <div className="flex flex-col items-center py-4 space-y-4">
                             <button
                                 onClick={() => setActiveMobileCategoryId('all')}
                                 className={`w-full py-4 flex flex-col items-center justify-center transition-all relative ${activeMobileCategoryId === 'all' ? 'text-green-600' : 'text-slate-400'}`}
@@ -499,10 +499,10 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                         className={`w-full py-3 flex flex-col items-center justify-center transition-all relative ${isActive ? 'text-green-600' : 'text-slate-400'}`}
                                     >
                                         {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-600 rounded-r-full"></div>}
-                                        <div className={`w-10 h-10 rounded-full p-2 mb-1 transition-transform ${isActive ? 'bg-green-50 dark:bg-green-900/20 scale-105 shadow-sm' : 'bg-transparent'}`}>
+                                        <div className={`w-14 h-14 rounded-full p-2 mb-1 transition-transform ${isActive ? 'bg-green-50 dark:bg-green-900/20 scale-105 shadow-sm' : 'bg-transparent'}`}>
                                             <img src={cat.image} alt={cat.name} className="w-full h-full object-cover rounded-full mix-blend-multiply opacity-90" />
                                         </div>
-                                        <span className={`text-[8px] font-bold text-center leading-tight px-1 ${isActive ? 'text-green-800 dark:text-green-400' : 'text-slate-500 dark:text-slate-400'}`}>
+                                        <span className={`text-[10px] font-bold text-center leading-tight px-1 ${isActive ? 'text-green-800 dark:text-green-400' : 'text-slate-500 dark:text-slate-400'}`}>
                                             {cat.name}
                                         </span>
                                     </button>

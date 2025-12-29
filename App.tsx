@@ -486,8 +486,8 @@ const App: React.FC = () => {
 
       {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && (
         <>
-          {/* Mobile Header: Hidden on Categories/BasketBuddy (they have their own or full screen) */}
-          {currentView !== 'categories' && currentView !== 'basketbuddy' && (
+          {/* Mobile Header: Visible on Categories now for persistent search, Hidden ONLY on BasketBuddy/Cart/ProductDetail if needed or handled globally */}
+          {currentView !== 'basketbuddy' && (
             <div className="md:hidden">
               <Header
                 onProfileClick={() => setCurrentView('account')}

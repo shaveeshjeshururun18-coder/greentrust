@@ -101,7 +101,7 @@ const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onSearc
             className="w-full h-12 rounded-xl bg-green-50 dark:bg-slate-800 border-none pl-12 pr-10 text-sm font-semibold outline-none focus:ring-2 focus:ring-green-500/50 transition-colors text-slate-800 dark:text-white placeholder-slate-400/80"
             placeholder={SEARCH_PLACEHOLDERS[placeholderIndex]}
           />
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center">
+          <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center pointer-events-none">
             <i className="fa-solid fa-magnifying-glass text-green-600 text-lg"></i>
           </div>
           <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-3">

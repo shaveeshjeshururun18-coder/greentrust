@@ -216,6 +216,13 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
         ? { name: 'All Products', subcategories: [] }
         : (DETAILED_CATEGORIES.find(c => c.id === activeCategoryId) || DETAILED_CATEGORIES[0]);
 
+    console.log('[CategoriesView] Render:', {
+        activeCategoryId,
+        allProductsCount: allProducts.length,
+        filteredProductsCount: filteredProducts.length,
+        searchQuery: props.searchQuery
+    });
+
     return (
         <div className="h-screen bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row relative animate-fadeIn transition-all overflow-hidden">
 
@@ -644,13 +651,14 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                         </div>
 
                         {filteredProducts.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-32 opacity-50">
+                            <div className="flex flex-col items-center justify-center py-32 opacity-100">
                                 <i className="fa-solid fa-carrot text-6xl text-slate-300 mb-4"></i>
-                                <p className="text-xl font-bold text-slate-400">No products found here.</p>
+                                <p className="text-xl font-bold text-slate-500">No products found here.</p>
+                                <p className="text-xs text-slate-400 mt-2">Try changing filters or search terms.</p>
                             </div>
                         ) : (
                             // Responsive Grid: Can go very wide
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 Gap-6">
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
                                 {filteredProducts.map(({ product: p }, idx) => {
                                     return (
                                         <div key={p.id}>

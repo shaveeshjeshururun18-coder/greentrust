@@ -49,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </button>
 
       <div className="relative cursor-pointer overflow-hidden p-3" onClick={onClick}>
-        <div className="aspect-square bg-gray-50/50 dark:bg-white rounded-2xl p-4 flex items-center justify-center relative overflow-hidden group-hover:bg-gray-100/50 dark:group-hover:bg-gray-100 transition-colors">
+        <div className="aspect-square bg-gray-50/50 dark:bg-white rounded-2xl p-2 flex items-center justify-center relative overflow-hidden group-hover:bg-gray-100/50 dark:group-hover:bg-gray-100 transition-colors">
           {/* Animated Background Shimmer on Card */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
 
@@ -63,36 +63,31 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {/* ADD Button Floating */}
         <div className="absolute bottom-5 right-5 z-20 flex items-center gap-2">
           {quantity > 0 ? (
-            <div className="flex items-center bg-green-600 rounded-2xl text-white font-black h-9 shadow-xl shadow-green-100 animate-popIn">
-              <button onClick={(e) => { e.stopPropagation(); removeFromCart(); }} className="px-3 h-full flex items-center justify-center hover:bg-green-700 transition-colors rounded-l-2xl">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M20 12H4" />
-                </svg>
+            <div className="flex items-center bg-green-600 rounded-xl text-white font-black h-7 shadow-lg shadow-green-100 animate-popIn">
+              <button onClick={(e) => { e.stopPropagation(); removeFromCart(); }} className="px-2 h-full flex items-center justify-center hover:bg-green-700 transition-colors rounded-l-xl">
+                <i className="fa-solid fa-minus text-[8px]"></i>
               </button>
-              <span className="px-2 text-xs tabular-nums">{quantity}</span>
-              <button onClick={(e) => { e.stopPropagation(); addToCart(); }} className="px-3 h-full flex items-center justify-center hover:bg-green-700 transition-colors rounded-r-2xl">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M12 4v16m8-8H4" />
-                </svg>
+              <span className="px-1.5 text-[10px] tabular-nums">{quantity}</span>
+              <button onClick={(e) => { e.stopPropagation(); addToCart(); }} className="px-2 h-full flex items-center justify-center hover:bg-green-700 transition-colors rounded-r-xl">
+                <i className="fa-solid fa-plus text-[8px]"></i>
               </button>
             </div>
           ) : (
-            <div className="flex gap-2">
+            <div className="flex gap-1.5">
               <button
                 onClick={(e) => { e.stopPropagation(); addToCart(); }}
-                className="bg-white border border-gray-100 text-green-600 font-black px-4 py-2 rounded-2xl text-[11px] shadow-lg transition-all active-pop hover:bg-green-600 hover:text-white flex flex-col items-center uppercase tracking-widest"
+                className="bg-white border border-gray-100 text-green-600 font-extrabold px-3 py-1.5 rounded-xl text-[9px] shadow-sm transition-all active:scale-95 hover:bg-green-50 flex flex-col items-center uppercase tracking-wider"
               >
-                <span>ADD</span>
+                ADD
               </button>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   addToCart();
-                  // Ideally navigate to cart here, but we rely on toast 'View Cart' or global cart for now
                 }}
-                className="bg-green-600 border border-green-600 text-white font-black px-4 py-2 rounded-2xl text-[11px] shadow-lg shadow-green-200 transition-all active-pop hover:bg-green-700 flex flex-col items-center uppercase tracking-widest"
+                className="bg-green-600 border border-green-600 text-white font-extrabold px-3 py-1.5 rounded-xl text-[9px] shadow-md shadow-green-100 transition-all active:scale-95 hover:bg-green-700 flex flex-col items-center uppercase tracking-wider"
               >
-                <span>BUY</span>
+                BUY
               </button>
             </div>
           )}

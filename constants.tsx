@@ -79,6 +79,7 @@ export const DETAILED_CATEGORIES: DetailedCategory[] = [
     id: 'dc1',
     name: 'Vegetables',
     icon: 'fa-carrot',
+    image: '/categories/Vegetables.png',
     subcategories: [
       {
         id: 'sc1-2',
@@ -116,6 +117,7 @@ export const DETAILED_CATEGORIES: DetailedCategory[] = [
     id: 'dc2',
     name: 'Fruits',
     icon: 'fa-apple-whole',
+    image: '/categories/Fruits.png',
     subcategories: [
       {
         id: 'sc2-1',
@@ -148,6 +150,7 @@ export const DETAILED_CATEGORIES: DetailedCategory[] = [
     id: 'dc3',
     name: 'Herbs & Greens',
     icon: 'fa-leaf',
+    image: '/categories/Herbs_Greens.png',
     subcategories: [
       {
         id: 'sc3-1',
@@ -165,6 +168,7 @@ export const DETAILED_CATEGORIES: DetailedCategory[] = [
     id: 'dc4',
     name: 'Exotic & Premium',
     icon: 'fa-gem',
+    image: '/categories/Exotic_Premium_Produce.png',
     subcategories: [
       {
         id: 'sc4-1',
@@ -182,6 +186,7 @@ export const DETAILED_CATEGORIES: DetailedCategory[] = [
     id: 'dc5',
     name: 'Fresh Packs',
     icon: 'fa-box-open',
+    image: '/categories/Fresh_Packs_Combos.png',
     subcategories: [
       {
         id: 'sc5-1',
@@ -194,6 +199,7 @@ export const DETAILED_CATEGORIES: DetailedCategory[] = [
     id: 'dc6',
     name: 'Flowers',
     icon: 'fa-spa',
+    image: 'https://images.unsplash.com/photo-1490750967868-58cb75069faf?w=200&h=200&fit=crop',
     subcategories: [
       {
         id: 'sc6-1',

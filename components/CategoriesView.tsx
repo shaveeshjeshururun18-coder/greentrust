@@ -471,42 +471,65 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                 </div>
                             </div>
                         ) : (
-                            <div className="animate-fadeIn">
-                                {/* Category Banner/Header */}
-                                <div className="flex items-center justify-between mb-4 sticky top-0 bg-slate-50 dark:bg-slate-950 z-10 py-2">
+                            <div className="animate-fadeIn relative h-full flex flex-col">
+                                {/* Category Banner/Header with Search & Filter Icons */}
+                                <div className="flex items-center justify-between mb-4 sticky top-0 bg-slate-50 dark:bg-slate-950 z-20 py-2 pt-3 shadow-sm md:shadow-none -mx-3 px-3">
                                     <h2 className="text-lg font-black text-slate-900 dark:text-white leading-tight">{activeMobileCategory.name}</h2>
-                                    <button className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-slate-400">
-                                        <i className="fa-solid fa-sliders text-xs"></i>
-                                    </button>
+                                    <div className="flex items-center gap-3">
+                                        <button className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-slate-400">
+                                            <i className="fa-solid fa-magnifying-glass text-xs"></i>
+                                        </button>
+                                        <button className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-slate-400">
+                                            <i className="fa-solid fa-sliders text-xs"></i>
+                                        </button>
+                                    </div>
                                 </div>
 
-                                {activeMobileCategory.subcategories.map((sub) => {
-                                    const subProps = allProducts.filter(p => p.categoryId === activeMobileCategory.id && p.subCategoryName === sub.name);
-                                    if (subProps.length === 0) return null;
-                                    return (
-                                        <div key={sub.id} className="mb-6">
-                                            <div className="flex items-center gap-2 mb-3 opacity-80">
-                                                <span className="w-1 h-4 bg-green-500 rounded-full"></span>
-                                                <h3 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">{sub.name}</h3>
+                                {/* Horizontal Subcategory Pills (The "Previous Filter") */}
+                                <div className="flex items-center gap-2 overflow-x-auto no-scrollbar mb-4 -mx-3 px-3 pb-2 sticky top-[52px] z-10 bg-slate-50 dark:bg-slate-950/95 backdrop-blur-sm">
+                                    {activeMobileCategory.subcategories.map((sub) => (
+                                        <button
+                                            key={sub.id}
+                                            onClick={() => {
+                                                const el = document.getElementById(`sub-${sub.id}`);
+                                                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                            }}
+                                            className="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold text-slate-600 dark:text-slate-300 shadow-sm hover:border-green-500 hover:text-green-600 transition-all flex-shrink-0"
+                                        >
+                                            {sub.name}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <div className="space-y-6 pb-24">
+                                    {activeMobileCategory.subcategories.map((sub) => {
+                                        const subProps = allProducts.filter(p => p.categoryId === activeMobileCategory.id && p.subCategoryName === sub.name);
+                                        if (subProps.length === 0) return null;
+                                        return (
+                                            <div key={sub.id} id={`sub-${sub.id}`} className="scroll-mt-32">
+                                                <div className="flex items-center gap-2 mb-3 opacity-90">
+                                                    <span className="w-1 h-3 bg-green-600 rounded-full"></span>
+                                                    <h3 className="text-xs font-black text-green-800 dark:text-green-400 uppercase tracking-wide">{sub.name}</h3>
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-3">
+                                                    {subProps.map(({ product: p }) => (
+                                                        <div key={p.id}>
+                                                            <ProductCard
+                                                                product={p}
+                                                                onClick={() => onProductClick(p)}
+                                                                addToCart={() => addToCart(p, p.units[0])}
+                                                                quantity={getQuantity(p.id, p.units[0].id)}
+                                                                removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
+                                                                isFavorite={wishlist.includes(p.id)}
+                                                                toggleFavorite={() => toggleWishlist(p.id)}
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
-                                            <div className="grid grid-cols-2 gap-3">
-                                                {subProps.map(({ product: p }) => (
-                                                    <div key={p.id}>
-                                                        <ProductCard
-                                                            product={p}
-                                                            onClick={() => onProductClick(p)}
-                                                            addToCart={() => addToCart(p, p.units[0])}
-                                                            quantity={getQuantity(p.id, p.units[0].id)}
-                                                            removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
-                                                            isFavorite={wishlist.includes(p.id)}
-                                                            toggleFavorite={() => toggleWishlist(p.id)}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )
-                                })}
+                                        )
+                                    })}
+                                </div>
                             </div>
                         )}
                     </div>

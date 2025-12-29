@@ -61,7 +61,7 @@ const AnimatedBanner: React.FC = () => {
                     {/* Brand Badge with Pulse */}
                     <div className="mb-2 md:mb-6 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 md:px-4 md:py-1.5 rounded-full flex items-center gap-2 animate-fadeIn hover:bg-white/20 transition-colors cursor-pointer origin-left scale-75 md:scale-100">
                         <i className="fa-solid fa-leaf text-green-400 animate-bounce"></i>
-                        <span className="text-white font-bold text-[10px] tracking-[0.2em] uppercase">Est. 2024 • Certified Organic</span>
+                        <span className="text-white font-bold text-[10px] tracking-[0.2em] uppercase">Est. 2026 • Certified Organic</span>
                     </div>
 
                     {/* Main Text Effect: "GREEN TRUST" - Cinematic Entrance */}

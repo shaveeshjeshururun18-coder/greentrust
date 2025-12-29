@@ -24,10 +24,16 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
 }) => {
     const [searchValue, setSearchValue] = useState('');
 
+    // Debounce Search to prevent re-rendering App on every keystroke
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            onSearchChange(searchValue);
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [searchValue]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value;
-        setSearchValue(val);
-        onSearchChange(val);
+        setSearchValue(e.target.value);
     };
 
     return (
@@ -63,7 +69,7 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                             onClick={() => setCurrentView('basketbuddy')}
                             className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-sm transition-all ${currentView === 'basketbuddy' ? 'bg-green-50 text-green-700' : 'hover:bg-slate-50 text-slate-700'}`}
                         >
-                            <span className="text-lg">🧺</span>
+                            <img src="/basket_buddy_logo.png" alt="Buddy" className="w-6 h-6 object-contain" />
                             BasketBuddy
                         </button>
                     </div>

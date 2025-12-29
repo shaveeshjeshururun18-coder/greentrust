@@ -33,10 +33,15 @@ const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onSearc
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onSearchChange(searchValue);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchValue]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setSearchValue(val);
-    onSearchChange(val);
+    setSearchValue(e.target.value);
   };
 
   return (

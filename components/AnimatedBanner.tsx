@@ -54,6 +54,15 @@ const AnimatedBanner: React.FC = () => {
 
                     {/* Passing Cloud Shadows */}
                     <div className="absolute inset-0 bg-[url('https://raw.githubusercontent.com/h-s-c/realistic-clouds/master/dist/cloud.png')] bg-cover opacity-10 animate-[panImage_30s_linear_infinite]"></div>
+
+                    {/* Marquee Text Layer (Behind content, low opacity) */}
+                    <div className="absolute top-10 left-0 w-full overflow-hidden opacity-10 pointer-events-none">
+                        <div className="whitespace-nowrap animate-[scrollLeft_20s_linear_infinite]">
+                            <span className="text-8xl font-black text-white px-4">GREEN TRUST • ORGANIC • FRESH • </span>
+                            <span className="text-8xl font-black text-white px-4">GREEN TRUST • ORGANIC • FRESH • </span>
+                            <span className="text-8xl font-black text-white px-4">GREEN TRUST • ORGANIC • FRESH • </span>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="relative z-30 p-4 md:p-10 flex flex-col items-start justify-center h-full">
@@ -165,6 +174,10 @@ const AnimatedBanner: React.FC = () => {
         @keyframes panImage {
             0% { background-position: 0% 0%; }
             100% { background-position: 100% 0%; }
+        }
+        @keyframes scrollLeft {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
       `}</style>
         </div>

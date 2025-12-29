@@ -163,8 +163,8 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
 
         return allProducts.filter(({ product: p, subCategoryName, categoryId }) => {
             // 0. Search Filter (Global)
-            if (props.searchQuery) {
-                const q = props.searchQuery.toLowerCase();
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase();
                 const match = p.nameEn.toLowerCase().includes(q) || (p.nameTa && p.nameTa.includes(q));
                 if (!match) return false;
                 // If searching, ignore category unless specific? 
@@ -180,7 +180,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
             // 1. Main Category
             // If searching, we search GLOBALLY (ignore category), unless user explicitly wants to filter within category?
             // User feedback implies they want global search.
-            const isSearching = props.searchQuery && props.searchQuery.length > 0;
+            const isSearching = searchQuery && searchQuery.length > 0;
             const categoryMatch = isSearching ? true : (activeCategoryId === 'all' || activeCategoryId === categoryId);
 
             // 1. Subcategory (Only applies if not 'All', or if we want global subcat filter?)
@@ -249,8 +249,8 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                         <div className="relative w-full max-w-[150px]">
                             <input
                                 type="text"
-                                value={props.searchQuery || ''}
-                                onChange={(e) => props.setSearchQuery && props.setSearchQuery(e.target.value)}
+                                value={searchQuery || ''}
+                                onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
                                 placeholder="Search..."
                                 className="w-full h-8 bg-slate-100 dark:bg-slate-800 rounded-full pl-8 pr-3 text-xs outline-none focus:ring-1 focus:ring-green-500"
                             />
@@ -324,6 +324,16 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                         >
                             <i className="fa-solid fa-border-all text-xl mb-1"></i>
                             <span className="text-[9px] font-bold text-center leading-none">All</span>
+                        </button>
+
+                        {/* Collapse Button (Restored) */}
+                        <button
+                            onClick={() => setIsSidebarHidden(true)}
+                            className="group flex flex-col items-center justify-center w-full aspect-square rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors"
+                            title="Collapse Menu"
+                        >
+                            <i className="fa-solid fa-arrow-left-long text-lg"></i>
+                            <span className="text-[8px] font-bold mt-1">Hide</span>
                         </button>
 
 
@@ -547,12 +557,12 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                 <div className="flex items-center justify-between mb-2">
                                     <h2 className="text-base font-black text-slate-800 dark:text-white">All Products</h2>
                                     <span className="text-[10px] font-bold text-slate-400">
-                                        {allProducts.filter(p => !props.searchQuery || p.product.nameEn.toLowerCase().includes(props.searchQuery.toLowerCase())).length} Items
+                                        {allProducts.filter(p => !searchQuery || p.product.nameEn.toLowerCase().includes(searchQuery.toLowerCase())).length} Items
                                     </span>
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
                                     {allProducts
-                                        .filter(p => !props.searchQuery || p.product.nameEn.toLowerCase().includes(props.searchQuery.toLowerCase()) || (p.product.nameTa && p.product.nameTa.includes(props.searchQuery)))
+                                        .filter(p => !searchQuery || p.product.nameEn.toLowerCase().includes(searchQuery.toLowerCase()) || (p.product.nameTa && p.product.nameTa.includes(searchQuery)))
                                         .slice(0, 20)
                                         .map(({ product: p }) => (
                                             <div key={p.id}>
@@ -575,8 +585,12 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                 <div className="flex items-center justify-between mb-4 sticky top-0 bg-slate-50 dark:bg-slate-950 z-20 py-2 pt-3 shadow-sm md:shadow-none -mx-3 px-3">
                                     <h2 className="text-lg font-black text-slate-900 dark:text-white leading-tight">{activeMobileCategory.name}</h2>
                                     <div className="flex items-center gap-3">
-                                        {/* Search removed */}
-                                        {/* Filter Icon Removed as requested */}
+                                        <button 
+                                            onClick={() => setIsFiltersOpen(true)}
+                                            className="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-300"
+                                        >
+                                            <i className="fa-solid fa-sliders"></i>
+                                        </button>
                                     </div>
                                 </div>
 
@@ -607,7 +621,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                         const subProps = allProducts.filter(p =>
                                             p.categoryId === activeMobileCategory.id &&
                                             p.subCategoryName === sub.name &&
-                                            (!props.searchQuery || p.product.nameEn.toLowerCase().includes(props.searchQuery.toLowerCase()) || (p.product.nameTa && p.product.nameTa.includes(props.searchQuery)))
+                                            (!searchQuery || p.product.nameEn.toLowerCase().includes(searchQuery.toLowerCase()) || (p.product.nameTa && p.product.nameTa.includes(searchQuery)))
                                         );
                                         if (subProps.length === 0) return null;
                                         return (

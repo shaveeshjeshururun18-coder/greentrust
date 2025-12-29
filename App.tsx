@@ -95,9 +95,13 @@ const App: React.FC = () => {
   }, []);
 
   const toggleWishlist = useCallback((productId: string) => {
-    setWishlist(prev =>
-      prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId]
-    );
+    console.log('toggleWishlist called with productId:', productId);
+    setWishlist(prev => {
+      const newWishlist = prev.includes(productId) ? prev.filter(id => id !== productId) : [...prev, productId];
+      console.log('Previous wishlist:', prev);
+      console.log('New wishlist:', newWishlist);
+      return newWishlist;
+    });
   }, []);
 
   const clearCart = useCallback(() => setCart([]), []);
@@ -199,17 +203,14 @@ const App: React.FC = () => {
                     key={product.id}
                     product={product}
                     onClick={() => openProduct(product)}
-                    onAdd={(unit) => addToCart(product, unit)}
-                    onRemove={(unitId) => {
-                      const item = cart.find(c => c.id === product.id && c.selectedUnit.id === unitId);
-                      if (item) removeFromCart(product.id, unitId);
+                    addToCart={() => addToCart(product, product.units[0])}
+                    removeFromCart={() => {
+                      const item = cart.find(c => c.id === product.id);
+                      if (item) removeFromCart(product.id, item.selectedUnit.id);
                     }}
-                    getQuantity={(unitId) => {
-                      const item = cart.find(c => c.id === product.id && c.selectedUnit.id === unitId);
-                      return item ? item.cartQuantity : 0;
-                    }}
-                    isWishlisted={wishlist.includes(product.id)}
-                    onToggleWishlist={() => toggleWishlist(product.id)}
+                    quantity={cart.reduce((acc, curr) => curr.id === product.id ? acc + curr.cartQuantity : acc, 0)}
+                    isFavorite={wishlist.includes(product.id)}
+                    toggleFavorite={() => toggleWishlist(product.id)}
                   />
                 ))}
               </div>

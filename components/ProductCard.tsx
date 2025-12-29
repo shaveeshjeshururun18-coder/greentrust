@@ -36,7 +36,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       <button
-        onClick={(e) => { e.stopPropagation(); toggleFavorite(); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log('Wishlist button clicked, isFavorite:', isFavorite);
+          toggleFavorite();
+        }}
         className={`absolute top-3 right-3 z-20 p-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-full shadow-lg transition-all active-pop ${isFavorite ? 'scale-110 shadow-red-100 dark:shadow-none' : ''}`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-300'}`} viewBox="0 0 20 20" fill="currentColor">

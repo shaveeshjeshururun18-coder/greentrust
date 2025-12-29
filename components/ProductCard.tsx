@@ -98,8 +98,40 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </div>
           </div>
 
-          <div className="flex items-end z-10">
-            {/* Buttons removed for card view */}
+          <div className="flex items-end z-10 w-[70px] h-[30px] justify-end">
+            {quantity === 0 ? (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addToCart();
+                }}
+                className="w-full h-full bg-slate-50 dark:bg-slate-700 hover:bg-green-50 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800 rounded-lg text-xs font-black shadow-sm active:scale-95 transition-all flex items-center justify-center gap-1 uppercase tracking-tight"
+              >
+                ADD <i className="fa-solid fa-plus text-[10px]"></i>
+              </button>
+            ) : (
+              <div className="w-full h-full flex items-center justify-between bg-green-600 text-white rounded-lg shadow-md overlow-hidden px-1">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFromCart();
+                  }}
+                  className="w-5 h-full flex items-center justify-center active:scale-75 transition-transform"
+                >
+                  <i className="fa-solid fa-minus text-[9px]"></i>
+                </button>
+                <span className="text-xs font-black min-w-[14px] text-center">{quantity}</span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart();
+                  }}
+                  className="w-5 h-full flex items-center justify-center active:scale-75 transition-transform"
+                >
+                  <i className="fa-solid fa-plus text-[9px]"></i>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

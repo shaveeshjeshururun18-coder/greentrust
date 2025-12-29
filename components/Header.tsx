@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 interface HeaderProps {
   onProfileClick: () => void;
   onSearchChange: (val: string) => void;
+  onSearchFocus?: () => void;
   onLocationClick: () => void;
   onWishlistClick?: () => void;
   address: string;
@@ -20,7 +21,7 @@ const SEARCH_PLACEHOLDERS = [
   "Search 'Dosa'"
 ];
 
-const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onLocationClick, onWishlistClick, address, isDark, toggleTheme, isScrolled = false }) => {
+const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onSearchFocus, onLocationClick, onWishlistClick, address, isDark, toggleTheme, isScrolled = false }) => {
   const [searchValue, setSearchValue] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isVegMode, setIsVegMode] = useState(false);
@@ -87,6 +88,8 @@ const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onLocat
             type="text"
             value={searchValue}
             onChange={handleChange}
+            onFocus={onSearchFocus}
+            onClick={onSearchFocus}
             className="w-full h-12 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 pl-10 pr-10 text-sm font-semibold outline-none focus:border-orange-500 transition-colors dark:text-white"
             placeholder={SEARCH_PLACEHOLDERS[placeholderIndex]}
           />

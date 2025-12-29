@@ -38,14 +38,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <button
         onClick={(e) => {
           e.stopPropagation();
-          console.log('Wishlist button clicked, isFavorite:', isFavorite);
           toggleFavorite();
         }}
-        className={`absolute top-3 right-3 z-20 p-2 bg-white/80 dark:bg-slate-700/80 backdrop-blur-md rounded-full shadow-lg transition-all active-pop ${isFavorite ? 'scale-110 shadow-red-100 dark:shadow-none' : ''}`}
+        className={`absolute top-3 right-3 z-20 p-2 bg-white/80 dark:bg-slate-700/80 backdrop-blur-md rounded-full shadow-lg transition-all duration-300 ${isFavorite ? 'scale-110 shadow-red-100 dark:shadow-none bg-red-50 dark:bg-red-900/10' : 'hover:scale-110 active:scale-95'}`}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-300'}`} viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-        </svg>
+        <div className={`${isFavorite ? 'animate-heartBeat' : ''}`}>
+          <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-colors duration-300 ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-300'}`} viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+          </svg>
+        </div>
       </button>
 
       <div className="relative cursor-pointer overflow-hidden p-3" onClick={onClick}>

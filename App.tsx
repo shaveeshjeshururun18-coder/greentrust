@@ -22,9 +22,12 @@ import DesktopHero from './components/DesktopHero';
 import AIAssistant from './components/AIAssistant';
 
 // Inside App component
+import EntranceScreen from './components/EntranceScreen';
+
 // Inside App component
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('home');
+  const [showEntrance, setShowEntrance] = useState(true); // Default true for mobile splash
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>(() => {
     const saved = localStorage.getItem('wishlist');
@@ -461,12 +464,15 @@ const App: React.FC = () => {
   return (
     <div className={`w-full ${currentView === 'categories' ? '' : 'md:max-w-6xl mx-auto'} h-screen relative overflow-hidden flex flex-col selection:bg-green-100 ${isDark ? 'dark text-white' : ''}`}>
       <BackgroundAnimation />
+      {showEntrance && <EntranceScreen onComplete={() => setShowEntrance(false)} />}
+
       {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && (
         <>
           <div className="md:hidden">
             <Header
               onProfileClick={() => setCurrentView('account')}
               onSearchChange={setSearchQuery}
+              onSearchFocus={() => setCurrentView('categories')}
               onLocationClick={() => setCurrentView('location-picker')}
               onWishlistClick={() => setCurrentView('wishlist')}
               address={userAddress}

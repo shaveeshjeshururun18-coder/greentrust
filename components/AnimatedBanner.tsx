@@ -157,6 +157,36 @@ const AnimatedBanner: React.FC = () => {
                 </div>
             </div>
 
+            {/* Quick Action Buttons (Under Banner) */}
+            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+                <button className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800 p-3 rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-green-100 dark:hover:bg-green-900/40 transition-all active:scale-95 group shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i className="fa-solid fa-basket-shopping text-green-600 dark:text-green-400"></i>
+                    </div>
+                    <span className="text-xs font-black text-green-800 dark:text-green-300">Shop Fresh Now</span>
+                </button>
+
+                <button className="bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800 p-3 rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-all active:scale-95 group shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-800 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i className="fa-solid fa-carrot text-orange-600 dark:text-orange-400"></i>
+                    </div>
+                    <span className="text-xs font-black text-orange-800 dark:text-orange-300">Eat Healthy Today</span>
+                </button>
+
+                <button className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 p-3 rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all active:scale-95 group shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-800 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i className="fa-solid fa-truck-fast text-blue-600 dark:text-blue-400"></i>
+                    </div>
+                    <span className="text-xs font-black text-blue-800 dark:text-blue-300">Doorstep Delivery</span>
+                </button>
+
+                <button className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 p-3 rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-red-100 dark:hover:bg-red-900/40 transition-all active:scale-95 group shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-800 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i className="fa-solid fa-heart text-red-600 dark:text-red-400"></i>
+                    </div>
+                    <span className="text-xs font-black text-red-800 dark:text-red-300">Trusted by Families</span>
+                </button>
+            </div>
             {/* Custom Keyframe Styles injected for this component */}
             <style>{`
         @keyframes kenBurns {

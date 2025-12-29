@@ -3,32 +3,7 @@ import React from 'react';
 const Footer: React.FC = () => {
     return (
         <footer className="hidden md:block bg-green-50/50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-20 pt-10">
-            {/* Brand Promise Section (Live it up replacement) */}
-            <div className="bg-slate-100 dark:bg-slate-800/50 py-16 px-6 mb-20">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h1 className="text-5xl md:text-7xl font-black text-slate-300 dark:text-slate-700 tracking-tighter mb-4 leading-tight">
-                        Fresh Groceries,<br />Delivered Daily
-                    </h1>
-                    <p className="text-lg md:text-xl font-bold text-slate-400 dark:text-slate-500 flex items-center justify-center gap-2 mb-10">
-                        Delivered with <i className="fa-solid fa-heart text-red-500 animate-pulse"></i> in Tamil Nadu
-                    </p>
-
-                    <div className="flex flex-wrap items-center justify-center gap-4">
-                        {/* Primary Button */}
-                        <button className="bg-green-600 hover:bg-green-700 text-white text-lg font-black px-8 py-4 rounded-2xl shadow-xl shadow-green-200 hover:-translate-y-1 transition-all flex items-center gap-3">
-                            <span>Shop Fresh Now</span>
-                            <i className="fa-solid fa-arrow-right"></i>
-                        </button>
-
-                        {/* Secondary Button */}
-                        <button className="bg-white dark:bg-slate-800 text-slate-700 dark:text-white border-2 border-slate-200 dark:border-slate-700 text-lg font-bold px-8 py-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 hover:-translate-y-1 transition-all">
-                            Browse Categories
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Social Icons (Floating Center) - Adjusted position relative to new section */}
+            {/* Social Icons (Floating Center) */}
             <div className="relative">
                 <div className="absolute left-1/2 -translate-x-1/2 -top-16 flex gap-4">
                     <a href="#" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg shadow-green-600/20">

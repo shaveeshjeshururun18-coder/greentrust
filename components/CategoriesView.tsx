@@ -43,7 +43,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     ...props
 }) => {
     // Mobile State: Active Category Tab
-    const [activeMobileCategoryId, setActiveMobileCategoryId] = useState(initialCategoryId !== 'all' ? initialCategoryId : DETAILED_CATEGORIES[0].id);
+    const [activeMobileCategoryId, setActiveMobileCategoryId] = useState(initialCategoryId);
     const [activeMobileSubCategory, setActiveMobileSubCategory] = useState<string>('all'); // NEW: For filtering
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 

@@ -256,7 +256,8 @@ export const ALL_PRODUCTS = (() => {
     cat.subcategories.forEach(sub => {
       sub.items.forEach((itemName, index) => {
         const imageIndex = (itemName.length + index) % PRODUCT_IMAGES.length;
-        const image = `/assets/products/${PRODUCT_IMAGES[imageIndex]}`;
+        const rawImage = PRODUCT_IMAGES[imageIndex];
+        const image = rawImage.startsWith('http') ? rawImage : `/assets/products/${rawImage}`;
         const tamilName = TAMIL_NAMES[itemName] || itemName;
 
         const product: Product = {

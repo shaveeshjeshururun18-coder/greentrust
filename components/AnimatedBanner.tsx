@@ -13,7 +13,7 @@ const AnimatedBanner: React.FC = () => {
     return (
         <div className="px-4 mt-2 animate-slideUp">
             {/* Main Banner Container with Farm/Fresh Theme */}
-            <div className="relative w-full overflow-hidden rounded-[2rem] shadow-2xl group border border-green-100 min-h-[450px] md:min-h-[500px]">
+            <div className="relative w-full overflow-hidden rounded-2xl md:rounded-[2rem] shadow-2xl group border border-green-100 min-h-[280px] md:min-h-[500px]">
 
                 {/* VIDEO BACKGROUND LAYER */}
                 <div className="absolute inset-0 bg-slate-100 z-0">
@@ -56,22 +56,22 @@ const AnimatedBanner: React.FC = () => {
                     <div className="absolute inset-0 bg-[url('https://raw.githubusercontent.com/h-s-c/realistic-clouds/master/dist/cloud.png')] bg-cover opacity-10 animate-[panImage_30s_linear_infinite]"></div>
                 </div>
 
-                <div className="relative z-30 p-6 md:p-10 flex flex-col items-start justify-center h-full">
+                <div className="relative z-30 p-4 md:p-10 flex flex-col items-start justify-center h-full">
 
                     {/* Brand Badge with Pulse */}
-                    <div className="mb-6 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full flex items-center gap-2 animate-fadeIn hover:bg-white/20 transition-colors cursor-pointer">
+                    <div className="mb-2 md:mb-6 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 md:px-4 md:py-1.5 rounded-full flex items-center gap-2 animate-fadeIn hover:bg-white/20 transition-colors cursor-pointer origin-left scale-75 md:scale-100">
                         <i className="fa-solid fa-leaf text-green-400 animate-bounce"></i>
                         <span className="text-white font-bold text-[10px] tracking-[0.2em] uppercase">Est. 2024 • Certified Organic</span>
                     </div>
 
                     {/* Main Text Effect: "GREEN TRUST" - Cinematic Entrance */}
                     <div className="overflow-hidden">
-                        <h1 className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-green-200 uppercase tracking-tighter drop-shadow-2xl mb-2 leading-[0.85] animate-[slideInRight_0.8s_ease-out]" style={{ fontFamily: 'Impact, sans-serif' }}>
+                        <h1 className="text-4xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-green-200 uppercase tracking-tighter drop-shadow-2xl mb-0 md:mb-2 leading-[0.85] animate-[slideInRight_0.8s_ease-out]" style={{ fontFamily: 'Impact, sans-serif' }}>
                             GREEN
                         </h1>
                     </div>
-                    <div className="flex items-center gap-4 mb-6">
-                        <h1 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter drop-shadow-2xl leading-[0.85] animate-[slideInRight_1s_ease-out]" style={{ fontFamily: 'Impact, sans-serif' }}>
+                    <div className="flex items-center gap-4 mb-2 md:mb-6">
+                        <h1 className="text-4xl md:text-8xl font-black text-white uppercase tracking-tighter drop-shadow-2xl leading-[0.85] animate-[slideInRight_1s_ease-out]" style={{ fontFamily: 'Impact, sans-serif' }}>
                             TRUST
                         </h1>
                         <div className="relative hidden md:block group cursor-pointer">
@@ -81,18 +81,18 @@ const AnimatedBanner: React.FC = () => {
                     </div>
 
                     {/* Subtext with Typewriter feel or simple fade */}
-                    <div className="relative overflow-hidden mb-10">
-                        <p className="text-green-50 font-medium text-xl md:text-2xl tracking-wide max-w-lg leading-snug drop-shadow-md animate-[fadeIn_1.5s_ease-out]">
+                    <div className="relative overflow-hidden mb-4 md:mb-10">
+                        <p className="text-green-50 font-medium text-sm md:text-2xl tracking-wide max-w-[250px] md:max-w-lg leading-snug drop-shadow-md animate-[fadeIn_1.5s_ease-out]">
                             Healthy Groceries You Can Trust.
                         </p>
-                        <div className="flex items-center gap-3 mt-3 animate-[fadeIn_2s_ease-out]">
-                            <span className="h-[1px] w-8 bg-green-400"></span>
-                            <span className="text-sm md:text-base opacity-90 font-light text-green-100 uppercase tracking-widest">Fresh • Organic • No Chemicals</span>
+                        <div className="flex items-center gap-3 mt-1 md:mt-3 animate-[fadeIn_2s_ease-out]">
+                            <span className="h-[1px] w-4 md:w-8 bg-green-400"></span>
+                            <span className="text-[10px] md:text-base opacity-90 font-light text-green-100 uppercase tracking-widest">Fresh • Organic</span>
                         </div>
                     </div>
 
-                    {/* Trust Badges Row - Glassmorphism */}
-                    <div className="flex flex-wrap items-center gap-3 md:gap-4 mb-10 animate-slideUp stagger-1">
+                    {/* Trust Badges Row - Glassmorphism - Hidden on mobile for space */}
+                    <div className="hidden md:flex flex-wrap items-center gap-3 md:gap-4 mb-10 animate-slideUp stagger-1">
                         {[
                             { icon: 'fa-seedling', color: 'text-green-400', text: '100% Organic' },
                             { icon: 'fa-tractor', color: 'text-yellow-400', text: 'Farm Direct' },
@@ -108,14 +108,14 @@ const AnimatedBanner: React.FC = () => {
                     </div>
 
                     {/* CTA Button - Glowing & active */}
-                    <button className="group relative bg-green-600 hover:bg-green-500 text-white font-black text-lg px-10 py-5 rounded-2xl shadow-[0_20px_40px_rgba(22,163,74,0.4)] hover:shadow-[0_20px_40px_rgba(22,163,74,0.6)] hover:-translate-y-1 active:translate-y-0 transition-all uppercase tracking-widest flex items-center gap-4 overflow-hidden">
+                    <button className="group relative bg-green-600 hover:bg-green-500 text-white font-black text-xs md:text-lg px-6 py-3 md:px-10 md:py-5 rounded-2xl shadow-[0_20px_40px_rgba(22,163,74,0.4)] hover:shadow-[0_20px_40px_rgba(22,163,74,0.6)] hover:-translate-y-1 active:translate-y-0 transition-all uppercase tracking-widest flex items-center gap-2 md:gap-4 overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out"></div>
-                        <span className="relative z-10">Shop Healthy Now</span>
-                        <i className="fa-solid fa-arrow-right-long relative z-10 text-xl group-hover:translate-x-2 transition-transform"></i>
+                        <span className="relative z-10">Shop Now</span>
+                        <i className="fa-solid fa-arrow-right-long relative z-10 text-sm md:text-xl group-hover:translate-x-2 transition-transform"></i>
                     </button>
 
-                    {/* Absolute Offer Cards - Floating & Attention Grabbing */}
-                    <div className="absolute right-4 bottom-4 md:right-10 md:bottom-10 flex flex-col gap-4 z-40">
+                    {/* Absolute Offer Cards - Hidden on Mobile to prevent clutter/overlapping */}
+                    <div className="hidden md:flex absolute right-10 bottom-10 flex-col gap-4 z-40">
 
                         {/* Offer Card 1 */}
                         <div className="bg-white/95 backdrop-blur-xl p-4 rounded-2xl shadow-2xl border border-white/50 animate-[float_4s_ease-in-out_infinite] hover:scale-105 transition-transform cursor-pointer origin-bottom-right">

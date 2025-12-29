@@ -58,12 +58,12 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onNavigate, onSelectCategory 
     };
 
     return (
-        <>
+        <div className="relative">
             {/* Floating Genie Button */}
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed bottom-24 left-5 z-[60] w-14 h-14 bg-gradient-to-br from-green-600 to-emerald-600 rounded-full shadow-2xl flex items-center justify-center animate-bounce-slow active:scale-95 transition-transform border-4 border-white dark:border-slate-800"
+                    className="w-14 h-14 bg-gradient-to-br from-green-600 to-emerald-600 rounded-full shadow-2xl flex items-center justify-center animate-bounce-slow active:scale-95 transition-transform border-4 border-white dark:border-slate-800"
                 >
                     <span className="text-2xl">🧺</span>
                 </button>
@@ -71,7 +71,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onNavigate, onSelectCategory 
 
             {/* Chat Window */}
             {isOpen && (
-                <div className="fixed bottom-24 left-5 z-[60] w-72 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-hidden animate-popIn origin-bottom-left flex flex-col">
+                <div className="absolute bottom-0 left-0 z-[60] w-72 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-hidden animate-popIn origin-bottom-left flex flex-col">
                     {/* Header */}
                     <div className="bg-gradient-to-br from-green-600 to-emerald-600 p-4 flex justify-between items-center">
                         <div className="flex items-center gap-3">
@@ -118,7 +118,7 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ onNavigate, onSelectCategory 
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 };
 

@@ -408,81 +408,108 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
             {/* Main Content (Full Page) */}
             <div className="flex-1 h-[calc(100vh-64px)] md:h-screen overflow-y-auto p-4 md:p-8 custom-scrollbar bg-slate-50 dark:bg-slate-950">
 
-                {/* Mobile View */}
-                <div className="md:hidden pb-20">
-                    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar mb-6 pb-2">
-                        <button
-                            onClick={() => setActiveMobileCategoryId('all')}
-                            className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${activeMobileCategoryId === 'all' ? 'bg-slate-900 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'}`}
-                        >
-                            All
-                        </button>
-                        {DETAILED_CATEGORIES.map(cat => (
+                {/* Mobile Split View (Sidebar + Content) */}
+                <div className="md:hidden flex h-[calc(100vh-120px)] overflow-hidden">
+
+                    {/* Level 1: Sidebar (Categories) */}
+                    <div className="w-[85px] flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 overflow-y-auto no-scrollbar pb-24">
+                        <div className="flex flex-col items-center py-2 space-y-1">
                             <button
-                                key={cat.id}
-                                onClick={() => setActiveMobileCategoryId(cat.id)}
-                                className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${activeMobileCategoryId === cat.id ? 'bg-green-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'}`}
+                                onClick={() => setActiveMobileCategoryId('all')}
+                                className={`w-full py-4 flex flex-col items-center justify-center transition-all relative ${activeMobileCategoryId === 'all' ? 'text-green-600' : 'text-slate-400'}`}
                             >
-                                {cat.name}
+                                {activeMobileCategoryId === 'all' && <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-600 rounded-r-full"></div>}
+                                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${activeMobileCategoryId === 'all' ? 'bg-green-50 dark:bg-green-900/30' : 'bg-slate-50 dark:bg-slate-800'}`}>
+                                    <i className="fa-solid fa-border-all text-lg"></i>
+                                </div>
+                                <span className={`text-[10px] font-bold text-center leading-tight max-w-[60px] ${activeMobileCategoryId === 'all' ? 'text-green-700' : 'text-slate-500'}`}>All</span>
                             </button>
-                        ))}
+
+                            {DETAILED_CATEGORIES.map(cat => {
+                                const isActive = activeMobileCategoryId === cat.id;
+                                return (
+                                    <button
+                                        key={cat.id}
+                                        onClick={() => setActiveMobileCategoryId(cat.id)}
+                                        className={`w-full py-3 flex flex-col items-center justify-center transition-all relative ${isActive ? 'text-green-600' : 'text-slate-400'}`}
+                                    >
+                                        {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-600 rounded-r-full"></div>}
+                                        <div className={`w-12 h-12 rounded-full p-2 mb-1 transition-transform ${isActive ? 'bg-green-50 dark:bg-green-900/20 scale-105 shadow-sm' : 'bg-transparent'}`}>
+                                            <img src={cat.image} alt={cat.name} className="w-full h-full object-cover rounded-full mix-blend-multiply opacity-90" />
+                                        </div>
+                                        <span className={`text-[9px] font-bold text-center leading-tight px-1 ${isActive ? 'text-green-800 dark:text-green-400' : 'text-slate-500 dark:text-slate-400'}`}>
+                                            {cat.name}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
 
-                    {activeMobileCategoryId === 'all' ? (
-                        <div className="space-y-6">
-                            {DETAILED_CATEGORIES.map((cat) => (
-                                <div key={cat.id}>
-                                    <h3 className="text-lg font-black text-slate-900 dark:text-white mb-4">{cat.name}</h3>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        {allProducts.filter(p => p.categoryId === cat.id).slice(0, 4).map(({ product: p }) => (
-                                            <div key={p.id}>
-                                                <ProductCard
-                                                    product={p}
-                                                    onClick={() => onProductClick(p)}
-                                                    addToCart={() => addToCart(p, p.units[0])}
-                                                    quantity={getQuantity(p.id, p.units[0].id)}
-                                                    removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
-                                                    isFavorite={wishlist.includes(p.id)}
-                                                    toggleFavorite={() => toggleWishlist(p.id)}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
+                    {/* Level 2: Content (Subcategories & Products) */}
+                    <div className="flex-1 bg-slate-50 dark:bg-slate-950 overflow-y-auto w-full p-3 pb-24">
+                        {activeMobileCategoryId === 'all' ? (
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h2 className="text-base font-black text-slate-800 dark:text-white">All Products</h2>
+                                    <span className="text-[10px] font-bold text-slate-400">{allProducts.length} Items</span>
                                 </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <>
-                            <h2 className="text-xl font-black text-slate-900 dark:text-white mb-6 animate-fadeIn">{activeMobileCategory.name}</h2>
-                            {activeMobileCategory.subcategories.map((sub) => {
-                                const subProps = allProducts.filter(p => p.product.nameEn && p.categoryId === activeMobileCategory.id && p.subCategoryName === sub.name);
-                                if (subProps.length === 0) return null;
-                                return (
-                                    <div key={sub.id} className="mb-8">
-                                        <h3 className="text-sm font-black text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2">
-                                            <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                                            {sub.name}
-                                        </h3>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            {subProps.map(({ product: p }) => (
-                                                <div key={p.id}>
-                                                    <ProductCard
-                                                        product={p}
-                                                        onClick={() => onProductClick(p)}
-                                                        addToCart={() => addToCart(p, p.units[0])}
-                                                        quantity={getQuantity(p.id, p.units[0].id)}
-                                                        removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
-                                                        isFavorite={wishlist.includes(p.id)}
-                                                        toggleFavorite={() => toggleWishlist(p.id)}
-                                                    />
-                                                </div>
-                                            ))}
+                                <div className="grid grid-cols-2 gap-3">
+                                    {allProducts.slice(0, 20).map(({ product: p }) => (
+                                        <div key={p.id}>
+                                            <ProductCard
+                                                product={p}
+                                                onClick={() => onProductClick(p)}
+                                                addToCart={() => addToCart(p, p.units[0])}
+                                                quantity={getQuantity(p.id, p.units[0].id)}
+                                                removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
+                                                isFavorite={wishlist.includes(p.id)}
+                                                toggleFavorite={() => toggleWishlist(p.id)}
+                                            />
                                         </div>
-                                    </div>
-                                )
-                            })}
-                        </>
-                    )}
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="animate-fadeIn">
+                                {/* Category Banner/Header */}
+                                <div className="flex items-center justify-between mb-4 sticky top-0 bg-slate-50 dark:bg-slate-950 z-10 py-2">
+                                    <h2 className="text-lg font-black text-slate-900 dark:text-white leading-tight">{activeMobileCategory.name}</h2>
+                                    <button className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-slate-400">
+                                        <i className="fa-solid fa-sliders text-xs"></i>
+                                    </button>
+                                </div>
+
+                                {activeMobileCategory.subcategories.map((sub) => {
+                                    const subProps = allProducts.filter(p => p.categoryId === activeMobileCategory.id && p.subCategoryName === sub.name);
+                                    if (subProps.length === 0) return null;
+                                    return (
+                                        <div key={sub.id} className="mb-6">
+                                            <div className="flex items-center gap-2 mb-3 opacity-80">
+                                                <span className="w-1 h-4 bg-green-500 rounded-full"></span>
+                                                <h3 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide">{sub.name}</h3>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {subProps.map(({ product: p }) => (
+                                                    <div key={p.id}>
+                                                        <ProductCard
+                                                            product={p}
+                                                            onClick={() => onProductClick(p)}
+                                                            addToCart={() => addToCart(p, p.units[0])}
+                                                            quantity={getQuantity(p.id, p.units[0].id)}
+                                                            removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
+                                                            isFavorite={wishlist.includes(p.id)}
+                                                            toggleFavorite={() => toggleWishlist(p.id)}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Desktop Grid */}

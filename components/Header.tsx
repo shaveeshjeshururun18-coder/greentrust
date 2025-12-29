@@ -46,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ onProfileClick, onSearchChange, onLocat
         <div className="flex flex-col cursor-pointer" onClick={onLocationClick}>
           <div className="flex items-center gap-1.5 text-[#3d4152] dark:text-white group">
             <i className="fa-solid fa-location-dot text-orange-500 text-lg"></i>
-            <span className="font-extrabold text-lg tracking-tight group-hover:text-orange-500 transition-colors">Home</span>
+            <span className="font-extrabold text-lg tracking-tight group-hover:text-green-600 transition-colors">Green Trust</span>
             <i className="fa-solid fa-angle-down text-sm mt-1"></i>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate max-w-[200px] leading-tight pl-6">

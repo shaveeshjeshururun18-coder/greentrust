@@ -221,7 +221,15 @@ const PRODUCT_IMAGES = [
   'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=500&h=500&fit=crop', // Fruit
   'https://images.unsplash.com/photo-1563565375-f3fdf5efa269?w=500&h=500&fit=crop', // Grapes
   'https://images.unsplash.com/photo-1557800636-894a64c1696f?w=500&h=500&fit=crop', // Orange
-  'https://images.unsplash.com/photo-1519999482648-25049ddd37b1?w=500&h=500&fit=crop'  // Berries
+  'https://images.unsplash.com/photo-1519999482648-25049ddd37b1?w=500&h=500&fit=crop', // Berries
+  // Local User Provided Images
+  'product-10-1.jpg', 'product-10-2.jpg', 'product-11-1.jpg', 'product-11-2.jpg',
+  'product-13-1.jpg', 'product-13-2.jpg', 'product-15-1.jpg', 'product-15-2.jpg',
+  'product-4-1.jpg', 'product-4-2.jpg', 'product-5-1.jpg', 'product-5-2.jpg',
+  'product-6-1.jpg', 'product-6-2.jpg', 'product-7-1.jpg', 'product-7-2.jpg',
+  'product-8-1.jpg', 'product-8-2.jpg', 'product-9-1.jpg', 'product-9-2.jpg',
+  'veg_1.png', 'veg_1s.png', 'veg_2s.png', 'veg_3.png', 'veg_4.png', 'veg_5.png',
+  'watermalone_1.png', 'watermalone_1ss.png'
 ];
 
 const TAMIL_NAMES: { [key: string]: string } = {

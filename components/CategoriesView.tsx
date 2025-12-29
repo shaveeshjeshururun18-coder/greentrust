@@ -224,7 +224,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     });
 
     return (
-        <div className="h-screen bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row relative animate-fadeIn transition-all overflow-hidden">
+        <div className="h-full bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row relative animate-fadeIn transition-all overflow-hidden">
 
             {/* Mobile Header (Custom for Categories) */}
             <div className="md:hidden sticky top-0 z-30 bg-white dark:bg-slate-900 shadow-sm flex flex-col transition-all">

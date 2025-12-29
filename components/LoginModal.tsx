@@ -97,11 +97,16 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
                     <img src={product.image} alt="" className="w-full h-full object-contain mix-blend-multiply" />
                   </div>
                 ))}
+                {PRODUCT_IMAGES.concat(PRODUCT_IMAGES).sort(() => Math.random() - 0.5).map((img, i) => (
+                  <div key={i} className="flex-shrink-0 w-full aspect-[3/4] p-2">
+                    <div className="w-full h-full bg-white rounded-2xl shadow-sm overflow-hidden p-2">
+                      <img src={img.startsWith('http') ? img : `/assets/products/${img}`} alt="" className="w-full h-full object-contain mix-blend-multiply" />
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          {/* Gradient Fade Overlay for readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent"></div>
+          {/* Gradient Fade Overlay for readability */ }
+              < div className = "absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent" ></div>
         </div>
 
         {/* Content Container */}

@@ -484,21 +484,26 @@ const App: React.FC = () => {
       <BackgroundAnimation />
       {/* Entrance Screen removed as per request, using index.html splash instead */}
 
-      {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && currentView !== 'categories' && currentView !== 'basketbuddy' && (
+      {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && (
         <>
-          <div className="md:hidden">
-            <Header
-              onProfileClick={() => setCurrentView('account')}
-              onSearchChange={setSearchQuery}
-              onSearchFocus={() => setCurrentView('categories')}
-              onLocationClick={() => setCurrentView('location-picker')}
-              onWishlistClick={() => setCurrentView('wishlist')}
-              address={userAddress}
-              isDark={isDark}
-              toggleTheme={toggleTheme}
-              isScrolled={isScrolled}
-            />
-          </div>
+          {/* Mobile Header: Hidden on Categories/BasketBuddy (they have their own or full screen) */}
+          {currentView !== 'categories' && currentView !== 'basketbuddy' && (
+            <div className="md:hidden">
+              <Header
+                onProfileClick={() => setCurrentView('account')}
+                onSearchChange={setSearchQuery}
+                onSearchFocus={() => setCurrentView('categories')}
+                onLocationClick={() => setCurrentView('location-picker')}
+                onWishlistClick={() => setCurrentView('wishlist')}
+                address={userAddress}
+                isDark={isDark}
+                toggleTheme={toggleTheme}
+                isScrolled={isScrolled}
+              />
+            </div>
+          )}
+
+          {/* Desktop Header: Visible on Categories/BasketBuddy too */}
           <DesktopHeader
             currentView={currentView}
             setCurrentView={setCurrentView}

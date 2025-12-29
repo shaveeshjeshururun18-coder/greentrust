@@ -8,7 +8,6 @@ Designed for "Green Trust" to sell fresh vegetables, fruits, and essentials with
 - **Mobile-First Experience**: Optimized for touch, navigation, and mobile layouts.
 - **Localization**: Support for Tamil product names.
 - **Smart Features**:
-    - 🎤 **Voice Search**: "Tomato" -> Finds tomatoes.
     - 📍 **Smart Delivery**: Auto-detects location and checks pincode availability (Mock: 600xxx).
     - 🚚 **WhatsApp Integration**: Sends formatted orders directly to WhatsApp.
 - **Loyalty System**: Earn "Green Points" on orders and redeem for cash discounts.
@@ -86,4 +85,4 @@ To turn this into a `green-trust.apk` file, use **Capacitor**.
 - `/src/constants.tsx`: Initial Product Data.
 
 ---
-*Created with ❤️ by S.Shaveesh Jeshurun <SSJ> *
+*Created with ❤️ by S.Shaveesh Jeshurun SSJ *

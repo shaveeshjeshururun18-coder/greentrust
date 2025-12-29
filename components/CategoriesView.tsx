@@ -683,7 +683,6 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                 <Footer />
             </div>
         </div>
-        </div >
     );
 };
 

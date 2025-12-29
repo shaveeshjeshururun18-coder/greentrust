@@ -517,12 +517,20 @@ const App: React.FC = () => {
             </div>
 
             <div className="px-6 mt-12 mb-6 animate-popIn stagger-5">
-              <div className="bg-gradient-to-r from-green-800 to-green-600 rounded-[2.5rem] p-8 text-center relative overflow-hidden group cursor-pointer" onClick={() => setCurrentView('categories')}>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16 blur-2xl group-hover:bg-white/10 transition-all"></div>
-                <div className="relative z-10">
-                  <span className="text-[10px] font-black text-green-400 uppercase tracking-widest mb-2 block">Explore More</span>
-                  <h3 className="text-2xl font-black text-white mb-6">Fresh Markets</h3>
-                  <button onClick={() => setCurrentView('categories')} className="bg-white text-gray-900 px-8 py-3 rounded-xl font-black text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
+              <div className="bg-[#064e3b] rounded-[2.5rem] p-8 text-center relative overflow-hidden group cursor-pointer shadow-xl shadow-green-950/20" onClick={() => setCurrentView('categories')}>
+                <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -translate-y-24 translate-x-24 blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
+                <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-green-400/10 rounded-full blur-2xl"></div>
+
+                <div className="relative z-10 py-4">
+                  <span className="text-[11px] font-black text-green-400 uppercase tracking-[0.2em] mb-3 block">Explore More</span>
+                  <h3 className="text-3xl font-black text-white mb-8 tracking-tighter drop-shadow-md">Fresh Markets</h3>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCurrentView('categories');
+                    }}
+                    className="bg-white text-[#064e3b] px-10 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl"
+                  >
                     View All
                   </button>
                 </div>

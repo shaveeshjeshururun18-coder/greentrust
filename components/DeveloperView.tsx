@@ -1,0 +1,84 @@
+import React from 'react';
+
+interface DeveloperProps {
+    onBack: () => void;
+}
+
+const DeveloperView: React.FC<DeveloperProps> = ({ onBack }) => {
+    return (
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 animate-fadeIn">
+            {/* Header */}
+            <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center gap-4">
+                <button
+                    onClick={onBack}
+                    className="w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all active:scale-90"
+                >
+                    <i className="fa-solid fa-arrow-left"></i>
+                </button>
+                <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Developer Profile</h1>
+            </header>
+
+            <main className="max-w-2xl mx-auto p-6 pt-10">
+                {/* Profile Card */}
+                <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 shadow-2xl shadow-green-500/5 border border-slate-100 dark:border-slate-800 text-center relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full -translate-y-16 translate-x-16"></div>
+
+                    <div className="relative z-10">
+                        <div className="w-32 h-32 rounded-[2.5rem] bg-gradient-to-br from-green-400 to-green-600 p-1.5 mx-auto mb-6 shadow-xl rotate-3">
+                            <div className="w-full h-full rounded-[2.2rem] bg-white dark:bg-slate-800 p-1">
+                                <img
+                                    src="https://picsum.photos/seed/dev/300/300"
+                                    alt="Developer"
+                                    className="w-full h-full rounded-[2rem] object-cover"
+                                />
+                            </div>
+                        </div>
+
+                        <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">S. Shaveesh Jeshurun</h2>
+                        <p className="text-green-600 dark:text-green-400 font-bold uppercase tracking-widest text-xs mb-6">Full Stack Developer & UI Designer</p>
+
+                        <div className="flex flex-wrap justify-center gap-3 mb-8">
+                            <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">React</span>
+                            <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">Vite</span>
+                            <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">Firebase</span>
+                            <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">Tailwind CSS</span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <a href="https://github.com/shaveeshjeshururun18-coder" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-95">
+                                <i className="fa-brands fa-github text-xl"></i>
+                                Github
+                            </a>
+                            <a href="mailto:shaveeshjeshurun@gmail.com" className="flex items-center justify-center gap-2 py-4 bg-green-600 text-white rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-green-600/20">
+                                <i className="fa-solid fa-envelope text-xl"></i>
+                                Contact
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {/* About Section */}
+                <div className="mt-10 space-y-6">
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-100 dark:border-slate-800">
+                        <h3 className="text-lg font-black text-slate-900 dark:text-white mb-3">About the Project</h3>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Green Trust is a high-performance, mobile-first e-commerce application designed to deliver the freshest organic produce with a premium user experience. Built with a focus on speed, aesthetics, and user trust.
+                        </p>
+                    </div>
+
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-100 dark:border-slate-800">
+                        <h3 className="text-lg font-black text-slate-900 dark:text-white mb-3">Mission</h3>
+                        <div className="flex items-center gap-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-100 dark:border-green-800/30">
+                            <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white shrink-0">
+                                <i className="fa-solid fa-check"></i>
+                            </div>
+                            <p className="text-sm font-bold text-green-700 dark:text-green-400 italic">"Providing purity through every delivery."</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+};
+
+export default DeveloperView;

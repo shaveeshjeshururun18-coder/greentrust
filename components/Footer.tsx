@@ -21,7 +21,18 @@ const Footer: React.FC = () => {
                 </div>
             </div>
 
-            <div className="max-w-[1920px] mx-auto px-10 pb-10">
+            <div className="max-w-[1920px] mx-auto px-10 pt-10 pb-16 border-b border-slate-100 dark:border-slate-800/50">
+                <div className="flex flex-col gap-1">
+                    <h2 className="text-[5.5rem] font-black text-slate-900/10 dark:text-white/5 leading-[0.85] tracking-tighter select-none">
+                        Get Fresh<br />Groceries!
+                    </h2>
+                    <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 font-bold uppercase tracking-[0.25em] text-[10px] sm:text-[11px] mt-2">
+                        Trusted by Families <span className="text-red-500/80 animate-pulse">❤️</span> delivered all over Tamil Nadu
+                    </div>
+                </div>
+            </div>
+
+            <div className="max-w-[1920px] mx-auto px-10 py-10">
                 <div className="grid grid-cols-4 gap-12 text-sm text-slate-600 dark:text-slate-400">
                     {/* Column 1: Brand */}
                     <div>

@@ -86,4 +86,4 @@ To turn this into a `green-trust.apk` file, use **Capacitor**.
 - `/src/constants.tsx`: Initial Product Data.
 
 ---
-*Created with ❤️ by Antigravity*
+*Created with ❤️ by S.Shaveesh Jeshurun <SSJ> *

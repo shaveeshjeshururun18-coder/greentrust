@@ -477,190 +477,62 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                         ))}
                     </div>
                 </div>
+            </div>
 
-                {/* Main Content (Full Page) */}
-                <div className="flex-1 h-[calc(100vh-64px)] md:h-screen overflow-y-auto p-4 md:p-8 custom-scrollbar bg-slate-50 dark:bg-slate-950">
+            {/* Main Content (Full Page) */}
+            <div className="flex-1 h-[calc(100vh-64px)] md:h-screen overflow-y-auto p-4 md:p-8 custom-scrollbar bg-slate-50 dark:bg-slate-950">
 
-                    {/* Mobile Split View (Sidebar + Content) */}
-                    <div className="md:hidden flex h-[calc(100vh-120px)] overflow-hidden">
+                {/* Mobile Split View (Sidebar + Content) */}
+                <div className="md:hidden flex h-[calc(100vh-120px)] overflow-hidden">
 
-                        {/* Level 1: Categories Sidebar */}
-                        <div className="w-[85px] bg-white dark:bg-slate-900 overflow-y-auto no-scrollbar border-r border-slate-100 dark:border-slate-800 flex-shrink-0 z-20 pb-24">
-                            <div className="flex flex-col items-center py-4 space-y-4">
-                                <button
-                                    onClick={() => setActiveMobileCategoryId('all')}
-                                    className={`w-full py-4 flex flex-col items-center justify-center transition-all relative ${activeMobileCategoryId === 'all' ? 'text-green-600' : 'text-slate-400'}`}
-                                >
-                                    {activeMobileCategoryId === 'all' && <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-600 rounded-r-full"></div>}
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-1 ${activeMobileCategoryId === 'all' ? 'bg-green-50 dark:bg-green-900/30' : 'bg-slate-50 dark:bg-slate-800'}`}>
-                                        <i className="fa-solid fa-border-all text-sm"></i>
-                                    </div>
-                                    <span className={`text-[8px] font-bold text-center leading-tight max-w-[60px] ${activeMobileCategoryId === 'all' ? 'text-green-700' : 'text-slate-500'}`}>All</span>
-                                </button>
-
-                                {DETAILED_CATEGORIES.map(cat => {
-                                    const isActive = activeMobileCategoryId === cat.id;
-                                    return (
-                                        <button
-                                            key={cat.id}
-                                            onClick={() => {
-                                                setActiveMobileCategoryId(cat.id);
-                                                setActiveMobileSubCategory('all'); // Reset subcat on cat change
-                                            }}
-                                            className={`w-full py-3 flex flex-col items-center justify-center transition-all relative ${isActive ? 'text-green-600' : 'text-slate-400'}`}
-                                        >
-                                            {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-600 rounded-r-full"></div>}
-                                            <div className={`w-14 h-14 rounded-full p-2 mb-1 transition-transform ${isActive ? 'bg-green-50 dark:bg-green-900/20 scale-105 shadow-sm' : 'bg-transparent'}`}>
-                                                <img src={cat.image} alt={cat.name} className="w-full h-full object-cover rounded-full mix-blend-multiply opacity-90" />
-                                            </div>
-                                            <span className={`text-[10px] font-bold text-center leading-tight px-1 ${isActive ? 'text-green-800 dark:text-green-400' : 'text-slate-500 dark:text-slate-400'}`}>
-                                                {cat.name}
-                                            </span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        {/* Level 2: Content (Subcategories & Products) */}
-                        <div className="flex-1 bg-slate-50 dark:bg-slate-950 overflow-y-auto w-full p-3 pb-24">
-                            {activeMobileCategoryId === 'all' ? (
-                                <div className="space-y-6">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <h2 className="text-base font-black text-slate-800 dark:text-white">All Products</h2>
-                                        <span className="text-[10px] font-bold text-slate-400">{allProducts.length} Items</span>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        {allProducts.slice(0, 20).map(({ product: p }) => (
-                                            <div key={p.id}>
-                                                <ProductCard
-                                                    product={p}
-                                                    onClick={() => onProductClick(p)}
-                                                    addToCart={() => addToCart(p, p.units[0])}
-                                                    quantity={getQuantity(p.id, p.units[0].id)}
-                                                    removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
-                                                    isFavorite={wishlist.includes(p.id)}
-                                                    toggleFavorite={() => toggleWishlist(p.id)}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
+                    {/* Level 1: Categories Sidebar */}
+                    <div className="w-[85px] bg-white dark:bg-slate-900 overflow-y-auto no-scrollbar border-r border-slate-100 dark:border-slate-800 flex-shrink-0 z-20 pb-24">
+                        <div className="flex flex-col items-center py-4 space-y-4">
+                            <button
+                                onClick={() => setActiveMobileCategoryId('all')}
+                                className={`w-full py-4 flex flex-col items-center justify-center transition-all relative ${activeMobileCategoryId === 'all' ? 'text-green-600' : 'text-slate-400'}`}
+                            >
+                                {activeMobileCategoryId === 'all' && <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-600 rounded-r-full"></div>}
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-1 ${activeMobileCategoryId === 'all' ? 'bg-green-50 dark:bg-green-900/30' : 'bg-slate-50 dark:bg-slate-800'}`}>
+                                    <i className="fa-solid fa-border-all text-sm"></i>
                                 </div>
-                            ) : (
-                                <div className="animate-fadeIn relative h-full flex flex-col">
-                                    {/* Category Banner/Header with Search & Filter Icons */}
-                                    <div className="flex items-center justify-between mb-4 sticky top-0 bg-slate-50 dark:bg-slate-950 z-20 py-2 pt-3 shadow-sm md:shadow-none -mx-3 px-3">
-                                        <h2 className="text-lg font-black text-slate-900 dark:text-white leading-tight">{activeMobileCategory.name}</h2>
-                                        <div className="flex items-center gap-3">
-                                            {/* Search removed */}
-                                            {/* Filter Icon Removed as requested */}
+                                <span className={`text-[8px] font-bold text-center leading-tight max-w-[60px] ${activeMobileCategoryId === 'all' ? 'text-green-700' : 'text-slate-500'}`}>All</span>
+                            </button>
+
+                            {DETAILED_CATEGORIES.map(cat => {
+                                const isActive = activeMobileCategoryId === cat.id;
+                                return (
+                                    <button
+                                        key={cat.id}
+                                        onClick={() => {
+                                            setActiveMobileCategoryId(cat.id);
+                                            setActiveMobileSubCategory('all'); // Reset subcat on cat change
+                                        }}
+                                        className={`w-full py-3 flex flex-col items-center justify-center transition-all relative ${isActive ? 'text-green-600' : 'text-slate-400'}`}
+                                    >
+                                        {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-600 rounded-r-full"></div>}
+                                        <div className={`w-14 h-14 rounded-full p-2 mb-1 transition-transform ${isActive ? 'bg-green-50 dark:bg-green-900/20 scale-105 shadow-sm' : 'bg-transparent'}`}>
+                                            <img src={cat.image} alt={cat.name} className="w-full h-full object-cover rounded-full mix-blend-multiply opacity-90" />
                                         </div>
-                                    </div>
-
-                                    {/* Horizontal Subcategory Pills (The "Previous Filter") */}
-                                    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar mb-4 -mx-3 px-3 pb-2 sticky top-[52px] z-10 bg-slate-50 dark:bg-slate-950/95 backdrop-blur-sm">
-                                        <button
-                                            onClick={() => setActiveMobileSubCategory('all')}
-                                            className={`whitespace-nowrap px-3 py-1.5 rounded-lg border text-[10px] font-bold shadow-sm transition-all flex-shrink-0 ${activeMobileSubCategory === 'all' ? 'bg-green-600 border-green-600 text-white' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'}`}
-                                        >
-                                            All
-                                        </button>
-                                        {activeMobileCategory.subcategories.map((sub) => (
-                                            <button
-                                                key={sub.id}
-                                                onClick={() => setActiveMobileSubCategory(sub.name)}
-                                                className={`whitespace-nowrap px-3 py-1.5 rounded-lg border text-[10px] font-bold shadow-sm transition-all flex-shrink-0 ${activeMobileSubCategory === sub.name ? 'bg-green-600 border-green-600 text-white' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-green-500 hover:text-green-600'}`}
-                                            >
-                                                {sub.name}
-                                            </button>
-                                        ))}
-                                    </div>
-
-                                    <div className="space-y-6 pb-24">
-                                        {activeMobileCategory.subcategories.map((sub) => {
-                                            // Filter Logic: Show if 'all' or matches selected subcat
-                                            if (activeMobileSubCategory !== 'all' && activeMobileSubCategory !== sub.name) return null;
-
-                                            const subProps = allProducts.filter(p => p.categoryId === activeMobileCategory.id && p.subCategoryName === sub.name);
-                                            if (subProps.length === 0) return null;
-                                            return (
-                                                <div key={sub.id} id={`sub-${sub.id}`} className="scroll-mt-32">
-                                                    <div className="flex items-center gap-2 mb-3 opacity-90">
-                                                        <span className="w-1 h-3 bg-green-600 rounded-full"></span>
-                                                        <h3 className="text-xs font-black text-green-800 dark:text-green-400 uppercase tracking-wide">{sub.name}</h3>
-                                                    </div>
-                                                    <div className="grid grid-cols-2 gap-3">
-                                                        {subProps.map(({ product: p }) => (
-                                                            <div key={p.id}>
-                                                                <ProductCard
-                                                                    product={p}
-                                                                    onClick={() => onProductClick(p)}
-                                                                    addToCart={() => addToCart(p, p.units[0])}
-                                                                    quantity={getQuantity(p.id, p.units[0].id)}
-                                                                    removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
-                                                                    isFavorite={wishlist.includes(p.id)}
-                                                                    toggleFavorite={() => toggleWishlist(p.id)}
-                                                                />
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                </div>
-                            )}
+                                        <span className={`text-[10px] font-bold text-center leading-tight px-1 ${isActive ? 'text-green-800 dark:text-green-400' : 'text-slate-500 dark:text-slate-400'}`}>
+                                            {cat.name}
+                                        </span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 
-                    {/* Desktop Grid */}
-                    <div className="hidden md:block flex-1 h-full overflow-y-auto pb-32 w-full px-8 custom-scrollbar">
-                        {/* Header with improved spacing */}
-                        <div className="flex items-center justify-between mb-8 py-4 border-b border-transparent">
-                            <div className="flex items-center gap-6">
-                                {/* Filter Toggle Button */}
-                                <button
-                                    onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${isFiltersOpen ? 'bg-slate-900 text-white border-slate-900 shadow-lg' : 'bg-white text-slate-700 border-slate-200 hover:border-green-500 hover:text-green-600'}`}
-                                >
-                                    <i className={`fa-solid ${isFiltersOpen ? 'fa-xmark' : 'fa-filter'}`}></i>
-                                    {isFiltersOpen ? 'Close Filters' : 'Filter'}
-                                </button>
-
-                                {/* Line Separator (Optional Gap) */}
-                                <div className="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-2"></div>
-
-                                <div>
-                                    <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">{currentDesktopCategory.name}</h1>
-                                    <p className="text-sm text-slate-500 font-medium mt-1">
-                                        {filteredProducts.length} products found
-                                    </p>
+                    {/* Level 2: Content (Subcategories & Products) */}
+                    <div className="flex-1 bg-slate-50 dark:bg-slate-950 overflow-y-auto w-full p-3 pb-24">
+                        {activeMobileCategoryId === 'all' ? (
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between mb-2">
+                                    <h2 className="text-base font-black text-slate-800 dark:text-white">All Products</h2>
+                                    <span className="text-[10px] font-bold text-slate-400">{allProducts.length} Items</span>
                                 </div>
-                            </div>
-
-                            {/* Sort */}
-                            <div className="relative group">
-                                <button
-                                    onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
-                                    className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 rounded-xl text-sm font-bold text-slate-600 shadow-sm hover:shadow-md transition-all active:scale-95"
-                                >
-                                    <i className={`fa-solid ${sortOrder === 'asc' ? 'fa-arrow-up-short-wide' : 'fa-arrow-down-short-wide'}`}></i>
-                                    {sortOrder === 'asc' ? 'Price: Low to High' : sortOrder === 'desc' ? 'Price: High to Low' : 'Sort by Price'}
-                                </button>
-                            </div>
-                        </div>
-
-                        {filteredProducts.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-32 opacity-100">
-                                <i className="fa-solid fa-carrot text-6xl text-slate-300 mb-4"></i>
-                                <p className="text-xl font-bold text-slate-500">No products found here.</p>
-                                <p className="text-xs text-slate-400 mt-2">Try changing filters or search terms.</p>
-                            </div>
-                        ) : (
-                            // Responsive Grid: Can go very wide
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
-                                {filteredProducts.map(({ product: p }, idx) => {
-                                    return (
+                                <div className="grid grid-cols-2 gap-3">
+                                    {allProducts.slice(0, 20).map(({ product: p }) => (
                                         <div key={p.id}>
                                             <ProductCard
                                                 product={p}
@@ -672,17 +544,146 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                                 toggleFavorite={() => toggleWishlist(p.id)}
                                             />
                                         </div>
-                                    )
-                                })}
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="animate-fadeIn relative h-full flex flex-col">
+                                {/* Category Banner/Header with Search & Filter Icons */}
+                                <div className="flex items-center justify-between mb-4 sticky top-0 bg-slate-50 dark:bg-slate-950 z-20 py-2 pt-3 shadow-sm md:shadow-none -mx-3 px-3">
+                                    <h2 className="text-lg font-black text-slate-900 dark:text-white leading-tight">{activeMobileCategory.name}</h2>
+                                    <div className="flex items-center gap-3">
+                                        {/* Search removed */}
+                                        {/* Filter Icon Removed as requested */}
+                                    </div>
+                                </div>
+
+                                {/* Horizontal Subcategory Pills (The "Previous Filter") */}
+                                <div className="flex items-center gap-2 overflow-x-auto no-scrollbar mb-4 -mx-3 px-3 pb-2 sticky top-[52px] z-10 bg-slate-50 dark:bg-slate-950/95 backdrop-blur-sm">
+                                    <button
+                                        onClick={() => setActiveMobileSubCategory('all')}
+                                        className={`whitespace-nowrap px-3 py-1.5 rounded-lg border text-[10px] font-bold shadow-sm transition-all flex-shrink-0 ${activeMobileSubCategory === 'all' ? 'bg-green-600 border-green-600 text-white' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'}`}
+                                    >
+                                        All
+                                    </button>
+                                    {activeMobileCategory.subcategories.map((sub) => (
+                                        <button
+                                            key={sub.id}
+                                            onClick={() => setActiveMobileSubCategory(sub.name)}
+                                            className={`whitespace-nowrap px-3 py-1.5 rounded-lg border text-[10px] font-bold shadow-sm transition-all flex-shrink-0 ${activeMobileSubCategory === sub.name ? 'bg-green-600 border-green-600 text-white' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-green-500 hover:text-green-600'}`}
+                                        >
+                                            {sub.name}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <div className="space-y-6 pb-24">
+                                    {activeMobileCategory.subcategories.map((sub) => {
+                                        // Filter Logic: Show if 'all' or matches selected subcat
+                                        if (activeMobileSubCategory !== 'all' && activeMobileSubCategory !== sub.name) return null;
+
+                                        const subProps = allProducts.filter(p => p.categoryId === activeMobileCategory.id && p.subCategoryName === sub.name);
+                                        if (subProps.length === 0) return null;
+                                        return (
+                                            <div key={sub.id} id={`sub-${sub.id}`} className="scroll-mt-32">
+                                                <div className="flex items-center gap-2 mb-3 opacity-90">
+                                                    <span className="w-1 h-3 bg-green-600 rounded-full"></span>
+                                                    <h3 className="text-xs font-black text-green-800 dark:text-green-400 uppercase tracking-wide">{sub.name}</h3>
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-3">
+                                                    {subProps.map(({ product: p }) => (
+                                                        <div key={p.id}>
+                                                            <ProductCard
+                                                                product={p}
+                                                                onClick={() => onProductClick(p)}
+                                                                addToCart={() => addToCart(p, p.units[0])}
+                                                                quantity={getQuantity(p.id, p.units[0].id)}
+                                                                removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
+                                                                isFavorite={wishlist.includes(p.id)}
+                                                                toggleFavorite={() => toggleWishlist(p.id)}
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
                             </div>
                         )}
                     </div>
-
-                    {/* Footer (Desktop Only) */}
-                    <Footer />
                 </div>
+
+                {/* Desktop Grid */}
+                <div className="hidden md:block flex-1 h-full overflow-y-auto pb-32 w-full px-8 custom-scrollbar">
+                    {/* Header with improved spacing */}
+                    <div className="flex items-center justify-between mb-8 py-4 border-b border-transparent">
+                        <div className="flex items-center gap-6">
+                            {/* Filter Toggle Button */}
+                            <button
+                                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold border-2 transition-all ${isFiltersOpen ? 'bg-slate-900 text-white border-slate-900 shadow-lg' : 'bg-white text-slate-700 border-slate-200 hover:border-green-500 hover:text-green-600'}`}
+                            >
+                                <i className={`fa-solid ${isFiltersOpen ? 'fa-xmark' : 'fa-filter'}`}></i>
+                                {isFiltersOpen ? 'Close Filters' : 'Filter'}
+                            </button>
+
+                            {/* Line Separator (Optional Gap) */}
+                            <div className="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-2"></div>
+
+                            <div>
+                                <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-none">{currentDesktopCategory.name}</h1>
+                                <p className="text-sm text-slate-500 font-medium mt-1">
+                                    {filteredProducts.length} products found
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Sort */}
+                        <div className="relative group">
+                            <button
+                                onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                                className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 rounded-xl text-sm font-bold text-slate-600 shadow-sm hover:shadow-md transition-all active:scale-95"
+                            >
+                                <i className={`fa-solid ${sortOrder === 'asc' ? 'fa-arrow-up-short-wide' : 'fa-arrow-down-short-wide'}`}></i>
+                                {sortOrder === 'asc' ? 'Price: Low to High' : sortOrder === 'desc' ? 'Price: High to Low' : 'Sort by Price'}
+                            </button>
+                        </div>
+                    </div>
+
+                    {filteredProducts.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-32 opacity-100">
+                            <i className="fa-solid fa-carrot text-6xl text-slate-300 mb-4"></i>
+                            <p className="text-xl font-bold text-slate-500">No products found here.</p>
+                            <p className="text-xs text-slate-400 mt-2">Try changing filters or search terms.</p>
+                        </div>
+                    ) : (
+                        // Responsive Grid: Can go very wide
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+                            {filteredProducts.map(({ product: p }, idx) => {
+                                return (
+                                    <div key={p.id}>
+                                        <ProductCard
+                                            product={p}
+                                            onClick={() => onProductClick(p)}
+                                            addToCart={() => addToCart(p, p.units[0])}
+                                            quantity={getQuantity(p.id, p.units[0].id)}
+                                            removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
+                                            isFavorite={wishlist.includes(p.id)}
+                                            toggleFavorite={() => toggleWishlist(p.id)}
+                                        />
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer (Desktop Only) */}
+                <Footer />
             </div>
         </div>
+        </div >
     );
 };
 

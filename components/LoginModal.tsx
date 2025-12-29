@@ -87,27 +87,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
         {/* Invisible Recaptcha Container */}
         <div id="recaptcha-container" ref={recaptchaWrapperRef}></div>
 
-        {/* --- DYNAMIC BACKGROUND: Scrolling Products (Blinkit Style) --- */}
-        <div className="absolute inset-0 z-0 overflow-hidden bg-slate-50">
-          <div className="grid grid-cols-4 gap-4 opacity-40">
-            {[0, 1, 2, 3].map((colIndex) => (
-              <div key={colIndex} className={`flex flex-col gap-4 animate-scrollVertical ${colIndex % 2 === 0 ? 'animate-reverse' : ''}`} style={{ animationDuration: `${20 + colIndex * 5}s` }}>
-                {[...ALL_PRODUCTS, ...ALL_PRODUCTS].map((product, idx) => (
-                  <div key={`${colIndex}-${idx}`} className="w-full aspect-square bg-white p-2 rounded-xl shadow-sm flex items-center justify-center">
-                    <img src={product.image} alt="" className="w-full h-full object-contain mix-blend-multiply" />
-                  </div>
-                ))}
-                {PRODUCT_IMAGES.concat(PRODUCT_IMAGES).sort(() => Math.random() - 0.5).map((img, i) => (
-                  <div key={i} className="flex-shrink-0 w-full aspect-[3/4] p-2">
-                    <div className="w-full h-full bg-white rounded-2xl shadow-sm overflow-hidden p-2">
-                      <img src={img.startsWith('http') ? img : `/assets/products/${img}`} alt="" className="w-full h-full object-contain mix-blend-multiply" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-          {/* Gradient Fade Overlay for readability */ }
-              < div className = "absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent" ></div>
-        </div>
+        {/* --- BACKGROUND REDUCED (Clean White) --- */}
+        <div className="absolute inset-0 z-0 bg-white"></div>
 
         {/* Content Container */}
         <div className="relative z-10">

@@ -546,22 +546,27 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                             <div className="space-y-6">
                                 <div className="flex items-center justify-between mb-2">
                                     <h2 className="text-base font-black text-slate-800 dark:text-white">All Products</h2>
-                                    <span className="text-[10px] font-bold text-slate-400">{allProducts.length} Items</span>
+                                    <span className="text-[10px] font-bold text-slate-400">
+                                        {allProducts.filter(p => !props.searchQuery || p.product.nameEn.toLowerCase().includes(props.searchQuery.toLowerCase())).length} Items
+                                    </span>
                                 </div>
                                 <div className="grid grid-cols-2 gap-3">
-                                    {allProducts.slice(0, 20).map(({ product: p }) => (
-                                        <div key={p.id}>
-                                            <ProductCard
-                                                product={p}
-                                                onClick={() => onProductClick(p)}
-                                                addToCart={() => addToCart(p, p.units[0])}
-                                                quantity={getQuantity(p.id, p.units[0].id)}
-                                                removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
-                                                isFavorite={wishlist.includes(p.id)}
-                                                toggleFavorite={() => toggleWishlist(p.id)}
-                                            />
-                                        </div>
-                                    ))}
+                                    {allProducts
+                                        .filter(p => !props.searchQuery || p.product.nameEn.toLowerCase().includes(props.searchQuery.toLowerCase()) || (p.product.nameTa && p.product.nameTa.includes(props.searchQuery)))
+                                        .slice(0, 20)
+                                        .map(({ product: p }) => (
+                                            <div key={p.id}>
+                                                <ProductCard
+                                                    product={p}
+                                                    onClick={() => onProductClick(p)}
+                                                    addToCart={() => addToCart(p, p.units[0])}
+                                                    quantity={getQuantity(p.id, p.units[0].id)}
+                                                    removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
+                                                    isFavorite={wishlist.includes(p.id)}
+                                                    toggleFavorite={() => toggleWishlist(p.id)}
+                                                />
+                                            </div>
+                                        ))}
                                 </div>
                             </div>
                         ) : (
@@ -599,7 +604,11 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                         // Filter Logic: Show if 'all' or matches selected subcat
                                         if (activeMobileSubCategory !== 'all' && activeMobileSubCategory !== sub.name) return null;
 
-                                        const subProps = allProducts.filter(p => p.categoryId === activeMobileCategory.id && p.subCategoryName === sub.name);
+                                        const subProps = allProducts.filter(p =>
+                                            p.categoryId === activeMobileCategory.id &&
+                                            p.subCategoryName === sub.name &&
+                                            (!props.searchQuery || p.product.nameEn.toLowerCase().includes(props.searchQuery.toLowerCase()) || (p.product.nameTa && p.product.nameTa.includes(props.searchQuery)))
+                                        );
                                         if (subProps.length === 0) return null;
                                         return (
                                             <div key={sub.id} id={`sub-${sub.id}`} className="scroll-mt-32">

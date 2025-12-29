@@ -361,7 +361,7 @@
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      animation: slideUpOut 0.8s cubic-bezier(0.65, 0, 0.35, 1) 7.5s forwards;
+      animation: slideUpOut 0.8s cubic-bezier(0.65, 0, 0.35, 1) 4.2s forwards;
     }
 
     .glow {
@@ -407,7 +407,7 @@
       bottom: 32px;
       text-align: center;
       opacity: 0;
-      animation: slideInUp 0.9s cubic-bezier(.2, .9, .3, 1) 1.1s forwards;
+      animation: slideInUp 0.9s cubic-bezier(.2, .9, .3, 1) 0.8s forwards;
     }
 
     .signature-only {
@@ -427,9 +427,9 @@
       text-shadow: 0 0 15px rgba(124, 255, 178, 0);
       will-change: clip-path, transform, text-shadow;
       animation:
-        penWrite 5s cubic-bezier(.22, 1, .36, 1) 1.5s forwards,
-        signatureSettle 1.2s ease-out 6.4s forwards,
-        pulseGlow 2s ease-in-out 7s infinite;
+        penWrite 3s cubic-bezier(.22, 1, .36, 1) 1.2s forwards,
+        signatureSettle 0.8s ease-out 3.5s forwards,
+        pulseGlow 2s ease-in-out 3.8s infinite;
     }
 
     .ssj {
@@ -439,7 +439,7 @@
       letter-spacing: 3px;
       color: #ffffff;
       opacity: 0;
-      animation: ssjReveal 0.9s ease-out 6.8s forwards;
+      animation: ssjReveal 0.6s ease-out 3.8s forwards;
       font-family: 'Poppins', sans-serif;
     }
 
@@ -603,7 +603,7 @@
     setTimeout(() => {
       const splash = document.getElementById('splash');
       if (splash) splash.style.display = 'none';
-    }, 8500);
+    }, 5000);
   </script>
   <div id="root"></div>
   <script type="module" src="/index.tsx"></script>

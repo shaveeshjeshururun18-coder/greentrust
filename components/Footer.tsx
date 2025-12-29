@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer: React.FC = () => {
     return (
-        <footer className="hidden md:block bg-green-50/50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-20 pt-10">
+        <footer className="bg-green-50/50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-20 pt-10">
             {/* Social Icons (Floating Center) */}
             <div className="relative">
                 <div className="absolute left-1/2 -translate-x-1/2 -top-16 flex gap-4">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { auth } from '../firebaseConfig';
-import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from 'firebase/auth';
+import { auth, googleProvider } from '../firebaseConfig';
+import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult, signInWithPopup } from 'firebase/auth';
 import { ALL_PRODUCTS } from '../constants';
 
 interface LoginModalProps {
@@ -15,6 +15,19 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
   const recaptchaWrapperRef = useRef<HTMLDivElement>(null);
+
+  const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    try {
+      await signInWithPopup(auth, googleProvider);
+      setIsLoading(false);
+      onLogin(); // App.tsx onAuthStateChanged will actually handle state, but we close modal
+    } catch (error) {
+      console.error("Google login failed:", error);
+      setIsLoading(false);
+      alert("Google login failed. Please try again.");
+    }
+  };
 
   useEffect(() => {
     // Initialize Recaptcha only once
@@ -169,13 +182,16 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
               </div>
 
               <div className="grid grid-cols-2 gap-5 mt-8 animate-popIn stagger-5 relative z-10">
-                <button className="flex items-center justify-center gap-3 py-4 bg-white border-2 border-slate-100 rounded-[1.5rem] hover:bg-gray-50 hover:border-slate-200 transition-all active:scale-95 shadow-sm">
-                  <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-6 h-6" alt="Google" />
-                  <span className="text-sm font-black text-gray-700 uppercase tracking-tighter">Google</span>
+                <button
+                  onClick={handleGoogleLogin}
+                  className="flex items-center justify-center gap-3 py-4 bg-white border-2 border-slate-100 rounded-[1.5rem] hover:bg-slate-50 hover:border-green-200 transition-all active:scale-95 shadow-sm group"
+                >
+                  <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-6 h-6 group-hover:scale-110 transition-transform" alt="Google" />
+                  <span className="text-sm font-black text-slate-700 uppercase tracking-tighter">Google</span>
                 </button>
-                <button className="flex items-center justify-center gap-3 py-4 bg-white border-2 border-slate-100 rounded-[1.5rem] hover:bg-gray-50 hover:border-slate-200 transition-all active:scale-95 shadow-sm">
+                <button className="flex items-center justify-center gap-3 py-4 bg-white border-2 border-slate-100 rounded-[1.5rem] hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-95 shadow-sm opacity-50 cursor-not-allowed">
                   <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" className="w-6 h-6" alt="FB" />
-                  <span className="text-sm font-black text-gray-700 uppercase tracking-tighter">Facebook</span>
+                  <span className="text-sm font-black text-slate-700 uppercase tracking-tighter">Facebook</span>
                 </button>
               </div>
             </>

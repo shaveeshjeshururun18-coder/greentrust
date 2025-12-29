@@ -2,6 +2,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Draggable from './components/Draggable';
 import { ViewState, Product, Unit, CartItem } from './types.ts';
+import { auth } from './firebaseConfig.ts';
+import { onAuthStateChanged } from 'firebase/auth';
 import { PRODUCTS, ALL_PRODUCTS, DETAILED_CATEGORIES } from './constants.tsx';
 import Header from './components/Header.tsx';
 import DesktopHeader from './components/DesktopHeader.tsx';
@@ -38,6 +40,7 @@ const App: React.FC = () => {
     return saved ? JSON.parse(saved) : [];
   });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const [showLogin, setShowLogin] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -55,6 +58,19 @@ const App: React.FC = () => {
       document.documentElement.classList.remove('dark');
     }
   }, [isDark]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setIsLoggedIn(true);
+        setUser(firebaseUser);
+      } else {
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   const toggleTheme = useCallback(() => setIsDark(prev => !prev), []);
 
@@ -467,7 +483,7 @@ const App: React.FC = () => {
           onBack={() => setCurrentView('home')}
         />;
       case 'account':
-        return <AccountView onLoginClick={() => setShowLogin(true)} isLoggedIn={isLoggedIn} toggleTheme={toggleTheme} isDark={isDark} />;
+        return <AccountView onLoginClick={() => setShowLogin(true)} isLoggedIn={isLoggedIn} user={user} toggleTheme={toggleTheme} isDark={isDark} />;
       case 'wishlist':
         return <WishlistView
           onBack={() => setCurrentView('home')}

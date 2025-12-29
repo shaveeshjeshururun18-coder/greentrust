@@ -4,11 +4,12 @@ import Footer from './Footer';
 interface AccountViewProps {
   onLoginClick: () => void;
   isLoggedIn: boolean;
+  user: any;
   toggleTheme: () => void;
   isDark: boolean;
 }
 
-const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, toggleTheme, isDark }) => {
+const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, user, toggleTheme, isDark }) => {
   const MenuLink = ({ icon, label, sub }: { icon: React.ReactNode, label: string, sub?: string }) => (
     <div className="flex items-center justify-between p-4 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors">
       <div className="flex items-center gap-4">
@@ -28,17 +29,17 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, tog
     <div className="bg-transparent min-h-full pb-20 animate-fadeIn">
       <div className="p-8 pt-12 text-white relative overflow-hidden shadow-2xl" style={{ background: 'linear-gradient(to bottom, #16a34a, #15803d)' }}>
         <div className="relative z-10 flex flex-col items-center">
-          <div className="w-24 h-24 rounded-full border-4 border-white/30 p-1 mb-4 shadow-2xl bg-white/10 backdrop-blur-md">
+          <div className="w-24 h-24 rounded-full border-4 border-white/30 p-1 mb-4 shadow-2xl bg-white/10 backdrop-blur-md overflow-hidden">
             <img
-              src={isLoggedIn ? "https://picsum.photos/seed/greenuser/200/200" : "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+              src={user?.photoURL || (isLoggedIn ? "https://picsum.photos/seed/greenuser/200/200" : "https://cdn-icons-png.flaticon.com/512/149/149071.png")}
               alt="Avatar"
               className="w-full h-full rounded-full object-cover"
             />
           </div>
           {isLoggedIn ? (
             <div className="text-center">
-              <h2 className="text-xl font-black">Rajesh Kumar</h2>
-              <p className="text-sm text-green-100 font-medium">98765 43210</p>
+              <h2 className="text-xl font-black">{user?.displayName || 'Green User'}</h2>
+              <p className="text-sm text-green-100 font-medium">{user?.phoneNumber || user?.email || 'Authenticated'}</p>
               <button className="mt-3 bg-white text-green-700 px-4 py-1.5 rounded-full font-bold text-xs uppercase shadow-lg">Edit Profile</button>
             </div>
           ) : (

@@ -189,7 +189,7 @@ const AnimatedBanner: React.FC = () => {
             </div>
             {/* Scrolling Marquee - Single Line Text */}
             <div className="mt-8 mb-2 overflow-hidden relative w-full py-3 bg-slate-50/50 dark:bg-slate-900/30 border-y border-slate-100 dark:border-slate-800">
-                <div className="whitespace-nowrap flex animate-[scrollLeft_40s_linear_infinite] gap-12 text-slate-400 dark:text-slate-500 font-bold text-sm md:text-base uppercase tracking-widest">
+                <div className="whitespace-nowrap flex animate-[scrollLeft_25s_linear_infinite] gap-12 text-slate-400 dark:text-slate-500 font-bold text-sm md:text-base uppercase tracking-widest">
                     <span className="flex items-center gap-2">Fresh Groceries, Delivered Daily <i className="fa-solid fa-bolt text-yellow-400"></i></span>
                     <span className="flex items-center gap-2">Delivered with <i className="fa-solid fa-heart text-red-500"></i> in Tamil Nadu</span>
                     <span className="flex items-center gap-2">Shop Fresh Now <i className="fa-solid fa-basket-shopping text-green-400"></i></span>

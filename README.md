@@ -85,4 +85,21 @@ To turn this into a `green-trust.apk` file, use **Capacitor**.
 - `/src/constants.tsx`: Initial Product Data.
 
 ---
-*Created with ❤️ by S.Shaveesh Jeshurun SSJ *
+## 🌐 Website Information
+Green Trust is designed to bridge the gap between organic farmers and urban households. With a focus on purity, trust, and speed, we ensure:
+- **100% Organic Certified Produce**: Directly sourced from verified farms.
+- **Zero-Plastic Packaging**: Committed to eco-friendly delivery solutions.
+- **Community Trust**: Built on transparency and quality assurance.
+
+---
+
+## 📞 Contact & Credits
+**Developed & Designed by:**
+### S.Shaveesh Jeshurun
+- **Portfolio**: [ssjportfolio-one.vercel.app](https://ssjportfolio-one.vercel.app/)
+- **Role**: Full Stack Developer & UI/UX Designer
+
+*For website development inquiries or collaborations, please visit the portfolio link above.*
+
+---
+*Created with ❤️ by S.Shaveesh Jeshurun*

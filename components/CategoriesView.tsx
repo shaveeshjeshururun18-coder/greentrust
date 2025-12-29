@@ -259,11 +259,35 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
         <div className="h-screen bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row relative animate-fadeIn transition-all overflow-hidden">
 
             {/* Mobile Header */}
-            <div className="md:hidden sticky top-0 z-30 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm flex items-center gap-4">
-                <button onClick={onBack} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
-                    <i className="fa-solid fa-arrow-left"></i>
+            <div className="md:hidden sticky top-0 z-30 bg-white dark:bg-slate-900 px-4 py-3 shadow-sm flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4 flex-1">
+                    <button onClick={onBack} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 flex-shrink-0">
+                        <i className="fa-solid fa-arrow-left"></i>
+                    </button>
+                    {isFiltersOpen ? (
+                        <div className="flex-1 relative animate-fadeIn">
+                            <input
+                                type="text"
+                                autoFocus
+                                placeholder="Search here..."
+                                className="w-full h-10 rounded-lg bg-slate-100 dark:bg-slate-800 border-none px-4 text-sm font-bold focus:ring-2 focus:ring-green-500"
+                                onChange={(e) => {
+                                    // Handle local search if needed, or pass up
+                                }}
+                            />
+                            <i className="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        </div>
+                    ) : (
+                        <h1 className="text-lg font-black text-slate-900 dark:text-white">Categories</h1>
+                    )}
+                </div>
+
+                <button
+                    onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${isFiltersOpen ? 'bg-green-100 text-green-600' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'}`}
+                >
+                    <i className={`fa-solid ${isFiltersOpen ? 'fa-xmark' : 'fa-magnifying-glass'}`}></i>
                 </button>
-                <h1 className="text-lg font-black text-slate-900 dark:text-white">Categories</h1>
             </div>
 
             {/* Desktop Sidebar Container */}

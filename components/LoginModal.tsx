@@ -39,60 +39,52 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
     }
   };
 
+  // Ref to store the verifier to avoid window object dependency issues
+  const verifierRef = useRef<RecaptchaVerifier | null>(null);
+
+  const initRecaptcha = () => {
+    if (verifierRef.current) return verifierRef.current;
+
+    if (recaptchaWrapperRef.current) {
+      try {
+        // Clear any existing instance on the window to prevent duplicates
+        if (window.recaptchaVerifier) {
+          try { window.recaptchaVerifier.clear(); } catch (e) { }
+        }
+
+        const verifier = new RecaptchaVerifier(auth, recaptchaWrapperRef.current, {
+          'size': 'invisible',
+          'callback': () => {
+            // Solved
+          },
+          'expired-callback': () => {
+            console.warn("reCAPTCHA expired");
+            // Allow auto-reset on next attempt
+          }
+        });
+
+        window.recaptchaVerifier = verifier; // For Firebase compatibility if needed by internal SDK
+        verifierRef.current = verifier;
+
+        verifier.render().catch(err => console.error("Render error:", err));
+        return verifier;
+      } catch (error) {
+        console.error("Recaptcha Init Error:", error);
+        return null;
+      }
+    }
+    return null;
+  };
+
   useEffect(() => {
-    // defined outside for cleanup access
-    let verifier: RecaptchaVerifier | undefined;
-
-    const initRecaptcha = () => {
-      // Clear existing verifier if any
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.clear();
-        } catch (e) {
-          console.warn("Retrying to clear old recaptcha instance", e);
-        }
-        window.recaptchaVerifier = undefined;
-      }
-
-      if (recaptchaWrapperRef.current) {
-        try {
-          // Use the element directly instead of ID to avoid querySelector issues
-          verifier = new RecaptchaVerifier(auth, recaptchaWrapperRef.current, {
-            'size': 'invisible',
-            'callback': () => {
-              console.log("reCAPTCHA solved successfully");
-            },
-            'expired-callback': () => {
-              console.warn("reCAPTCHA expired. Resetting...");
-              if (window.recaptchaVerifier) {
-                window.recaptchaVerifier.reset();
-              }
-            }
-          });
-
-          // Verify it rendered successfully
-          verifier.render().then(widgetId => {
-            console.log("reCAPTCHA rendered with ID:", widgetId);
-          });
-
-          window.recaptchaVerifier = verifier;
-        } catch (error) {
-          console.error("Failed to initialize reCAPTCHA:", error);
-        }
-      }
-    };
-
-    // Small timeout to ensure DOM is ready and stabilization
-    const timer = setTimeout(initRecaptcha, 100);
-
+    // Initial setup attempt
+    const timer = setTimeout(initRecaptcha, 500);
     return () => {
       clearTimeout(timer);
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.clear();
-        } catch (e) {
-          console.warn("Error clearing recaptcha on unmount", e);
-        }
+      // Cleanup on unmount
+      if (verifierRef.current) {
+        try { verifierRef.current.clear(); } catch (e) { }
+        verifierRef.current = null;
         window.recaptchaVerifier = undefined;
       }
     }
@@ -103,16 +95,20 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
     setIsLoading(true);
 
     const phoneNumber = `+91${phone}`;
-    const appVerifier = window.recaptchaVerifier;
+
+    // Lazy init/Get existing verifier
+    let appVerifier = verifierRef.current;
+    if (!appVerifier) {
+      appVerifier = initRecaptcha();
+    }
+
+    if (!appVerifier) {
+      setIsLoading(false);
+      alert("System Error: Could not initialize security check. Please refresh and try again.");
+      return;
+    }
 
     try {
-      if (!appVerifier) {
-        console.error("No reCAPTCHA verifier found.");
-        alert("Internal Error: Captcha not initialized. Please close and reopen the login window.");
-        setIsLoading(false);
-        return;
-      }
-
       const confirmation = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
       console.log("SMS sent successfully");
       setConfirmationResult(confirmation);
@@ -122,6 +118,19 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
       console.error("Error sending OTP:", error);
       setIsLoading(false);
 
+      // Force reset verifier on error to allow retrying
+      if (verifierRef.current) {
+        // Don't clear completely, just reset the widget if possible
+        try {
+          // Re-render often fixes 'captcha check failed' state
+          verifierRef.current.render().then(wid => grecaptcha.reset(wid));
+        } catch (e) {
+          // If reset fails, we might need to recreate
+          verifierRef.current = null;
+          setTimeout(initRecaptcha, 100);
+        }
+      }
+
       let msg = `Failed to send SMS. (${error.code || error.message})`;
       if (error.code === 'auth/invalid-phone-number') msg = "Invalid phone number format.";
       else if (error.code === 'auth/too-many-requests') msg = "Too many attempts. Please try again later.";
@@ -130,17 +139,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
       else if (error.message && error.message.includes('reCAPTCHA')) msg = "reCAPTCHA client error. " + error.message;
 
       alert(msg);
-
-      // Reset recaptcha on error so user can try again
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.render().then(widgetId => {
-            window.recaptchaVerifier.reset(widgetId);
-          });
-        } catch (e) {
-          console.log("Error resetting captcha", e);
-        }
-      }
     }
   };
 

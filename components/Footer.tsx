@@ -39,10 +39,10 @@ const Footer: React.FC = () => {
                     <div>
                         <div className="flex items-center gap-2 mb-6">
                             <i className="fa-solid fa-leaf text-3xl text-green-600"></i>
-                            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">Green<span className="text-green-600">Trust</span></h2>
+                            <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tighter">Green<span className="text-green-600">Trust Grocery</span></h2>
                         </div>
                         <p className="leading-relaxed mb-6">
-                            Green Trust is Chennai's best food and grocery store. With over 200 handpicked products in the catalogue, you will find everything you are looking for.
+                            Green Trust Grocery is Chennai's best food and grocery store. With over 200 handpicked products in the catalogue, you will find everything you are looking for.
                         </p>
                     </div>
 
@@ -101,7 +101,7 @@ const Footer: React.FC = () => {
             <div className="bg-green-600 text-white py-4 px-10">
                 <div className="max-w-[1920px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
                     <p className="text-xs font-medium text-center md:text-left">
-                        Copyright © 2025 Green Trust All rights reserved.
+                        Copyright © 2025 Green Trust Grocery All rights reserved.
                     </p>
 
                     <div className="flex items-center gap-4">

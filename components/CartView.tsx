@@ -13,10 +13,25 @@ interface CartViewProps {
   onExploreProducts: () => void;
   isLoggedIn: boolean;
   onLoginReq: () => void;
+  step?: 'list' | 'checkout';
+  onStepChange?: (step: 'list' | 'checkout') => void;
+  onOrderSuccess: () => void;
 }
 
-const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCart, addToCart, clearCart, onExploreProducts, isLoggedIn, onLoginReq }) => {
-  const [checkingOut, setCheckingOut] = useState(false);
+const CartView: React.FC<CartViewProps> = ({
+  cart,
+  address,
+  onBack,
+  removeFromCart,
+  addToCart,
+  clearCart,
+  onExploreProducts,
+  isLoggedIn,
+  onLoginReq,
+  step = 'list',
+  onStepChange,
+  onOrderSuccess
+}) => {
   const [showQR, setShowQR] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'gpay' | 'phonepe'>('cod');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -85,7 +100,7 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
 
     const waUrl = `https://wa.me/919500245626?text=${message}`;
     window.open(waUrl, '_blank');
-    setCheckingOut(true);
+    onOrderSuccess();
   };
 
   const handleGPay = async () => {
@@ -106,7 +121,7 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
       // Deep Link to UPI App (GPay preference if possible, but standard UPI works)
       window.location.href = upiUrl;
       // We assume they went to pay, show waiting state/success
-      setTimeout(() => setCheckingOut(true), 5000);
+      setTimeout(() => onOrderSuccess(), 5000);
     } else {
       // Desktop: Show QR Code
       setShowQR(true);
@@ -144,7 +159,7 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
           <p className="text-2xl font-black text-gray-900 mb-8">₹{total}</p>
 
           <button
-            onClick={() => { setShowQR(false); setCheckingOut(true); }}
+            onClick={() => { setShowQR(false); onOrderSuccess(); }}
             className="w-full bg-green-600 text-white font-black py-4 rounded-xl shadow-lg hover:bg-green-700 transition-colors"
           >
             I Have Paid
@@ -154,38 +169,7 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
     );
   }
 
-  if (checkingOut) {
-    return (
-      <div className="fixed inset-0 bg-white z-[70] flex flex-col items-center justify-center p-8 text-center animate-fadeIn">
-        <div className="relative mb-12">
-          <div className="w-32 h-32 bg-green-500 rounded-full flex items-center justify-center animate-success shadow-2xl shadow-green-200">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <div className="absolute -top-4 -right-4 w-8 h-8 bg-yellow-400 rounded-full animate-ping opacity-75"></div>
-          <div className="absolute -bottom-2 -left-4 w-6 h-6 bg-blue-400 rounded-full animate-bounce"></div>
-        </div>
-
-        <h2 className="text-3xl font-black text-gray-900 mb-4 animate-popIn stagger-1">Order Confirmed!</h2>
-        <p className="text-gray-500 mb-12 max-w-[250px] mx-auto font-medium leading-relaxed animate-popIn stagger-2">
-          Thank you for your payment. We are processing your order right away!
-        </p>
-
-        <div className="w-full space-y-4 animate-popIn stagger-3">
-          <button
-            onClick={() => { clearCart(); onBack(); }}
-            className="w-full bg-green-600 text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-green-100 hover:scale-105 active:scale-95 transition-all"
-          >
-            CONTINUE SHOPPING
-          </button>
-          <button className="text-green-600 font-black text-sm uppercase tracking-widest p-4">
-            Track Order Status
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // Checkout Success Screen logic removed from here as it's now a dedicated component
 
   return (
     <div className="flex flex-col h-full bg-gray-50 dark:bg-slate-950 animate-fadeIn">
@@ -207,10 +191,10 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar pb-40 md:pb-0">
-        <div className="md:flex md:items-start md:gap-8 md:max-w-5xl md:mx-auto md:p-6">
+        <div className={`md:flex md:items-start md:gap-8 md:max-w-5xl md:mx-auto md:p-6 ${step === 'checkout' ? 'flex-col-reverse md:flex-row' : ''}`}>
 
           {/* LEFT COLUMN: Address & Items */}
-          <div className="w-full md:w-[60%] space-y-6">
+          <div className={`w-full md:w-[60%] space-y-6 ${step === 'checkout' ? 'hidden md:block' : ''}`}>
 
             {/* Delivery Address Card */}
             <div className="mx-6 md:mx-0 mt-6 md:mt-0 bg-white dark:bg-slate-900 p-6 rounded-[2rem] shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-gray-100 dark:border-slate-800 animate-popIn stagger-1">
@@ -269,7 +253,7 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
           </div>
 
           {/* RIGHT COLUMN: Summary & Payment & Actions (Sticky on Desktop) */}
-          <div className="w-full md:w-[40%] md:sticky md:top-24 space-y-6">
+          <div className={`w-full md:w-[40%] md:sticky md:top-24 space-y-6 ${step === 'list' ? 'hidden md:block' : ''}`}>
 
             {/* Order Summary */}
             {cart.length > 0 && (
@@ -398,39 +382,55 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
 
       {/* FIXED FOOTER (Mobile Only) */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-6 pb-12 border-t border-gray-100 dark:border-slate-800 max-w-md mx-auto z-40 space-y-3">
-        {paymentMethod === 'gpay' && (
+        {step === 'list' ? (
           <button
-            onClick={handleGPay}
+            onClick={() => onStepChange?.('checkout')}
             disabled={cart.length === 0}
-            className={`w-full py-4 rounded-[2rem] font-black text-lg shadow-xl active:scale-95 flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-800 transition-all ${cart.length === 0 ? 'opacity-50 grayscale' : ''}`}
+            className={`w-full py-4 rounded-[2rem] font-black text-lg shadow-xl active:scale-95 flex items-center justify-between px-8 transition-all ${cart.length === 0 ? 'bg-gray-200 text-gray-400' : 'bg-green-600 text-white hover:bg-green-700'}`}
           >
-            <div className="w-14 h-6 bg-white rounded flex items-center justify-center p-0.5">
-              <svg viewBox="0 0 134 66" className="w-full h-full"><path fill="#fff" d="M134 33c0 18.2-14.8 33-33 33H33C14.8 66 0 51.2 0 33S14.8 0 33 0h68c18.2 0 33 14.8 33 33z" /><path fill="#4285F4" d="M36.1 27.5h-15v2.2h15c0 12.1-9.9 22-22 22s-22-9.9-22-22 9.9-22 22-22c5.8 0 11.1 2.3 15.2 6l-6.2 6.2C21.6 8.3 19.3 7 14.1 7 8 7 3 12 3 18s5 11 11.1 11c4.9 0 9.1-3 10.7-7.5h-10.7v-8.8h17c.5 2.5.8 5.2.8 8 .1 9.4-6.4 16.8-15.8 16.8z" /><path fill="#34A853" d="M63 43.1V9.9h7.8v33.2z" /><path fill="#EA4335" d="M52.5 19.1v17.5c-3.1 1.6-6.6 2.5-10.3 2.5-9.2 0-16.7-7.5-16.7-16.7 0-9.2 7.5-16.7 16.7-16.7 3.7 0 7.2.9 10.3 2.5zm-3.5 14.2c2-1.3 3.5-3.5 3.5-6.1 0-2.6-1.5-4.8-3.5-6.1-1.9-1.3-4.2-2-6.8-2s-4.9.7-6.8 2c-2 1.3-3.5 3.5-3.5 6.1 0 2.6 1.5 4.8 3.5 6.1 1.9 1.3 4.2 2 6.8 2 2.6 0 4.9-.7 6.8-2z" /><path fill="#FBBC04" d="M84.3 19.1l-2.8 7.2-2.9-7.2h-8.3l7 15.7v6.6h7.8v-6.3l7.3-16h-8.1z" /></svg>
+            <span>CHECKOUT</span>
+            <div className="flex items-center gap-2">
+              <span className="text-white/60 text-xs">₹{total}</span>
+              <i className="fa-solid fa-arrow-right text-xs"></i>
             </div>
-            <span>Pay</span>
           </button>
-        )}
+        ) : (
+          <>
+            {paymentMethod === 'gpay' && (
+              <button
+                onClick={handleGPay}
+                disabled={cart.length === 0}
+                className={`w-full py-4 rounded-[2rem] font-black text-lg shadow-xl active:scale-95 flex items-center justify-center gap-2 bg-black text-white hover:bg-gray-800 transition-all ${cart.length === 0 ? 'opacity-50 grayscale' : ''}`}
+              >
+                <div className="w-14 h-6 bg-white rounded flex items-center justify-center p-0.5">
+                  <svg viewBox="0 0 134 66" className="w-full h-full"><path fill="#fff" d="M134 33c0 18.2-14.8 33-33 33H33C14.8 66 0 51.2 0 33S14.8 0 33 0h68c18.2 0 33 14.8 33 33z" /><path fill="#4285F4" d="M36.1 27.5h-15v2.2h15c0 12.1-9.9 22-22 22s-22-9.9-22-22 9.9-22 22-22c5.8 0 11.1 2.3 15.2 6l-6.2 6.2C21.6 8.3 19.3 7 14.1 7 8 7 3 12 3 18s5 11 11.1 11c4.9 0 9.1-3 10.7-7.5h-10.7v-8.8h17c.5 2.5.8 5.2.8 8 .1 9.4-6.4 16.8-15.8 16.8z" /><path fill="#34A853" d="M63 43.1V9.9h7.8v33.2z" /><path fill="#EA4335" d="M52.5 19.1v17.5c-3.1 1.6-6.6 2.5-10.3 2.5-9.2 0-16.7-7.5-16.7-16.7 0-9.2 7.5-16.7 16.7-16.7 3.7 0 7.2.9 10.3 2.5zm-3.5 14.2c2-1.3 3.5-3.5 3.5-6.1 0-2.6-1.5-4.8-3.5-6.1-1.9-1.3-4.2-2-6.8-2s-4.9.7-6.8 2c-2 1.3-3.5 3.5-3.5 6.1 0 2.6 1.5 4.8 3.5 6.1 1.9 1.3 4.2 2 6.8 2 2.6 0 4.9-.7 6.8-2z" /><path fill="#FBBC04" d="M84.3 19.1l-2.8 7.2-2.9-7.2h-8.3l7 15.7v6.6h7.8v-6.3l7.3-16h-8.1z" /></svg>
+                </div>
+                <span>Pay ₹{total}</span>
+              </button>
+            )}
 
-        {paymentMethod === 'phonepe' && (
-          <button
-            onClick={handleGPay} // Using same intent handler for now, deep linking handles selection
-            disabled={cart.length === 0}
-            className={`w-full py-4 rounded-[2rem] font-black text-lg shadow-xl active:scale-95 flex items-center justify-center gap-3 bg-[#6739B7] text-white hover:bg-[#5e33a6] transition-all ${cart.length === 0 ? 'opacity-50 grayscale' : ''}`}
-          >
-            <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center text-[#6739B7] font-bold text-xs">Pe</div>
-            <span>Pay with PhonePe</span>
-          </button>
-        )}
+            {paymentMethod === 'phonepe' && (
+              <button
+                onClick={handleGPay}
+                disabled={cart.length === 0}
+                className={`w-full py-4 rounded-[2rem] font-black text-lg shadow-xl active:scale-95 flex items-center justify-center gap-3 bg-[#6739B7] text-white hover:bg-[#5e33a6] transition-all ${cart.length === 0 ? 'opacity-50 grayscale' : ''}`}
+              >
+                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center text-[#6739B7] font-bold text-xs">Pe</div>
+                <span>Pay with PhonePe ₹{total}</span>
+              </button>
+            )}
 
-        {paymentMethod === 'cod' && (
-          <button
-            onClick={handleCheckout}
-            disabled={cart.length === 0}
-            className={`w-full py-4 rounded-[2rem] font-black text-lg shadow-lg shimmer-effect active:scale-95 flex items-center justify-center gap-3 ${cart.length > 0 ? 'bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white' : 'bg-gray-200 text-gray-400'}`}
-          >
-            <i className="fa-brands fa-whatsapp text-2xl"></i>
-            Place Order via WhatsApp
-          </button>
+            {paymentMethod === 'cod' && (
+              <button
+                onClick={handleCheckout}
+                disabled={cart.length === 0}
+                className={`w-full py-4 rounded-[2rem] font-black text-lg shadow-lg shimmer-effect active:scale-95 flex items-center justify-center gap-3 ${cart.length > 0 ? 'bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white' : 'bg-gray-200 text-gray-400'}`}
+              >
+                <i className="fa-brands fa-whatsapp text-2xl"></i>
+                Place Order ₹{total}
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>

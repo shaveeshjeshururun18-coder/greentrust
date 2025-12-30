@@ -15,6 +15,7 @@ import BottomNav from './components/BottomNav.tsx';
 import CartView from './components/CartView.tsx';
 import CategoriesView from './components/CategoriesView.tsx';
 import AllCategoriesView from './components/AllCategoriesView.tsx';
+import OrderSuccessView from './components/OrderSuccessView.tsx';
 
 import AccountView from './components/AccountView.tsx';
 import LoginModal from './components/LoginModal.tsx';
@@ -68,7 +69,7 @@ const App: React.FC = () => {
     const handleUrl = () => {
       const path = window.location.pathname.replace(/^\/|\/$/g, '');
       const validViews: ViewState[] = [
-        'home', 'categories', 'cart', 'account', 'product-detail',
+        'home', 'categories', 'cart', 'checkout', 'order-success', 'account', 'product-detail',
         'location-picker', 'wishlist', 'orders', 'basketbuddy',
         'wallet', 'all-categories', 'developer', 'support', 'feedback'
       ];
@@ -104,6 +105,8 @@ const App: React.FC = () => {
     if (window.location.pathname !== path) {
       window.history.pushState({}, '', path);
     }
+    // Also dispatch popstate to trigger any listeners if needed, 
+    // though here we are the ones listening.
   }, [currentView, selectedProduct]);
 
   /* Guest Login Popup State */
@@ -609,14 +612,14 @@ const App: React.FC = () => {
             {/* SEO Content Section */}
             <div className="px-6 mt-16 mb-12 animate-popIn stagger-5">
               <div className="bg-slate-50 dark:bg-slate-800/40 rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-slate-800">
-                <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-6">About Green Trust - Organic Fresh Market</h2>
+                <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-6">About Green Trust Grocery - Organic Fresh Market</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-600 dark:text-slate-400">
                   <div className="space-y-4">
                     <p className="leading-relaxed">
-                      At <strong className="text-green-600">Green Trust</strong>, we are committed to bringing the freshest, most authentic organic produce directly from local farms in Tamil Nadu to your home in Chennai. Our mission is to promote sustainable farming while ensuring your family gets the purest quality vegetables and fruits.
+                      At <strong className="text-green-600">Green Trust Grocery</strong>, we are committed to bringing the freshest, most authentic organic produce directly from local farms in Tamil Nadu to your home in Chennai. Our mission is to promote sustainable farming while ensuring your family gets the purest quality vegetables and fruits.
                     </p>
                     <p className="leading-relaxed">
-                      Why choose <strong className="text-green-600">Green Trust</strong>? Because we eliminate the middleman, ensuring farmers get a fair price and you get produce harvested within hours of delivery. From farm-fresh country tomatoes to exotic Hass avocados, we deliver everything in 15 minutes.
+                      Why choose <strong className="text-green-600">Green Trust Grocery</strong>? Because we eliminate the middleman, ensuring farmers get a fair price and you get produce harvested within hours of delivery. From farm-fresh country tomatoes to exotic Hass avocados, we deliver everything in 15 minutes.
                     </p>
                   </div>
                   <div className="space-y-4">
@@ -661,6 +664,29 @@ const App: React.FC = () => {
           onExploreProducts={() => setCurrentView('home')}
           isLoggedIn={isLoggedIn}
           onLoginReq={() => setShowLogin(true)}
+          step="list"
+          onStepChange={(s) => s === 'checkout' ? setCurrentView('checkout') : setCurrentView('cart')}
+          onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
+        />;
+      case 'checkout':
+        return <CartView
+          cart={cart}
+          address={userAddress}
+          onBack={() => setCurrentView('cart')}
+          removeFromCart={removeFromCart}
+          addToCart={addToCart}
+          clearCart={clearCart}
+          onExploreProducts={() => setCurrentView('home')}
+          isLoggedIn={isLoggedIn}
+          onLoginReq={() => setShowLogin(true)}
+          step="checkout"
+          onStepChange={(s) => s === 'list' ? setCurrentView('cart') : setCurrentView('checkout')}
+          onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
+        />;
+      case 'order-success':
+        return <OrderSuccessView
+          onContinueShopping={() => setCurrentView('home')}
+          onTrackOrder={() => setCurrentView('orders')}
         />;
       case 'location-picker':
         return <LocationPicker

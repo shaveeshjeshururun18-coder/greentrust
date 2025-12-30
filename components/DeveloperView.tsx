@@ -24,13 +24,9 @@ const DeveloperView: React.FC<DeveloperProps> = ({ onBack }) => {
                     <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full -translate-y-16 translate-x-16"></div>
 
                     <div className="relative z-10">
-                        <div className="w-32 h-32 rounded-[2.5rem] bg-gradient-to-br from-green-400 to-green-600 p-1.5 mx-auto mb-6 shadow-xl rotate-3">
-                            <div className="w-full h-full rounded-[2.2rem] bg-white dark:bg-slate-800 p-1">
-                                <img
-                                    src="https://picsum.photos/seed/dev/300/300"
-                                    alt="Developer"
-                                    className="w-full h-full rounded-[2rem] object-cover"
-                                />
+                        <div className="w-32 h-32 rounded-[2.5rem] bg-gradient-to-br from-green-400 to-green-600 p-1.5 mx-auto mb-6 shadow-xl rotate-3 flex items-center justify-center">
+                            <div className="w-full h-full rounded-[2.2rem] bg-white dark:bg-slate-800 flex items-center justify-center">
+                                <span className="text-4xl font-black text-green-600 dark:text-green-400 tracking-tighter">SSJ</span>
                             </div>
                         </div>
 
@@ -38,20 +34,20 @@ const DeveloperView: React.FC<DeveloperProps> = ({ onBack }) => {
                         <p className="text-green-600 dark:text-green-400 font-bold uppercase tracking-widest text-xs mb-6">Full Stack Developer & UI Designer</p>
 
                         <div className="flex flex-wrap justify-center gap-3 mb-8">
-                            <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">React</span>
-                            <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">Vite</span>
+                            <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">React Native</span>
+                            <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">TypeScript</span>
                             <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">Firebase</span>
-                            <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">Tailwind CSS</span>
+                            <span className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300">UX/UI</span>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <a href="https://github.com/shaveeshjeshururun18-coder" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-95">
-                                <i className="fa-brands fa-github text-xl"></i>
-                                Github
+                            <a href="https://ssjportfolio-one.vercel.app/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-95">
+                                <i className="fa-solid fa-globe text-xl"></i>
+                                Website
                             </a>
                             <a href="mailto:shaveeshjeshurun@gmail.com" className="flex items-center justify-center gap-2 py-4 bg-green-600 text-white rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-green-600/20">
-                                <i className="fa-solid fa-envelope text-xl"></i>
-                                Contact
+                                <i className="fa-brands fa-google text-xl"></i>
+                                Gmail
                             </a>
                         </div>
                     </div>

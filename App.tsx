@@ -61,6 +61,19 @@ const App: React.FC = () => {
     }
   }, [isDark]);
 
+  // Guest Login Prompt Timer
+  useEffect(() => {
+    if (!isLoggedIn && !showLogin) {
+      const timer = setTimeout(() => {
+        // Only show if user hasn't interacted much? Or just show it once.
+        // We'll use a session storage flag to avoid annoying them every refresh if we wanted,
+        // but for now, just a simple timer.
+        setShowLogin(true);
+      }, 15000); // 15 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [isLoggedIn, showLogin]);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {

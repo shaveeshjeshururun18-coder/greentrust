@@ -207,10 +207,10 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar pb-40 md:pb-0">
-        <div className="md:flex md:items-start md:gap-8 md:max-w-7xl md:mx-auto md:p-6">
+        <div className="md:flex md:items-start md:gap-8 md:max-w-5xl md:mx-auto md:p-6">
 
           {/* LEFT COLUMN: Address & Items */}
-          <div className="w-full md:w-[65%] space-y-6">
+          <div className="w-full md:w-[60%] space-y-6">
 
             {/* Delivery Address Card */}
             <div className="mx-6 md:mx-0 mt-6 md:mt-0 bg-white dark:bg-slate-900 p-6 rounded-[2rem] shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-gray-100 dark:border-slate-800 animate-popIn stagger-1">
@@ -269,7 +269,7 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
           </div>
 
           {/* RIGHT COLUMN: Summary & Payment & Actions (Sticky on Desktop) */}
-          <div className="w-full md:w-[35%] md:sticky md:top-24 space-y-6">
+          <div className="w-full md:w-[40%] md:sticky md:top-24 space-y-6">
 
             {/* Order Summary */}
             {cart.length > 0 && (
@@ -326,8 +326,8 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
                   onClick={() => setPaymentMethod('gpay')}
                   className={`p-4 rounded-[1.5rem] border-[3px] flex items-center gap-4 cursor-pointer transition-all active:scale-95 ${paymentMethod === 'gpay' ? 'border-gray-300 bg-white shadow-xl shadow-gray-200' : 'border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 opacity-60'}`}
                 >
-                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center p-2 border border-gray-100">
-                    <svg viewBox="0 0 24 24" className="w-full h-full"><path fill="#EA4335" d="M12 24c6.6 0 12-5.4 12-12S18.6 0 12 0 0 5.4 0 12s5.4 12 12 12z" /><path fill="#FFF" d="M17.8 8.6h-2.5c-.3 0-.6.2-.7.4l-2.4 5.8-2.5-5.8c-.1-.3-.3-.4-.7-.4H6.4c-.4 0-.6.5-.3.8l4 8.7-2.3 5.2c-.1.3.1.6.4.6h2.5c.3 0 .6-.2.7-.4l6.4-14.1c.3-.3.1-.8-.3-.8z" /><path fill="#FFF" d="M9.8 8.6H5.4c-.3 0-.5.3-.4.6l.8 3.5c.1.3.3.5.6.5h3.4c.5 0 .9-.3 1-.8l.9-3.2c.2-.4-.2-.6-.6-.6z" /></svg>
+                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center p-2 border border-gray-100 overflow-hidden">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/1200px-Google_Pay_Logo.svg.png" className="w-full h-full object-contain" alt="GPay" />
                   </div>
                   <div className="flex-1">
                     <p className={`text-sm font-black ${paymentMethod === 'gpay' ? 'text-gray-900' : 'text-gray-500'}`}>Google Pay</p>
@@ -341,7 +341,9 @@ const CartView: React.FC<CartViewProps> = ({ cart, address, onBack, removeFromCa
                   onClick={() => setPaymentMethod('phonepe')}
                   className={`p-4 rounded-[1.5rem] border-[3px] flex items-center gap-4 cursor-pointer transition-all active:scale-95 ${paymentMethod === 'phonepe' ? 'border-[#6739B7] bg-[#6739B7]/10 shadow-lg shadow-purple-100' : 'border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 opacity-60'}`}
                 >
-                  <div className="w-12 h-12 bg-[#6739B7] rounded-full flex items-center justify-center text-white font-bold">Pe</div>
+                  <div className="w-12 h-12 bg-[#6739B7] rounded-full flex items-center justify-center overflow-hidden p-2">
+                    <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/phonepe-logo-icon.png" className="w-full h-full object-contain filter brightness-0 invert" alt="PhonePe" />
+                  </div>
                   <div className="flex-1">
                     <p className={`text-sm font-black ${paymentMethod === 'phonepe' ? 'text-gray-900 dark:text-white' : 'text-gray-500'}`}>PhonePe</p>
                     <p className="text-[10px] font-bold text-gray-400">Fast & Secure UPI</p>

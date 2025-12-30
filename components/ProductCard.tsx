@@ -50,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </button>
 
       <div className="relative cursor-pointer overflow-hidden p-3" onClick={onClick}>
-        <div className="aspect-square bg-gray-50/50 dark:bg-white rounded-2xl p-2 flex items-center justify-center relative overflow-hidden group-hover:bg-gray-100/50 dark:group-hover:bg-gray-100 transition-colors">
+        <div className="h-48 bg-gray-50/50 dark:bg-white rounded-2xl p-2 flex items-center justify-center relative overflow-hidden group-hover:bg-gray-100/50 dark:group-hover:bg-gray-100 transition-colors">
           {/* Animated Background Shimmer on Card */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
 

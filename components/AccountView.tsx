@@ -71,8 +71,8 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
         <div className="absolute bottom-0 right-0 w-24 h-24 bg-white/10 rounded-full translate-x-12 translate-y-12"></div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 p-4 mt-4 relative z-20">
-        <div className="bg-white p-3 rounded-2xl shadow-lg border border-gray-100 flex flex-col items-center text-center">
+      <div className="grid grid-cols-2 gap-4 p-4 mt-4 relative z-20">
+        <div onClick={() => onNavigate('orders')} className="bg-white p-3 rounded-2xl shadow-lg border border-gray-100 flex flex-col items-center text-center cursor-pointer active:scale-95 transition-transform">
           <div className="bg-blue-50 p-2 rounded-lg mb-2">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -88,14 +88,6 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
           </div>
           <span className="text-[10px] font-black text-gray-800">REWARDS</span>
         </div>
-        <div className="bg-white p-3 rounded-2xl shadow-lg border border-gray-100 flex flex-col items-center text-center">
-          <div className="bg-yellow-50 p-2 rounded-lg mb-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
-          <span className="text-[10px] font-black text-gray-800">WALLET</span>
-        </div>
       </div>
 
       <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100">
@@ -109,10 +101,12 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
           sub="Contactless, Morning Slots"
           icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
         />
-        <MenuLink
-          label="Manage Addresses"
-          icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
-        />
+        <div onClick={() => onNavigate('location-picker')}>
+          <MenuLink
+            label="Manage Addresses"
+            icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
+          />
+        </div>
         <MenuLink
           label="Refer & Earn"
           sub="Earn ₹250 for every referral"
@@ -125,72 +119,73 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
             icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
           />
         </div>
-        <MenuLink
-          label="Help & Support"
-          icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
-        />
-      </div>
+        <a href="mailto:shaveeshjeshurun@gmail.com?subject=Help & Support" className="block">
+          <MenuLink
+            label="Help & Support"
+            icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
+          />
+        </a>
 
-      <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={toggleTheme}>
-          <div className="flex items-center gap-4">
-            <div className="text-green-600">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-bold text-gray-800">Dark Mode</p>
-              <p className="text-[10px] text-gray-400">{isDark ? 'On' : 'Off'}</p>
-            </div>
-          </div>
-          <div className={`w-10 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out ${isDark ? 'bg-green-600' : ''}`}>
-            <div className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${isDark ? 'translate-x-4' : ''}`}></div>
-          </div>
-        </div>
-      </div>
-
-      {isLoggedIn && (
-        <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100 mb-6">
-          <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-red-50 transition-colors group" onClick={onLogoutClick}>
+        <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100">
+          <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={toggleTheme}>
             <div className="flex items-center gap-4">
-              <div className="text-red-500 bg-red-100 p-2 rounded-full group-hover:bg-red-200 transition-colors">
+              <div className="text-green-600">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-bold text-red-500">Sign Out</p>
-                <p className="text-[10px] text-red-300">Come back soon!</p>
+                <p className="text-sm font-bold text-gray-800">Dark Mode</p>
+                <p className="text-[10px] text-gray-400">{isDark ? 'On' : 'Off'}</p>
               </div>
             </div>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-200 group-hover:text-red-400 group-hover:translate-x-1 transition-all" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-            </svg>
+            <div className={`w-10 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out ${isDark ? 'bg-green-600' : ''}`}>
+              <div className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${isDark ? 'translate-x-4' : ''}`}></div>
+            </div>
           </div>
         </div>
-      )}
 
-      <div className="p-8 text-center text-gray-300">
-        <p className="text-xs font-bold tracking-widest uppercase mb-1">Green Trust</p>
-        <p className="text-[10px]">App Version 3.4.2 (2025)</p>
+        {isLoggedIn && (
+          <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100 mb-6">
+            <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-red-50 transition-colors group" onClick={onLogoutClick}>
+              <div className="flex items-center gap-4">
+                <div className="text-red-500 bg-red-100 p-2 rounded-full group-hover:bg-red-200 transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-red-500">Sign Out</p>
+                  <p className="text-[10px] text-red-300">Come back soon!</p>
+                </div>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-200 group-hover:text-red-400 group-hover:translate-x-1 transition-all" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        )}
+
+        <div className="p-8 text-center text-gray-300">
+          <p className="text-xs font-bold tracking-widest uppercase mb-1">Green Trust</p>
+          <p className="text-[10px]">App Version 3.4.2 (2025)</p>
+        </div>
+
+        <div className="hidden md:block">
+          <Footer />
+        </div>
+
+        {showEditProfile && (
+          <EditProfileModal
+            user={user}
+            onClose={() => setShowEditProfile(false)}
+            onSave={() => {
+              setShowEditProfile(false);
+            }}
+          />
+        )}
       </div>
-
-      <div className="hidden md:block">
-        <Footer />
-      </div>
-
-      {showEditProfile && (
-        <EditProfileModal
-          user={user}
-          onClose={() => setShowEditProfile(false)}
-          onSave={() => {
-            setShowEditProfile(false);
-          }}
-        />
-      )}
-    </div>
-  );
+      );
 };
 
-export default AccountView;
+      export default AccountView;

@@ -614,7 +614,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`w-full ${currentView === 'categories' ? '' : 'md:max-w-6xl mx-auto'} h-screen relative overflow-hidden flex flex-col selection:bg-green-100 ${isDark ? 'dark text-white' : ''}`}>
+    <div className={`w-full h-screen relative overflow-hidden flex flex-col selection:bg-green-100 ${isDark ? 'dark text-white' : ''}`}>
       <BackgroundAnimation />
       {/* Entrance Screen removed as per request, using index.html splash instead */}
 
@@ -663,7 +663,9 @@ const App: React.FC = () => {
         className="flex-1 overflow-y-auto no-scrollbar relative z-10"
         onScroll={handleScroll}
       >
-        {renderContent()}
+        <div className={`${currentView === 'categories' || currentView === 'all-categories' || currentView === 'basketbuddy' ? '' : 'md:max-w-6xl mx-auto'}`}>
+          {renderContent()}
+        </div>
       </main>
 
       {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && currentView !== 'basketbuddy' && (

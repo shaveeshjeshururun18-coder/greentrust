@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Footer from './Footer';
+import EditProfileModal from './EditProfileModal';
 
 interface AccountViewProps {
   onLoginClick: () => void;
@@ -42,7 +43,12 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
             <div className="text-center">
               <h2 className="text-xl font-black">{user?.displayName || 'Green User'}</h2>
               <p className="text-sm text-green-100 font-medium">{user?.phoneNumber || user?.email || 'Authenticated'}</p>
-              <button className="mt-3 bg-white text-green-700 px-4 py-1.5 rounded-full font-bold text-xs uppercase shadow-lg">Edit Profile</button>
+              <button
+                onClick={() => setShowEditProfile(true)}
+                className="mt-3 bg-white text-green-700 px-4 py-1.5 rounded-full font-bold text-xs uppercase shadow-lg hover:bg-green-50 active:scale-95 transition-all"
+              >
+                Edit Profile
+              </button>
             </div>
           ) : (
             <div className="text-center">
@@ -150,6 +156,17 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
       <div className="hidden md:block">
         <Footer />
       </div>
+
+      {showEditProfile && (
+        <EditProfileModal
+          user={user}
+          onClose={() => setShowEditProfile(false)}
+          onSave={() => {
+            // Optional: You could trigger a refresh here if needed, 
+            setShowEditProfile(false);
+          }}
+        />
+      )}
     </div>
   );
 };

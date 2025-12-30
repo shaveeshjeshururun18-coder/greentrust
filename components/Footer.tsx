@@ -4,7 +4,8 @@ const Footer: React.FC = () => {
     return (
         <footer className="bg-green-50/50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-20 pt-10">
             {/* Social Icons (Floating Center) */}
-            <div className="relative">
+            {/* Social Icons (Floating Center) - HIDDEN ON MOBILE */}
+            <div className="hidden md:block relative">
                 <div className="absolute left-1/2 -translate-x-1/2 -top-16 flex gap-4">
                     <a href="#" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg shadow-green-600/20">
                         <i className="fa-brands fa-instagram"></i>
@@ -23,7 +24,7 @@ const Footer: React.FC = () => {
 
             <div className="max-w-[1920px] mx-auto px-10 pt-16 pb-20 border-b border-slate-100 dark:border-slate-800/50">
                 <div className="flex flex-col gap-4">
-                    <h2 className="text-[5.5rem] font-black text-slate-500/80 dark:text-slate-400/80 leading-[0.8] tracking-tighter select-none">
+                    <h2 className="text-[3.5rem] md:text-[5.5rem] font-black text-slate-500/80 dark:text-slate-400/80 leading-[0.9] md:leading-[0.8] tracking-tighter select-none">
                         Get Fresh<br />Groceries!
                     </h2>
                     <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 font-bold text-sm tracking-tight mt-2">
@@ -33,8 +34,8 @@ const Footer: React.FC = () => {
             </div>
 
             <div className="max-w-[1920px] mx-auto px-10 py-10">
-                <div className="grid grid-cols-4 gap-12 text-sm text-slate-600 dark:text-slate-400">
-                    {/* Column 1: Brand */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 text-sm text-slate-600 dark:text-slate-400">
+                    {/* Column 1: Brand - VISIBLE ON MOBILE */}
                     <div>
                         <div className="flex items-center gap-2 mb-6">
                             <i className="fa-solid fa-leaf text-3xl text-green-600"></i>
@@ -45,8 +46,8 @@ const Footer: React.FC = () => {
                         </p>
                     </div>
 
-                    {/* Column 2: Quick Links */}
-                    <div>
+                    {/* Column 2: Quick Links - HIDDEN ON MOBILE */}
+                    <div className="hidden md:block">
                         <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Quick Links</h3>
                         <ul className="space-y-4 font-medium">
                             <li><a href="#" className="hover:text-green-600 transition-colors">Home</a></li>
@@ -57,8 +58,8 @@ const Footer: React.FC = () => {
                         </ul>
                     </div>
 
-                    {/* Column 3: Contact Us */}
-                    <div>
+                    {/* Column 3: Contact Us - HIDDEN ON MOBILE */}
+                    <div className="hidden md:block">
                         <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Contact Us</h3>
                         <ul className="space-y-4">
                             <li className="flex gap-3">
@@ -84,8 +85,8 @@ const Footer: React.FC = () => {
                         </ul>
                     </div>
 
-                    {/* Column 4: Policies */}
-                    <div>
+                    {/* Column 4: Policies - HIDDEN ON MOBILE */}
+                    <div className="hidden md:block">
                         <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Policies</h3>
                         <ul className="space-y-4 font-medium">
                             <li><a href="#" className="hover:text-green-600 transition-colors">Shipping Policy</a></li>
@@ -99,8 +100,8 @@ const Footer: React.FC = () => {
 
             {/* Bottom Bar */}
             <div className="bg-green-600 text-white py-4 px-10">
-                <div className="max-w-[1920px] mx-auto flex items-center justify-between">
-                    <p className="text-xs font-medium">
+                <div className="max-w-[1920px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p className="text-xs font-medium text-center md:text-left">
                         Copyright © 2025 Green Trust All rights reserved.
                     </p>
 

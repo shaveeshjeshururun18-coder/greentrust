@@ -12,21 +12,23 @@ interface AccountViewProps {
   onLogoutClick: () => void;
 }
 
-const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, user, toggleTheme, isDark, onNavigate, onLogoutClick }) => {
-  const MenuLink = ({ icon, label, sub }: { icon: React.ReactNode, label: string, sub?: string }) => (
-    <div className="flex items-center justify-between p-4 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors">
-      <div className="flex items-center gap-4">
-        <div className="text-green-600">{icon}</div>
-        <div>
-          <p className="text-sm font-bold text-gray-800">{label}</p>
-          {sub && <p className="text-[10px] text-gray-400">{sub}</p>}
-        </div>
+const MenuLink = ({ icon, label, sub }: { icon: React.ReactNode, label: string, sub?: string }) => (
+  <div className="flex items-center justify-between p-4 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors">
+    <div className="flex items-center gap-4">
+      <div className="text-green-600">{icon}</div>
+      <div>
+        <p className="text-sm font-bold text-gray-800">{label}</p>
+        {sub && <p className="text-[10px] text-gray-400">{sub}</p>}
       </div>
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-      </svg>
     </div>
-  );
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+    </svg>
+  </div>
+);
+
+const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, user, toggleTheme, isDark, onNavigate, onLogoutClick }) => {
+  const [showEditProfile, setShowEditProfile] = useState(false);
 
   return (
     <div className="bg-transparent min-h-full pb-20 animate-fadeIn">
@@ -148,6 +150,27 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
         </div>
       </div>
 
+      {isLoggedIn && (
+        <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100 mb-6">
+          <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-red-50 transition-colors group" onClick={onLogoutClick}>
+            <div className="flex items-center gap-4">
+              <div className="text-red-500 bg-red-100 p-2 rounded-full group-hover:bg-red-200 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-red-500">Sign Out</p>
+                <p className="text-[10px] text-red-300">Come back soon!</p>
+              </div>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-200 group-hover:text-red-400 group-hover:translate-x-1 transition-all" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+            </svg>
+          </div>
+        </div>
+      )}
+
       <div className="p-8 text-center text-gray-300">
         <p className="text-xs font-bold tracking-widest uppercase mb-1">Green Trust</p>
         <p className="text-[10px]">App Version 3.4.2 (2025)</p>
@@ -162,7 +185,6 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
           user={user}
           onClose={() => setShowEditProfile(false)}
           onSave={() => {
-            // Optional: You could trigger a refresh here if needed, 
             setShowEditProfile(false);
           }}
         />

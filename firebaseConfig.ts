@@ -18,3 +18,21 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
+
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+
+// Initialize App Check
+// Use standard dev/prod environment logic or just enable it. 
+// Note: You need to register this site key in Firebase Console -> App Check -> reCAPTCHA v3
+if (typeof window !== 'undefined') {
+    // Enable debug token for localhost development
+    // @ts-ignore
+    self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+
+    // @ts-ignore - self is a restricted global in some contexts but fine here
+    // eslint-disable-next-line
+    const appCheck = initializeAppCheck(app, {
+        provider: new ReCaptchaV3Provider('6Lcc6TosAAAAABGMPBXJ5wZTzbu7gMMD2GVb24CC'),
+        isTokenAutoRefreshEnabled: true
+    });
+}

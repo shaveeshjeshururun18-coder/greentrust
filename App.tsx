@@ -61,24 +61,35 @@ const App: React.FC = () => {
     }
   }, [isDark]);
 
+  /* Guest Login Popup State */
+  const [showGuestPopup, setShowGuestPopup] = useState(false);
+
   // Guest Login Prompt Timer
   useEffect(() => {
     if (!isLoggedIn && !showLogin) {
       const timer = setTimeout(() => {
-        // Only show if user hasn't interacted much? Or just show it once.
-        // We'll use a session storage flag to avoid annoying them every refresh if we wanted,
-        // but for now, just a simple timer.
-        setShowLogin(true);
-      }, 15000); // 15 seconds
+        setShowGuestPopup(true);
+      }, 15000); // Show after 15s
       return () => clearTimeout(timer);
     }
   }, [isLoggedIn, showLogin]);
+
+  // Auto-dismiss Guest Popup after 8s
+  useEffect(() => {
+    if (showGuestPopup) {
+      const timer = setTimeout(() => {
+        setShowGuestPopup(false);
+      }, 8000); // Disappear after 8s
+      return () => clearTimeout(timer);
+    }
+  }, [showGuestPopup]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setIsLoggedIn(true);
         setUser(firebaseUser);
+        setShowGuestPopup(false); // Hide popup if logged in
 
         // Load data from Firestore
         try {
@@ -710,6 +721,38 @@ const App: React.FC = () => {
       )}
 
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} onLogin={() => { setIsLoggedIn(true); setShowLogin(false); }} />}
+
+      {/* Guest Welcome Popup (Small & Auto-dismiss) */}
+      <div
+        className={`fixed bottom-24 left-6 z-[70] transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1) ${showGuestPopup ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-20 opacity-0 scale-90 pointer-events-none'
+          }`}
+      >
+        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 p-4 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] max-w-[280px] relative overflow-hidden group">
+          {/* Glossy Effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none"></div>
+
+          <div className="relative z-10">
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-green-600 transform group-hover:rotate-12 transition-transform">
+                <i className="fa-solid fa-gift text-lg animate-bounce"></i>
+              </div>
+              <button onClick={() => setShowGuestPopup(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <h4 className="font-black text-slate-900 dark:text-white mb-1 text-sm">Join Green Trust! 🌿</h4>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3 font-medium leading-relaxed">
+              Unlock exclusive deals, track orders & save addresses.
+            </p>
+            <button
+              onClick={() => { setShowGuestPopup(false); setShowLogin(true); }}
+              className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider shadow-lg hover:shadow-xl active:scale-95 transition-all"
+            >
+              Login / Signup
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* Global Toast Notification */}
       <div

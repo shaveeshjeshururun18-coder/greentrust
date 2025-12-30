@@ -125,67 +125,68 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
             icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
           />
         </a>
+      </div>
 
-        <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100">
-          <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={toggleTheme}>
+      <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100">
+        <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={toggleTheme}>
+          <div className="flex items-center gap-4">
+            <div className="text-green-600">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-gray-800">Dark Mode</p>
+              <p className="text-[10px] text-gray-400">{isDark ? 'On' : 'Off'}</p>
+            </div>
+          </div>
+          <div className={`w-10 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out ${isDark ? 'bg-green-600' : ''}`}>
+            <div className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${isDark ? 'translate-x-4' : ''}`}></div>
+          </div>
+        </div>
+      </div>
+
+      {isLoggedIn && (
+        <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100 mb-6">
+          <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-red-50 transition-colors group" onClick={onLogoutClick}>
             <div className="flex items-center gap-4">
-              <div className="text-green-600">
+              <div className="text-red-500 bg-red-100 p-2 rounded-full group-hover:bg-red-200 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-bold text-gray-800">Dark Mode</p>
-                <p className="text-[10px] text-gray-400">{isDark ? 'On' : 'Off'}</p>
+                <p className="text-sm font-bold text-red-500">Sign Out</p>
+                <p className="text-[10px] text-red-300">Come back soon!</p>
               </div>
             </div>
-            <div className={`w-10 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out ${isDark ? 'bg-green-600' : ''}`}>
-              <div className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${isDark ? 'translate-x-4' : ''}`}></div>
-            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-200 group-hover:text-red-400 group-hover:translate-x-1 transition-all" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+            </svg>
           </div>
         </div>
+      )}
 
-        {isLoggedIn && (
-          <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100 mb-6">
-            <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-red-50 transition-colors group" onClick={onLogoutClick}>
-              <div className="flex items-center gap-4">
-                <div className="text-red-500 bg-red-100 p-2 rounded-full group-hover:bg-red-200 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-red-500">Sign Out</p>
-                  <p className="text-[10px] text-red-300">Come back soon!</p>
-                </div>
-              </div>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-200 group-hover:text-red-400 group-hover:translate-x-1 transition-all" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-              </svg>
-            </div>
-          </div>
-        )}
-
-        <div className="p-8 text-center text-gray-300">
-          <p className="text-xs font-bold tracking-widest uppercase mb-1">Green Trust</p>
-          <p className="text-[10px]">App Version 3.4.2 (2025)</p>
-        </div>
-
-        <div className="hidden md:block">
-          <Footer />
-        </div>
-
-        {showEditProfile && (
-          <EditProfileModal
-            user={user}
-            onClose={() => setShowEditProfile(false)}
-            onSave={() => {
-              setShowEditProfile(false);
-            }}
-          />
-        )}
+      <div className="p-8 text-center text-gray-300">
+        <p className="text-xs font-bold tracking-widest uppercase mb-1">Green Trust</p>
+        <p className="text-[10px]">App Version 3.4.2 (2025)</p>
       </div>
-      );
+
+      <div className="hidden md:block">
+        <Footer />
+      </div>
+
+      {showEditProfile && (
+        <EditProfileModal
+          user={user}
+          onClose={() => setShowEditProfile(false)}
+          onSave={() => {
+            setShowEditProfile(false);
+          }}
+        />
+      )}
+    </div>
+  );
 };
 
-      export default AccountView;
+export default AccountView;

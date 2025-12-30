@@ -571,7 +571,21 @@ const App: React.FC = () => {
           onBack={() => setCurrentView('home')}
         />;
       case 'account':
-        return <AccountView onLoginClick={() => setShowLogin(true)} isLoggedIn={isLoggedIn} user={user} toggleTheme={toggleTheme} isDark={isDark} onNavigate={setCurrentView} />;
+        return <AccountView
+          onLoginClick={() => setShowLogin(true)}
+          isLoggedIn={isLoggedIn}
+          user={user}
+          toggleTheme={toggleTheme}
+          isDark={isDark}
+          onNavigate={setCurrentView}
+          onLogoutClick={() => {
+            auth.signOut().then(() => {
+              setToast({ show: true, message: "Signed out successfully", type: 'info' });
+              setIsLoggedIn(false);
+              setUser(null);
+            });
+          }}
+        />;
       case 'wishlist':
         return <WishlistView
           onBack={() => setCurrentView('home')}

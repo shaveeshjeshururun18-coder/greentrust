@@ -8,9 +8,10 @@ interface AccountViewProps {
   toggleTheme: () => void;
   isDark: boolean;
   onNavigate: (view: any) => void;
+  onLogoutClick: () => void;
 }
 
-const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, user, toggleTheme, isDark, onNavigate }) => {
+const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, user, toggleTheme, isDark, onNavigate, onLogoutClick }) => {
   const MenuLink = ({ icon, label, sub }: { icon: React.ReactNode, label: string, sub?: string }) => (
     <div className="flex items-center justify-between p-4 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors">
       <div className="flex items-center gap-4">

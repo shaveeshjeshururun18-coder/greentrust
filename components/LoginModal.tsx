@@ -40,19 +40,59 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
   };
 
   useEffect(() => {
-    // Initialize Recaptcha only once
-    if (!window.recaptchaVerifier && recaptchaWrapperRef.current) {
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'invisible',
-        'callback': () => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
+    // defined outside for cleanup access
+    let verifier: RecaptchaVerifier | undefined;
+
+    const initRecaptcha = () => {
+      // Clear existing verifier if any
+      if (window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier.clear();
+        } catch (e) {
+          console.warn("Retrying to clear old recaptcha instance", e);
         }
-      });
-    }
+        window.recaptchaVerifier = undefined;
+      }
+
+      if (recaptchaWrapperRef.current) {
+        try {
+          // Use the element directly instead of ID to avoid querySelector issues
+          verifier = new RecaptchaVerifier(auth, recaptchaWrapperRef.current, {
+            'size': 'invisible',
+            'callback': () => {
+              console.log("reCAPTCHA solved successfully");
+            },
+            'expired-callback': () => {
+              console.warn("reCAPTCHA expired. Resetting...");
+              if (window.recaptchaVerifier) {
+                window.recaptchaVerifier.reset();
+              }
+            }
+          });
+
+          // Verify it rendered successfully
+          verifier.render().then(widgetId => {
+            console.log("reCAPTCHA rendered with ID:", widgetId);
+          });
+
+          window.recaptchaVerifier = verifier;
+        } catch (error) {
+          console.error("Failed to initialize reCAPTCHA:", error);
+        }
+      }
+    };
+
+    // Small timeout to ensure DOM is ready and stabilization
+    const timer = setTimeout(initRecaptcha, 100);
 
     return () => {
+      clearTimeout(timer);
       if (window.recaptchaVerifier) {
-        window.recaptchaVerifier.clear();
+        try {
+          window.recaptchaVerifier.clear();
+        } catch (e) {
+          console.warn("Error clearing recaptcha on unmount", e);
+        }
         window.recaptchaVerifier = undefined;
       }
     }
@@ -66,19 +106,39 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
     const appVerifier = window.recaptchaVerifier;
 
     try {
+      if (!appVerifier) {
+        console.error("No reCAPTCHA verifier found.");
+        alert("Internal Error: Captcha not initialized. Please close and reopen the login window.");
+        setIsLoading(false);
+        return;
+      }
+
       const confirmation = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+      console.log("SMS sent successfully");
       setConfirmationResult(confirmation);
       setShowOtpInput(true);
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error sending OTP:", error);
       setIsLoading(false);
-      alert("Failed to send SMS. If using a custom domain or localhost, please check authorized domains in Firebase Console.");
+
+      let msg = "Failed to send SMS.";
+      if (error.code === 'auth/invalid-phone-number') msg = "Invalid phone number format.";
+      else if (error.code === 'auth/too-many-requests') msg = "Too many attempts. Please try again later.";
+      else if (error.code === 'auth/captcha-check-failed') msg = "reCAPTCHA check failed. Please check your internet connection.";
+      else if (error.message && error.message.includes('reCAPTCHA')) msg = "reCAPTCHA client error. " + error.message;
+
+      alert(msg);
+
       // Reset recaptcha on error so user can try again
       if (window.recaptchaVerifier) {
-        window.recaptchaVerifier.render().then(widgetId => {
-          window.recaptchaVerifier.reset(widgetId);
-        });
+        try {
+          window.recaptchaVerifier.render().then(widgetId => {
+            window.recaptchaVerifier.reset(widgetId);
+          });
+        } catch (e) {
+          console.log("Error resetting captcha", e);
+        }
       }
     }
   };

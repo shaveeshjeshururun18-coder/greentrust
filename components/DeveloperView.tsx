@@ -62,7 +62,7 @@ const DeveloperView: React.FC<DeveloperProps> = ({ onBack }) => {
                     <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-100 dark:border-slate-800">
                         <h3 className="text-lg font-black text-slate-900 dark:text-white mb-3">About the Project</h3>
                         <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
-                            Green Trust Grocery is a high-performance, mobile-first e-commerce application designed to deliver the freshest organic produce with a premium user experience. Built with a focus on speed, aesthetics, and user trust.
+                            GREEN trust Grocery is a high-performance, mobile-first e-commerce application designed to deliver the freshest organic produce with a premium user experience. Built with a focus on speed, aesthetics, and user trust.
                         </p>
                         <div className="flex flex-wrap gap-2">
                             <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-bold uppercase tracking-wide">React 18</span>

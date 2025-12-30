@@ -53,7 +53,7 @@ const OrderSuccessView: React.FC<OrderSuccessViewProps> = ({ onContinueShopping,
                 </div>
 
                 <h2 className="text-4xl font-black text-gray-900 dark:text-white mb-4 animate-popIn stagger-1">Order Confirmed!</h2>
-                <p className="text-lg text-gray-500 dark:text-gray-400 mb-2 font-bold animate-popIn stagger-2">Thank you for choosing Green Trust Grocery.</p>
+                <p className="text-lg text-gray-500 dark:text-gray-400 mb-2 font-bold animate-popIn stagger-2">Thank you for choosing GREEN trust Grocery.</p>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mb-12 max-w-[300px] mx-auto font-medium leading-relaxed animate-popIn stagger-3">
                     Your order has been placed successfully. We'll notify you as soon as it's out for delivery!
                 </p>

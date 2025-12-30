@@ -69,7 +69,7 @@ const Header: React.FC<HeaderProps> = ({
             <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center text-white text-sm shadow-md">
               <i className="fa-solid fa-leaf"></i>
             </div>
-            <h1 className="font-extrabold text-xl tracking-tight group-hover:text-green-600 transition-colors">Green Trust Grocery</h1>
+            <h1 className="font-extrabold text-xl tracking-tight group-hover:text-green-600 transition-colors">GREEN <span className="text-green-600">trust Grocery</span></h1>
             <i className="fa-solid fa-angle-down text-sm mt-1 text-green-600"></i>
           </a>
           <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate max-w-[200px] leading-tight pl-6">

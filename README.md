@@ -1,7 +1,7 @@
-# Green Trust Grocery - Fresh Essentials Mobile App 🥬
+# GREEN trust Grocery - Fresh Essentials Mobile App 🥬
 
 A comprehensive, mobile-first e-commerce application built with React, Vite, and Tailwind CSS.
-Designed for "Green Trust Grocery" to sell fresh vegetables, fruits, and essentials with a premium user experience.
+Designed for "GREEN trust Grocery" to sell fresh vegetables, fruits, and essentials with a premium user experience.
 
 ## ✨ Key Features
 - **Modern Glassmorphism Design**: Beautiful, translucent UI elements.
@@ -86,7 +86,7 @@ To turn this into a `green-trust.apk` file, use **Capacitor**.
 
 ---
 ## 🌐 Website Information
-Green Trust Grocery is designed to bridge the gap between organic farmers and urban households. With a focus on purity, trust, and speed, we ensure:
+GREEN trust Grocery is designed to bridge the gap between organic farmers and urban households. With a focus on purity, trust, and speed, we ensure:
 - **100% Organic Certified Produce**: Directly sourced from verified farms.
 - **Zero-Plastic Packaging**: Committed to eco-friendly delivery solutions.
 - **Community Trust**: Built on transparency and quality assurance.

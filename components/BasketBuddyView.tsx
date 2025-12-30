@@ -80,7 +80,7 @@ const BasketBuddyView: React.FC<BasketBuddyViewProps> = ({ onBack, onNavigate, o
                     <div className="w-16 h-16 bg-green-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 animate-bounce-slow">
                         👋
                     </div>
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-2">New to Green Trust Grocery?</h2>
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-2">New to GREEN trust Grocery?</h2>
                     <p className="text-sm text-slate-500 mb-4 max-w-xs mx-auto">I can teach you how to order fresh groceries in seconds.</p>
                     <button
                         onClick={() => handleAction('how_to_order')}

@@ -122,10 +122,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
       console.error("Error sending OTP:", error);
       setIsLoading(false);
 
-      let msg = "Failed to send SMS.";
+      let msg = `Failed to send SMS. (${error.code || error.message})`;
       if (error.code === 'auth/invalid-phone-number') msg = "Invalid phone number format.";
       else if (error.code === 'auth/too-many-requests') msg = "Too many attempts. Please try again later.";
       else if (error.code === 'auth/captcha-check-failed') msg = "reCAPTCHA check failed. Please check your internet connection.";
+      else if (error.code === 'auth/quota-exceeded') msg = "SMS quota exceeded. Please use Google Sign-in.";
       else if (error.message && error.message.includes('reCAPTCHA')) msg = "reCAPTCHA client error. " + error.message;
 
       alert(msg);

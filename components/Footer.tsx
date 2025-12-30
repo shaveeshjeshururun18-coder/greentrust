@@ -50,11 +50,10 @@ const Footer: React.FC = () => {
                     <div className="hidden md:block">
                         <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Quick Links</h3>
                         <ul className="space-y-4 font-medium">
-                            <li><a href="#" className="hover:text-green-600 transition-colors">Home</a></li>
-                            <li><a href="#" className="hover:text-green-600 transition-colors">BasketBuddy (AI Help)</a></li>
-                            <li><a href="#" className="hover:text-green-600 transition-colors">Our Story</a></li>
-                            <li><a href="#" className="hover:text-green-600 transition-colors">Contact Us</a></li>
-                            <li><a href="#" className="hover:text-green-600 transition-colors">About</a></li>
+                            <li><a href="/" onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="hover:text-green-600 transition-colors">Home</a></li>
+                            <li><a href="/categories" onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/categories'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="hover:text-green-600 transition-colors">Categories</a></li>
+                            <li><a href="/basketbuddy" onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/basketbuddy'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="hover:text-green-600 transition-colors">BasketBuddy (AI Help)</a></li>
+                            <li><a href="/all-categories" onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/all-categories'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="hover:text-green-600 transition-colors">A-Z Categories</a></li>
                         </ul>
                     </div>
 

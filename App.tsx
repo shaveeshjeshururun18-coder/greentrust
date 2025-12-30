@@ -606,6 +606,34 @@ const App: React.FC = () => {
               </div>
             </div>
 
+            {/* SEO Content Section */}
+            <div className="px-6 mt-16 mb-12 animate-popIn stagger-5">
+              <div className="bg-slate-50 dark:bg-slate-800/40 rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-slate-800">
+                <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-6">About Green Trust - Organic Fresh Market</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-600 dark:text-slate-400">
+                  <div className="space-y-4">
+                    <p className="leading-relaxed">
+                      At <strong className="text-green-600">Green Trust</strong>, we are committed to bringing the freshest, most authentic organic produce directly from local farms in Tamil Nadu to your home in Chennai. Our mission is to promote sustainable farming while ensuring your family gets the purest quality vegetables and fruits.
+                    </p>
+                    <p className="leading-relaxed">
+                      Why choose <strong className="text-green-600">Green Trust</strong>? Because we eliminate the middleman, ensuring farmers get a fair price and you get produce harvested within hours of delivery. From farm-fresh country tomatoes to exotic Hass avocados, we deliver everything in 15 minutes.
+                    </p>
+                  </div>
+                  <div className="space-y-4">
+                    <p className="leading-relaxed font-semibold text-slate-800 dark:text-slate-200">
+                      Our Promise:
+                    </p>
+                    <ul className="space-y-2">
+                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> 100% Certified Organic Produce</li>
+                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> 15-Minute Instant Delivery in Chennai</li>
+                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> Direct Sourcing from Sustainable Farms</li>
+                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> Daily Selection of Fresh Herbs & Greens</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <Footer />
           </div>
         );

@@ -56,7 +56,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
           <img
             src={product.image}
-            alt={product.nameEn}
+            alt={`Fresh Organic ${product.nameEn} available at Green Trust Chennai`}
             className="w-full h-full object-contain mix-blend-multiply transition-all duration-700 group-hover:scale-110 group-hover:rotate-2 drop-shadow-sm"
           />
         </div>

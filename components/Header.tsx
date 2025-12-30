@@ -63,15 +63,15 @@ const Header: React.FC<HeaderProps> = ({
 
       {/* Top Row: Location & Actions */}
       <div className={`px-4 pt-4 pb-2 flex justify-between items-center transition-all duration-300 ${isScrolled ? 'h-0 opacity-0 overflow-hidden pt-0 pb-0' : 'h-auto opacity-100'}`}>
-        {/* Location */}
+        {/* Location / Brand */}
         <div className="flex flex-col cursor-pointer" onClick={onLocationClick}>
-          <div className="flex items-center gap-2 text-[#3d4152] dark:text-white group">
+          <a href="/" className="flex items-center gap-2 text-[#3d4152] dark:text-white group" onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); }}>
             <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center text-white text-sm shadow-md">
               <i className="fa-solid fa-leaf"></i>
             </div>
-            <span className="font-extrabold text-xl tracking-tight group-hover:text-green-600 transition-colors">Green Trust</span>
+            <h1 className="font-extrabold text-xl tracking-tight group-hover:text-green-600 transition-colors">Green Trust</h1>
             <i className="fa-solid fa-angle-down text-sm mt-1 text-green-600"></i>
-          </div>
+          </a>
           <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate max-w-[200px] leading-tight pl-6">
             {address || '11, Mugambigai Nagar 5th cross...'}
           </p>

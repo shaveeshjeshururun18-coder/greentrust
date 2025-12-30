@@ -3,4 +3,4 @@ Allow: /
 Disallow: /account
 Disallow: /checkout
 
-Sitemap: https://greentrust.in/sitemap.xml
+Sitemap: https://greentrust-two.vercel.app/sitemap.xml

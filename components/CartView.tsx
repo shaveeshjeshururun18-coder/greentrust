@@ -88,19 +88,21 @@ const CartView: React.FC<CartViewProps> = ({
   };
 
   const handleCheckout = async () => {
-    if (!isLoggedIn) {
-      onLoginReq();
-      return;
-    }
+    // For COD, we allow guest checkout but encourage login if possible
+    // if (!isLoggedIn) { onLoginReq(); return; } 
 
     await saveOrderToDB();
 
     const orderItems = cart.map(item => `- ${item.nameEn} (${item.selectedUnit.weight}) x ${item.cartQuantity} = ₹${item.selectedUnit.price * item.cartQuantity}`).join('%0A');
-    const message = `*NEW ORDER FROM GREEN TRUST*%0A%0A*Items:*%0A${orderItems}%0A%0A*Bill Details:*%0ASubtotal: ₹${subtotal}%0ADelivery: ₹${deliveryFee}%0AHandling: ₹${handlingFee}%0A*Total: ₹${total}*%0A%0A*Payment Mode:* ${paymentMethod.toUpperCase()}%0A*Delivery Address:*%0A${address}%0A%0A_Please confirm my order!_`;
+    const message = `*NEW ORDER FROM GREEN TRUST GROCERY*%0A%0A*Items:*%0A${orderItems}%0A%0A*Bill Details:*%0ASubtotal: ₹${subtotal}%0ADelivery: ₹${deliveryFee}%0AHandling: ₹${handlingFee}%0A*Total: ₹${total}*%0A%0A*Payment Mode:* ${paymentMethod.toUpperCase()}%0A*Delivery Address:*%0A${address}%0A%0A_Please confirm my order from Green Trust Grocery!_`;
 
     const waUrl = `https://wa.me/919500245626?text=${message}`;
     window.open(waUrl, '_blank');
-    onOrderSuccess();
+
+    // Give a small delay before navigating to success page to ensure WA opens on mobile
+    setTimeout(() => {
+      onOrderSuccess();
+    }, 1000);
   };
 
   const handleGPay = async () => {

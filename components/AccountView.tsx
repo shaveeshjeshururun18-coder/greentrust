@@ -115,7 +115,7 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
         <div onClick={() => onNavigate('developer')}>
           <MenuLink
             label="Developer"
-            sub="Meet the mind behind GREEN trust Grocery"
+            sub="Meet the mind behind Green Trust Grocery"
             icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
           />
         </div>
@@ -168,7 +168,7 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
       )}
 
       <div className="p-8 text-center text-gray-300">
-        <p className="text-xs font-bold tracking-widest uppercase mb-1">GREEN trust Grocery</p>
+        <p className="text-xs font-bold tracking-widest uppercase mb-1">Green Trust Grocery</p>
         <p className="text-[10px]">App Version 3.4.2 (2025)</p>
       </div>
 

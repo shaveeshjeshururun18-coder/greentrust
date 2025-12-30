@@ -23,13 +23,13 @@ export const getRecipeSuggestions = async (cartItems: CartItem[]): Promise<Recip
             properties: {
               title: { type: Type.STRING },
               description: { type: Type.STRING },
-              ingredients: { 
-                type: Type.ARRAY, 
-                items: { type: Type.STRING } 
+              ingredients: {
+                type: Type.ARRAY,
+                items: { type: Type.STRING }
               },
-              instructions: { 
-                type: Type.ARRAY, 
-                items: { type: Type.STRING } 
+              instructions: {
+                type: Type.ARRAY,
+                items: { type: Type.STRING }
               },
             },
             required: ["title", "description", "ingredients", "instructions"]
@@ -46,23 +46,23 @@ export const getRecipeSuggestions = async (cartItems: CartItem[]): Promise<Recip
 };
 
 export const getSmartAssistantResponse = async (query: string, cartItems: CartItem[]): Promise<string> => {
-    const itemsList = cartItems.length > 0 
-        ? `User currently has these in their cart: ${cartItems.map(i => i.name).join(', ')}.` 
-        : "User's cart is empty.";
-        
-    const prompt = `You are a helpful assistant for "GreenTrust", a premium farm-fresh produce store. 
+  const itemsList = cartItems.length > 0
+    ? `User currently has these in their cart: ${cartItems.map(i => i.name).join(', ')}.`
+    : "User's cart is empty.";
+
+  const prompt = `You are a helpful assistant for "Green Trust Grocery", a premium farm-fresh produce store. 
     ${itemsList}
     User Question: ${query}
     Provide a concise, helpful, and friendly response about nutrition, storage tips, or product information.`;
 
-    try {
-        const response = await ai.models.generateContent({
-            model: 'gemini-3-flash-preview',
-            contents: prompt,
-        });
-        return response.text || "I'm sorry, I couldn't process that request right now.";
-    } catch (error) {
-        console.error("Gemini Assistant Error:", error);
-        return "Our AI assistant is currently tending to the fields. Please try again later!";
-    }
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-3-flash-preview',
+      contents: prompt,
+    });
+    return response.text || "I'm sorry, I couldn't process that request right now.";
+  } catch (error) {
+    console.error("Gemini Assistant Error:", error);
+    return "Our AI assistant is currently tending to the fields. Please try again later!";
+  }
 };

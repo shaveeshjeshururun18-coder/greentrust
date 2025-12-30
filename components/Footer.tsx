@@ -64,7 +64,7 @@ const Footer: React.FC = () => {
                             <li className="flex gap-3">
                                 <span className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></span>
                                 <div>
-                                    Green Trust, T Nagar,<br />
+                                    Green Trust Grocery, T Nagar,<br />
                                     Chennai,<br />
                                     Tamilnadu - 600017
                                 </div>

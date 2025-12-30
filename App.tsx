@@ -844,7 +844,7 @@ const App: React.FC = () => {
                 <i className="fa-solid fa-xmark"></i>
               </button>
             </div>
-            <h4 className="font-black text-slate-900 dark:text-white mb-1 text-sm">Join Green Trust! 🌿</h4>
+            <h4 className="font-black text-slate-900 dark:text-white mb-1 text-sm">Join Green Trust Grocery! 🌿</h4>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3 font-medium leading-relaxed">
               Unlock exclusive deals, track orders & save addresses.
             </p>

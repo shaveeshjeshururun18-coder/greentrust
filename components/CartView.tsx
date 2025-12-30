@@ -50,7 +50,7 @@ const CartView: React.FC<CartViewProps> = ({
 
   // Google Pay / UPI Configuration
   const VPA = 'prasathr3009@oksbi';
-  const MERCHANT_NAME = 'Green Trust';
+  const MERCHANT_NAME = 'Green Trust Grocery';
 
   const saveOrderToDB = async () => {
     try {
@@ -112,7 +112,7 @@ const CartView: React.FC<CartViewProps> = ({
     await saveOrderToDB();
 
     // Basic UPI Intent
-    const upiUrl = `upi://pay?pa=${VPA}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total}&cu=INR&tn=Order from Green Trust`;
+    const upiUrl = `upi://pay?pa=${VPA}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${total}&cu=INR&tn=Order from Green Trust Grocery`;
 
     // Detect Mobile (Simple check)
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

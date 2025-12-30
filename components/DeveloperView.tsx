@@ -41,13 +41,17 @@ const DeveloperView: React.FC<DeveloperProps> = ({ onBack }) => {
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <a href="https://ssjportfolio-one.vercel.app/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-95">
-                                <i className="fa-solid fa-globe text-xl"></i>
+                            <a href="https://ssjportfolio-one.vercel.app/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-95 text-xs lg:text-sm">
+                                <i className="fa-solid fa-globe text-lg"></i>
                                 Website
                             </a>
-                            <a href="mailto:shaveeshjeshurun@gmail.com" className="flex items-center justify-center gap-2 py-4 bg-green-600 text-white rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-green-600/20">
-                                <i className="fa-brands fa-google text-xl"></i>
+                            <a href="mailto:shaveeshjeshurun@gmail.com" className="flex items-center justify-center gap-2 py-4 bg-red-500 text-white rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-red-500/20 text-xs lg:text-sm">
+                                <i className="fa-brands fa-google text-lg"></i>
                                 Gmail
+                            </a>
+                            <a href="https://github.com/shaveeshjeshururun18-coder/greentrust" target="_blank" rel="noopener noreferrer" className="col-span-2 flex items-center justify-center gap-2 py-4 bg-[#24292e] dark:bg-[#161b22] text-white rounded-2xl font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-gray-900/20">
+                                <i className="fa-brands fa-github text-xl"></i>
+                                View on GitHub
                             </a>
                         </div>
                     </div>
@@ -57,9 +61,15 @@ const DeveloperView: React.FC<DeveloperProps> = ({ onBack }) => {
                 <div className="mt-10 space-y-6">
                     <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-100 dark:border-slate-800">
                         <h3 className="text-lg font-black text-slate-900 dark:text-white mb-3">About the Project</h3>
-                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
                             Green Trust is a high-performance, mobile-first e-commerce application designed to deliver the freshest organic produce with a premium user experience. Built with a focus on speed, aesthetics, and user trust.
                         </p>
+                        <div className="flex flex-wrap gap-2">
+                            <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-bold uppercase tracking-wide">React 18</span>
+                            <span className="px-3 py-1 bg-sky-50 text-sky-600 rounded-lg text-[10px] font-bold uppercase tracking-wide">TailwindCSS</span>
+                            <span className="px-3 py-1 bg-yellow-50 text-yellow-600 rounded-lg text-[10px] font-bold uppercase tracking-wide">Firebase v10</span>
+                            <span className="px-3 py-1 bg-purple-50 text-purple-600 rounded-lg text-[10px] font-bold uppercase tracking-wide">Vite</span>
+                        </div>
                     </div>
 
                     <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-100 dark:border-slate-800">

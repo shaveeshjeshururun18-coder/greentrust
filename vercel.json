@@ -1,0 +1,23 @@
+{
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                {
+                    "key": "X-Robots-Tag",
+                    "value": "index, follow"
+                },
+                {
+                    "key": "Access-Control-Allow-Origin",
+                    "value": "*"
+                }
+            ]
+        }
+    ],
+    "rewrites": [
+        {
+            "source": "/(?!api/)(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}

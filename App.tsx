@@ -27,6 +27,8 @@ import DeveloperView from './components/DeveloperView.tsx';
 import AIAssistant from './components/AIAssistant.tsx';
 
 import BasketBuddyView from './components/BasketBuddyView.tsx';
+import SupportView from './components/SupportView.tsx';
+import MarqueeBanner from './components/MarqueeBanner.tsx';
 import Footer from './components/Footer.tsx';
 
 // Inside App component
@@ -61,6 +63,49 @@ const App: React.FC = () => {
     }
   }, [isDark]);
 
+  // Handle Basic Routing for SEO / Deep Linking
+  useEffect(() => {
+    const handleUrl = () => {
+      const path = window.location.pathname.replace(/^\/|\/$/g, '');
+      const validViews: ViewState[] = [
+        'home', 'categories', 'cart', 'account', 'product-detail',
+        'location-picker', 'wishlist', 'orders', 'basketbuddy',
+        'wallet', 'all-categories', 'developer', 'support', 'feedback'
+      ];
+
+      if (path === '' || path === 'home') {
+        setCurrentView('home');
+      } else if (path.startsWith('product/')) {
+        const productId = path.split('/')[1];
+        const product = ALL_PRODUCTS.find(p => p.id === productId);
+        if (product) {
+          setSelectedProduct(product);
+          setCurrentView('product-detail');
+        } else {
+          setCurrentView('home');
+        }
+      } else if (validViews.includes(path as ViewState)) {
+        setCurrentView(path as ViewState);
+      }
+    };
+
+    handleUrl(); // Sync on initial load
+    window.addEventListener('popstate', handleUrl);
+    return () => window.removeEventListener('popstate', handleUrl);
+  }, []);
+
+  // Update URL whenever currentView or selectedProduct changes
+  useEffect(() => {
+    let path = currentView === 'home' ? '/' : `/${currentView}`;
+    if (currentView === 'product-detail' && selectedProduct) {
+      path = `/product/${selectedProduct.id}`;
+    }
+
+    if (window.location.pathname !== path) {
+      window.history.pushState({}, '', path);
+    }
+  }, [currentView, selectedProduct]);
+
   /* Guest Login Popup State */
   const [showGuestPopup, setShowGuestPopup] = useState(false);
 
@@ -69,7 +114,7 @@ const App: React.FC = () => {
     if (!isLoggedIn && !showLogin) {
       const timer = setTimeout(() => {
         setShowGuestPopup(true);
-      }, 15000); // Show after 15s
+      }, 4000); // Show after 4s for better visibility
       return () => clearTimeout(timer);
     }
   }, [isLoggedIn, showLogin]);
@@ -632,6 +677,9 @@ const App: React.FC = () => {
         />;
       case 'developer':
         return <DeveloperView onBack={() => setCurrentView('account')} />;
+      case 'support':
+      case 'feedback':
+        return <SupportView onBack={() => setCurrentView('account')} />;
       default:
         return <div className="p-8 text-center text-gray-400">Section Coming Soon</div>;
     }
@@ -680,6 +728,8 @@ const App: React.FC = () => {
               setCurrentView('categories');
             }}
           />
+          <MarqueeBanner />
+
         </>
       )}
 

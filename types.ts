@@ -59,7 +59,7 @@ export interface DetailedCategory {
   subcategories: SubCategory[];
 }
 
-export type ViewState = 'home' | 'categories' | 'cart' | 'account' | 'product-detail' | 'location-picker' | 'wishlist' | 'orders' | 'basketbuddy' | 'wallet' | 'all-categories' | 'developer';
+export type ViewState = 'home' | 'categories' | 'cart' | 'account' | 'product-detail' | 'location-picker' | 'wishlist' | 'orders' | 'basketbuddy' | 'wallet' | 'all-categories' | 'developer' | 'support' | 'feedback';
 
 // Extend Window interface for ReCaptcha
 declare global {

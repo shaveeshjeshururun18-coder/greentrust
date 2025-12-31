@@ -403,535 +403,540 @@ const App: React.FC = () => {
                     <div className="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
                       <i className={`fa-solid ${item.data?.icon || 'fa-tag'}`}></i>
                     </div>
-                    <div>
-                      <p className="font-bold text-slate-800 dark:text-slate-100 text-sm">{item.data.name}</p>
-                      {item.type === 'sub' && <p className="text-[10px] text-slate-400 uppercase font-bold">in {item.parent}</p>}
-                    </div>
+                    <img
+                      src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=2670&auto=format&fit=crop"
+                      alt="Fresh Farm Vegetables"
+                      className="w-full h-full object-cover opacity-90 animate-[kenBurns_20s_infinite_alternate]"
+                      fetchPriority="high"
+                    />  </div>
                   </div>
                 ))}
-              </div>
             </div>
-          )}
+            </div>
+      )
+    }
 
-          {/* Empty State */}
-          {filteredProducts.length === 0 && filteredCategories.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-20 text-center opacity-60">
-              <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 text-3xl">
-                🤷‍♂️
-              </div>
-              <p className="text-lg font-bold text-slate-600 dark:text-slate-400">No products found for "{searchQuery}"</p>
-              <p className="text-sm text-slate-400">Try searching for "Tomato", "Apple", or "Snacks"</p>
-            </div>
-          )}
+    {/* Empty State */ }
+    {
+      filteredProducts.length === 0 && filteredCategories.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 text-center opacity-60">
+          <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 text-3xl">
+            🤷‍♂️
+          </div>
+          <p className="text-lg font-bold text-slate-600 dark:text-slate-400">No products found for "{searchQuery}"</p>
+          <p className="text-sm text-slate-400">Try searching for "Tomato", "Apple", or "Snacks"</p>
         </div>
+      )
+    }
+        </div >
       );
     }
 
-    switch (currentView) {
-      case 'all-categories':
-        return (
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <AllCategoriesView
-              onCategoryClick={handleCategoryClick}
-              onSearchChange={setSearchQuery}
-              cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
-            />
-          </Suspense>
-        );
-      case 'categories':
-        return (
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <CategoriesView
-              onBack={() => setCurrentView('home')}
-              onProductClick={openProduct}
-              addToCart={addToCart}
-              removeFromCart={removeFromCart}
-              getQuantity={getQuantity}
-              wishlist={wishlist}
-              toggleWishlist={toggleWishlist}
-              initialCategoryId={selectedCategory}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              initialFilterOpen={shouldOpenFilter}
-            />
-          </Suspense>
-        );
-      case 'home':
-        return (
-          <div className="pb-32">
-            <AnimatedBanner />
-
-            {/* Categories Rail */}
-            <div className="px-6 pt-10 animate-popIn stagger-1">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-black text-gray-800 dark:text-white tracking-tight">Shop by Category</h2>
-                <div className="flex gap-2">
-                  <button className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-400">
-                    <i className="fa-solid fa-chevron-left text-xs"></i>
-                  </button>
-                  <button className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white shadow-lg shadow-green-200">
-                    <i className="fa-solid fa-chevron-right text-xs"></i>
-                  </button>
-                </div>
-              </div>
-              <CategoryGrid
-                categories={DETAILED_CATEGORIES}
-                onCategoryClick={handleCategoryClick}
-                activeCategory={selectedCategory}
-              />
-            </div>
-
-            {/* Trending Section */}
-            <div className="px-6 mt-12 animate-popIn stagger-2">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <span className="text-[10px] font-black text-green-600 uppercase tracking-widest bg-green-50 px-2 py-1 rounded-md mb-2 inline-block">Hot Picks</span>
-                  <h2 className="text-2xl font-black text-gray-900 dark:text-white">Trending Now</h2>
-                </div>
-                <button
-                  onClick={() => {
-                    setSelectedCategory('all');
-                    setCurrentView('categories');
-                  }}
-                  className="text-xs font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"
-                >
-                  View All
-                </button>
-              </div>
-
-              <div className="grid grid-cols-2 md:flex md:overflow-x-auto md:no-scrollbar md:gap-6 md:pb-4 gap-4">
-                {ALL_PRODUCTS.slice(0, 10).map((p, idx) => (
-                  <div key={p.id} className="md:min-w-[200px] lg:min-w-[220px] h-full">
-                    <ProductCard
-                      key={p.id}
-                      product={p}
-                      onClick={() => openProduct(p)}
-                      addToCart={() => addToCart(p, p.units[0])}
-                      quantity={cart.reduce((acc, curr) => curr.id === p.id ? acc + curr.cartQuantity : acc, 0)}
-                      removeFromCart={() => {
-                        const item = cart.find(c => c.id === p.id);
-                        if (item) removeFromCart(p.id, item.selectedUnit.id);
-                      }}
-                      toggleFavorite={() => toggleWishlist(p.id)}
-                      isFavorite={wishlist.includes(p.id)}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Farm Fresh Vegetables Section */}
-            <div className="px-6 mt-12 animate-popIn stagger-3">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-2xl font-black text-gray-900 dark:text-white">Farm Fresh Vegetables</h2>
-                </div>
-                <button
-                  onClick={() => {
-                    setSelectedCategory('dc1');
-                    setCurrentView('categories');
-                  }}
-                  className="text-xs font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"
-                >
-                  View All
-                </button>
-              </div>
-              <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4 h-full">
-                {ALL_PRODUCTS.filter(p => p.category === 'Vegetables').slice(0, 5).map(p => (
-                  <div key={p.id} className="min-w-[160px] h-full">
-                    <ProductCard
-                      product={p}
-                      onClick={() => openProduct(p)}
-                      addToCart={() => addToCart(p, p.units[0])}
-                      quantity={cart.reduce((acc, curr) => curr.id === p.id ? acc + curr.cartQuantity : acc, 0)}
-                      removeFromCart={() => {
-                        const item = cart.find(c => c.id === p.id);
-                        if (item) removeFromCart(p.id, item.selectedUnit.id);
-                      }}
-                      isFavorite={wishlist.includes(p.id)}
-                      toggleFavorite={() => toggleWishlist(p.id)}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Seasonal Fruits Section */}
-            <div className="px-6 mt-12 animate-popIn stagger-4">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-2xl font-black text-gray-900 dark:text-white">Seasonal Fruits</h2>
-                </div>
-                <button
-                  onClick={() => {
-                    setSelectedCategory('dc2');
-                    setCurrentView('categories');
-                  }}
-                  className="text-xs font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"
-                >
-                  View All
-                </button>
-              </div>
-              <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4 h-full">
-                {ALL_PRODUCTS.filter(p => p.category === 'Fruits').slice(0, 5).map(p => (
-                  <div key={p.id} className="min-w-[160px] h-full">
-                    <ProductCard
-                      product={p}
-                      onClick={() => openProduct(p)}
-                      addToCart={() => addToCart(p, p.units[0])}
-                      quantity={cart.reduce((acc, curr) => curr.id === p.id ? acc + curr.cartQuantity : acc, 0)}
-                      removeFromCart={() => {
-                        const item = cart.find(c => c.id === p.id);
-                        if (item) removeFromCart(p.id, item.selectedUnit.id);
-                      }}
-                      isFavorite={wishlist.includes(p.id)}
-                      toggleFavorite={() => toggleWishlist(p.id)}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="px-6 mt-12 mb-6 animate-popIn stagger-5">
-              <div className="bg-[#064e3b] rounded-[2.5rem] p-8 text-center relative overflow-hidden group cursor-pointer shadow-xl shadow-green-950/20" onClick={() => setCurrentView('categories')}>
-                <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -translate-y-24 translate-x-24 blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
-                <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-green-400/10 rounded-full blur-2xl"></div>
-
-                <div className="relative z-10 py-4">
-                  <span className="text-[11px] font-black text-green-400 uppercase tracking-[0.2em] mb-3 block">Explore More</span>
-                  <h3 className="text-3xl font-black text-white mb-8 tracking-tighter drop-shadow-md">Fresh Markets</h3>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setCurrentView('categories');
-                    }}
-                    className="bg-white text-[#064e3b] px-10 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl"
-                  >
-                    View All
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* SEO Content Section */}
-            <div className="px-6 mt-16 mb-12 animate-popIn stagger-5">
-              <div className="bg-slate-50 dark:bg-slate-800/40 rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-slate-800">
-                <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-6">About Green Trust Grocery - Organic Fresh Market</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-600 dark:text-slate-400">
-                  <div className="space-y-4">
-                    <p className="leading-relaxed">
-                      At <strong className="text-green-600">Green Trust Grocery</strong>, we are committed to bringing the freshest, most authentic organic produce directly from local farms in Tamil Nadu to your home in Chennai. Our mission is to promote sustainable farming while ensuring your family gets the purest quality vegetables and fruits.
-                    </p>
-                    <p className="leading-relaxed">
-                      Why choose <strong className="text-green-600">Green Trust Grocery</strong>? Because we eliminate the middleman, ensuring farmers get a fair price and you get produce harvested within hours of delivery. From farm-fresh country tomatoes to exotic Hass avocados, we deliver everything in 15 minutes.
-                    </p>
-                  </div>
-                  <div className="space-y-4">
-                    <p className="leading-relaxed font-semibold text-slate-800 dark:text-slate-200">
-                      Our Promise:
-                    </p>
-                    <ul className="space-y-2">
-                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> 100% Certified Organic Produce</li>
-                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> 15-Minute Instant Delivery in Chennai</li>
-                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> Direct Sourcing from Sustainable Farms</li>
-                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> Daily Selection of Fresh Herbs & Greens</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <MarqueeBanner />
-            <Footer />
-          </div>
-        );
-      case 'product-detail':
-        return selectedProduct ? (
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <ProductDetail
-              product={selectedProduct}
-              onBack={() => setCurrentView('home')}
-              addToCart={addToCart}
-              removeFromCart={removeFromCart}
-              cart={cart}
-              isFavorite={wishlist.includes(selectedProduct.id)}
-              toggleFavorite={() => toggleWishlist(selectedProduct.id)}
-              onSimilarProductClick={openProduct}
-            />
-          </Suspense>
-        ) : null;
-      case 'cart':
-        return (
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <CartView
-              cart={cart}
-              address={userAddress}
-              onBack={() => setCurrentView('home')}
-              removeFromCart={removeFromCart}
-              addToCart={addToCart}
-              clearCart={clearCart}
-              onExploreProducts={() => setCurrentView('home')}
-              isLoggedIn={isLoggedIn}
-              onLoginReq={() => setShowLogin(true)}
-              step="list"
-              onStepChange={(s) => s === 'checkout' ? setCurrentView('checkout') : setCurrentView('cart')}
-              onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
-            />
-          </Suspense>
-        );
-      case 'checkout':
-        return (
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <CartView
-              cart={cart}
-              address={userAddress}
-              onBack={() => setCurrentView('cart')}
-              removeFromCart={removeFromCart}
-              addToCart={addToCart}
-              clearCart={clearCart}
-              onExploreProducts={() => setCurrentView('home')}
-              isLoggedIn={isLoggedIn}
-              onLoginReq={() => setShowLogin(true)}
-              step="checkout"
-              onStepChange={(s) => s === 'list' ? setCurrentView('cart') : setCurrentView('checkout')}
-              onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
-            />
-          </Suspense>
-        );
-      case 'order-success':
-        return (
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <OrderSuccessView
-              onContinueShopping={() => setCurrentView('home')}
-              onTrackOrder={() => setCurrentView('orders')}
-            />
-          </Suspense>
-        );
-      case 'location-picker':
-        return (
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <LocationPicker
-              onConfirm={(addr) => { setUserAddress(addr); setCurrentView('home'); }}
-              onBack={() => setCurrentView('home')}
-            />
-          </Suspense>
-        );
-      case 'account':
-        return (
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <AccountView
-              onLoginClick={() => setShowLogin(true)}
-              isLoggedIn={isLoggedIn}
-              user={user}
-              toggleTheme={toggleTheme}
-              isDark={isDark}
-              onNavigate={setCurrentView}
-              onLogoutClick={() => {
-                auth.signOut().then(() => {
-                  setToast({ show: true, message: "Signed out successfully", type: 'info' });
-                  setIsLoggedIn(false);
-                  setUser(null);
-                });
-              }}
-            />
-          </Suspense>
-        );
-      case 'wishlist':
-        return (
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <WishlistView
-              onBack={() => setCurrentView('home')}
-              wishlistItems={ALL_PRODUCTS.filter(p => wishlist.includes(p.id))}
-              onProductClick={openProduct}
-              cart={cart}
-              addToCart={(p) => addToCart(p, p.units[0])}
-              removeFromCart={(id) => {
-                const item = cart.find(c => c.id === id);
-                if (item) removeFromCart(id, item.selectedUnit.id);
-              }}
-              wishlist={wishlist}
-              toggleWishlist={toggleWishlist}
-            />
-          </Suspense>
-        );
-      case 'basketbuddy':
-        return (
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <BasketBuddyView
-              onBack={() => setCurrentView('home')}
-              onNavigate={setCurrentView}
-              onSelectCategory={setSelectedCategory}
-            />
-          </Suspense>
-        );
-      case 'developer':
-        return (
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <DeveloperView onBack={() => setCurrentView('account')} />
-          </Suspense>
-        );
-      case 'support':
-      case 'feedback':
-        return (
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <SupportView onBack={() => setCurrentView('account')} />
-          </Suspense>
-        );
-      default:
-        return <div className="p-8 text-center text-gray-400">Section Coming Soon</div>;
-    }
-  };
-
-  return (
-    <div className={`w-full h-screen relative overflow-hidden flex flex-col selection:bg-green-100 ${isDark ? 'dark text-white' : ''}`}>
-      <Suspense fallback={null}>
-        <BackgroundAnimation />
+switch (currentView) {
+  case 'all-categories':
+    return (
+      <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <AllCategoriesView
+          onCategoryClick={handleCategoryClick}
+          onSearchChange={setSearchQuery}
+          cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
+        />
       </Suspense>
-      {/* Entrance Screen removed as per request, using index.html splash instead */}
+    );
+  case 'categories':
+    return (
+      <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <CategoriesView
+          onBack={() => setCurrentView('home')}
+          onProductClick={openProduct}
+          addToCart={addToCart}
+          removeFromCart={removeFromCart}
+          getQuantity={getQuantity}
+          wishlist={wishlist}
+          toggleWishlist={toggleWishlist}
+          initialCategoryId={selectedCategory}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          initialFilterOpen={shouldOpenFilter}
+        />
+      </Suspense>
+    );
+  case 'home':
+    return (
+      <div className="pb-32">
+        <AnimatedBanner />
 
-      {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && (
-        <>
-          {/* Mobile Header: Visible on Home only (mostly) to avoid duplication */}
-          {currentView !== 'basketbuddy' && currentView !== 'all-categories' && currentView !== 'categories' && (
-            <div className="md:hidden">
-              <Header
-                onProfileClick={() => setCurrentView('account')}
-                onSearchChange={setSearchQuery}
-                onLocationClick={() => setCurrentView('location-picker')}
-                onWishlistClick={() => setCurrentView('wishlist')}
-                address={userAddress}
-                isDark={isDark}
-                toggleTheme={toggleTheme}
-                isScrolled={isScrolled}
-                onFilterClick={() => {
-                  setShouldOpenFilter(true);
-                  setCurrentView('categories');
-                }}
-                showFilter={false} // Hide Filter on Home
-              />
-            </div>
-          )}
-
-          {/* Desktop Header: Visible on Categories/BasketBuddy too */}
-          <DesktopHeader
-            currentView={currentView}
-            setCurrentView={setCurrentView}
-            onSearchChange={setSearchQuery}
-            cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
-            wishlistCount={wishlist.length}
-            isDark={isDark}
-            toggleTheme={toggleTheme}
-            isScrolled={isScrolled}
-            onFilterClick={() => {
-              setShouldOpenFilter(true);
-              setCurrentView('categories');
-            }}
-          />
-
-
-        </>
-      )}
-
-      <main
-        className="flex-1 overflow-y-auto no-scrollbar relative z-10"
-        onScroll={handleScroll}
-      >
-        <div className={`${currentView === 'categories' || currentView === 'all-categories' || currentView === 'basketbuddy' ? '' : 'md:max-w-6xl mx-auto'}`}>
-          {renderContent()}
-        </div>
-      </main>
-
-      {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && currentView !== 'basketbuddy' && (
-        <div className="md:hidden">
-          <BottomNav
-            currentView={currentView}
-            setCurrentView={setCurrentView}
-            cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
-          />
-        </div>
-      )}
-
-      {/* Floating Buttons Removed */}
-
-      {/* Green Floating Cart Icon - Mobile Only */}
-      {cart.length > 0 && currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'basketbuddy' && (
-        <div
-          onClick={() => setCurrentView('cart')}
-          className="fixed bottom-6 right-5 z-[50] md:hidden flex items-center gap-3 bg-green-600 text-white pl-4 pr-2 py-2 rounded-full shadow-[0_10px_30px_rgba(22,163,74,0.5)] border-4 border-white dark:border-slate-900 active:scale-95 transition-transform animate-slideUp"
-        >
-          <div className="flex flex-col leading-none">
-            <span className="text-[10px] font-medium opacity-80 uppercase tracking-wide">{cart.reduce((a, c) => a + c.cartQuantity, 0)} Items</span>
-            <span className="font-black text-lg">₹{cart.reduce((a, c) => a + (c.selectedUnit.price * c.cartQuantity), 0)}</span>
-          </div>
-          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-            <i className="fa-solid fa-cart-shopping"></i>
-          </div>
-        </div>
-      )}
-
-      {showLogin && (
-        <Suspense fallback={<div className="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center"><div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div></div>}>
-          <LoginModal onClose={() => setShowLogin(false)} onLogin={() => { setIsLoggedIn(true); setShowLogin(false); }} />
-        </Suspense>
-      )}
-
-      {/* Guest Welcome Popup (Small & Auto-dismiss) */}
-      <div
-        className={`fixed bottom-24 left-6 z-[70] transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1) ${showGuestPopup ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-20 opacity-0 scale-90 pointer-events-none'
-          }`}
-      >
-        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 p-4 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] max-w-[280px] relative overflow-hidden group">
-          {/* Glossy Effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none"></div>
-
-          <div className="relative z-10">
-            <div className="flex items-start justify-between mb-3">
-              <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-green-600 transform group-hover:rotate-12 transition-transform">
-                <i className="fa-solid fa-gift text-lg animate-bounce" aria-hidden="true"></i>
-              </div>
-              <button onClick={() => setShowGuestPopup(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" aria-label="Dismiss Welcome Popup">
-                <i className="fa-solid fa-xmark" aria-hidden="true"></i>
+        {/* Categories Rail */}
+        <div className="px-6 pt-10 animate-popIn stagger-1">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-black text-gray-800 dark:text-white tracking-tight">Shop by Category</h2>
+            <div className="flex gap-2">
+              <button className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-400">
+                <i className="fa-solid fa-chevron-left text-xs"></i>
+              </button>
+              <button className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white shadow-lg shadow-green-200">
+                <i className="fa-solid fa-chevron-right text-xs"></i>
               </button>
             </div>
-            <h3 className="font-black text-slate-900 dark:text-white mb-1 text-sm">Join Green Trust Grocery! 🌿</h3>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3 font-medium leading-relaxed">
-              Unlock exclusive deals, track orders & save addresses.
-            </p>
+          </div>
+          <CategoryGrid
+            categories={DETAILED_CATEGORIES}
+            onCategoryClick={handleCategoryClick}
+            activeCategory={selectedCategory}
+          />
+        </div>
+
+        {/* Trending Section */}
+        <div className="px-6 mt-12 animate-popIn stagger-2">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <span className="text-[10px] font-black text-green-600 uppercase tracking-widest bg-green-50 px-2 py-1 rounded-md mb-2 inline-block">Hot Picks</span>
+              <h2 className="text-2xl font-black text-gray-900 dark:text-white">Trending Now</h2>
+            </div>
             <button
-              onClick={() => { setShowGuestPopup(false); setShowLogin(true); }}
-              className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider shadow-lg hover:shadow-xl active:scale-95 transition-all"
+              onClick={() => {
+                setSelectedCategory('all');
+                setCurrentView('categories');
+              }}
+              className="text-xs font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"
             >
-              Login / Signup
+              View All
             </button>
           </div>
+
+          <div className="grid grid-cols-2 md:flex md:overflow-x-auto md:no-scrollbar md:gap-6 md:pb-4 gap-4">
+            {ALL_PRODUCTS.slice(0, 10).map((p, idx) => (
+              <div key={p.id} className="md:min-w-[200px] lg:min-w-[220px] h-full">
+                <ProductCard
+                  key={p.id}
+                  product={p}
+                  onClick={() => openProduct(p)}
+                  addToCart={() => addToCart(p, p.units[0])}
+                  quantity={cart.reduce((acc, curr) => curr.id === p.id ? acc + curr.cartQuantity : acc, 0)}
+                  removeFromCart={() => {
+                    const item = cart.find(c => c.id === p.id);
+                    if (item) removeFromCart(p.id, item.selectedUnit.id);
+                  }}
+                  toggleFavorite={() => toggleWishlist(p.id)}
+                  isFavorite={wishlist.includes(p.id)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Farm Fresh Vegetables Section */}
+        <div className="px-6 mt-12 animate-popIn stagger-3">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-black text-gray-900 dark:text-white">Farm Fresh Vegetables</h2>
+            </div>
+            <button
+              onClick={() => {
+                setSelectedCategory('dc1');
+                setCurrentView('categories');
+              }}
+              className="text-xs font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"
+            >
+              View All
+            </button>
+          </div>
+          <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4 h-full">
+            {ALL_PRODUCTS.filter(p => p.category === 'Vegetables').slice(0, 5).map(p => (
+              <div key={p.id} className="min-w-[160px] h-full">
+                <ProductCard
+                  product={p}
+                  onClick={() => openProduct(p)}
+                  addToCart={() => addToCart(p, p.units[0])}
+                  quantity={cart.reduce((acc, curr) => curr.id === p.id ? acc + curr.cartQuantity : acc, 0)}
+                  removeFromCart={() => {
+                    const item = cart.find(c => c.id === p.id);
+                    if (item) removeFromCart(p.id, item.selectedUnit.id);
+                  }}
+                  isFavorite={wishlist.includes(p.id)}
+                  toggleFavorite={() => toggleWishlist(p.id)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Seasonal Fruits Section */}
+        <div className="px-6 mt-12 animate-popIn stagger-4">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-black text-gray-900 dark:text-white">Seasonal Fruits</h2>
+            </div>
+            <button
+              onClick={() => {
+                setSelectedCategory('dc2');
+                setCurrentView('categories');
+              }}
+              className="text-xs font-black text-gray-400 hover:text-green-600 transition-colors uppercase tracking-widest"
+            >
+              View All
+            </button>
+          </div>
+          <div className="flex overflow-x-auto no-scrollbar gap-4 pb-4 h-full">
+            {ALL_PRODUCTS.filter(p => p.category === 'Fruits').slice(0, 5).map(p => (
+              <div key={p.id} className="min-w-[160px] h-full">
+                <ProductCard
+                  product={p}
+                  onClick={() => openProduct(p)}
+                  addToCart={() => addToCart(p, p.units[0])}
+                  quantity={cart.reduce((acc, curr) => curr.id === p.id ? acc + curr.cartQuantity : acc, 0)}
+                  removeFromCart={() => {
+                    const item = cart.find(c => c.id === p.id);
+                    if (item) removeFromCart(p.id, item.selectedUnit.id);
+                  }}
+                  isFavorite={wishlist.includes(p.id)}
+                  toggleFavorite={() => toggleWishlist(p.id)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="px-6 mt-12 mb-6 animate-popIn stagger-5">
+          <div className="bg-[#064e3b] rounded-[2.5rem] p-8 text-center relative overflow-hidden group cursor-pointer shadow-xl shadow-green-950/20" onClick={() => setCurrentView('categories')}>
+            <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -translate-y-24 translate-x-24 blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
+            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-green-400/10 rounded-full blur-2xl"></div>
+
+            <div className="relative z-10 py-4">
+              <span className="text-[11px] font-black text-green-400 uppercase tracking-[0.2em] mb-3 block">Explore More</span>
+              <h3 className="text-3xl font-black text-white mb-8 tracking-tighter drop-shadow-md">Fresh Markets</h3>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentView('categories');
+                }}
+                className="bg-white text-[#064e3b] px-10 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl"
+              >
+                View All
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* SEO Content Section */}
+        <div className="px-6 mt-16 mb-12 animate-popIn stagger-5">
+          <div className="bg-slate-50 dark:bg-slate-800/40 rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-slate-800">
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-6">About Green Trust Grocery - Organic Fresh Market</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-600 dark:text-slate-400">
+              <div className="space-y-4">
+                <p className="leading-relaxed">
+                  At <strong className="text-green-600">Green Trust Grocery</strong>, we are committed to bringing the freshest, most authentic organic produce directly from local farms in Tamil Nadu to your home in Chennai. Our mission is to promote sustainable farming while ensuring your family gets the purest quality vegetables and fruits.
+                </p>
+                <p className="leading-relaxed">
+                  Why choose <strong className="text-green-600">Green Trust Grocery</strong>? Because we eliminate the middleman, ensuring farmers get a fair price and you get produce harvested within hours of delivery. From farm-fresh country tomatoes to exotic Hass avocados, we deliver everything in 15 minutes.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <p className="leading-relaxed font-semibold text-slate-800 dark:text-slate-200">
+                  Our Promise:
+                </p>
+                <ul className="space-y-2">
+                  <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> 100% Certified Organic Produce</li>
+                  <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> 15-Minute Instant Delivery in Chennai</li>
+                  <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> Direct Sourcing from Sustainable Farms</li>
+                  <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> Daily Selection of Fresh Herbs & Greens</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <MarqueeBanner />
+        <Footer />
+      </div>
+    );
+  case 'product-detail':
+    return selectedProduct ? (
+      <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <ProductDetail
+          product={selectedProduct}
+          onBack={() => setCurrentView('home')}
+          addToCart={addToCart}
+          removeFromCart={removeFromCart}
+          cart={cart}
+          isFavorite={wishlist.includes(selectedProduct.id)}
+          toggleFavorite={() => toggleWishlist(selectedProduct.id)}
+          onSimilarProductClick={openProduct}
+        />
+      </Suspense>
+    ) : null;
+  case 'cart':
+    return (
+      <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <CartView
+          cart={cart}
+          address={userAddress}
+          onBack={() => setCurrentView('home')}
+          removeFromCart={removeFromCart}
+          addToCart={addToCart}
+          clearCart={clearCart}
+          onExploreProducts={() => setCurrentView('home')}
+          isLoggedIn={isLoggedIn}
+          onLoginReq={() => setShowLogin(true)}
+          step="list"
+          onStepChange={(s) => s === 'checkout' ? setCurrentView('checkout') : setCurrentView('cart')}
+          onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
+        />
+      </Suspense>
+    );
+  case 'checkout':
+    return (
+      <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <CartView
+          cart={cart}
+          address={userAddress}
+          onBack={() => setCurrentView('cart')}
+          removeFromCart={removeFromCart}
+          addToCart={addToCart}
+          clearCart={clearCart}
+          onExploreProducts={() => setCurrentView('home')}
+          isLoggedIn={isLoggedIn}
+          onLoginReq={() => setShowLogin(true)}
+          step="checkout"
+          onStepChange={(s) => s === 'list' ? setCurrentView('cart') : setCurrentView('checkout')}
+          onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
+        />
+      </Suspense>
+    );
+  case 'order-success':
+    return (
+      <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <OrderSuccessView
+          onContinueShopping={() => setCurrentView('home')}
+          onTrackOrder={() => setCurrentView('orders')}
+        />
+      </Suspense>
+    );
+  case 'location-picker':
+    return (
+      <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <LocationPicker
+          onConfirm={(addr) => { setUserAddress(addr); setCurrentView('home'); }}
+          onBack={() => setCurrentView('home')}
+        />
+      </Suspense>
+    );
+  case 'account':
+    return (
+      <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <AccountView
+          onLoginClick={() => setShowLogin(true)}
+          isLoggedIn={isLoggedIn}
+          user={user}
+          toggleTheme={toggleTheme}
+          isDark={isDark}
+          onNavigate={setCurrentView}
+          onLogoutClick={() => {
+            auth.signOut().then(() => {
+              setToast({ show: true, message: "Signed out successfully", type: 'info' });
+              setIsLoggedIn(false);
+              setUser(null);
+            });
+          }}
+        />
+      </Suspense>
+    );
+  case 'wishlist':
+    return (
+      <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <WishlistView
+          onBack={() => setCurrentView('home')}
+          wishlistItems={ALL_PRODUCTS.filter(p => wishlist.includes(p.id))}
+          onProductClick={openProduct}
+          cart={cart}
+          addToCart={(p) => addToCart(p, p.units[0])}
+          removeFromCart={(id) => {
+            const item = cart.find(c => c.id === id);
+            if (item) removeFromCart(id, item.selectedUnit.id);
+          }}
+          wishlist={wishlist}
+          toggleWishlist={toggleWishlist}
+        />
+      </Suspense>
+    );
+  case 'basketbuddy':
+    return (
+      <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <BasketBuddyView
+          onBack={() => setCurrentView('home')}
+          onNavigate={setCurrentView}
+          onSelectCategory={setSelectedCategory}
+        />
+      </Suspense>
+    );
+  case 'developer':
+    return (
+      <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <DeveloperView onBack={() => setCurrentView('account')} />
+      </Suspense>
+    );
+  case 'support':
+  case 'feedback':
+    return (
+      <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+        <SupportView onBack={() => setCurrentView('account')} />
+      </Suspense>
+    );
+  default:
+    return <div className="p-8 text-center text-gray-400">Section Coming Soon</div>;
+}
+  };
+
+return (
+  <div className={`w-full h-screen relative overflow-hidden flex flex-col selection:bg-green-100 ${isDark ? 'dark text-white' : ''}`}>
+    <Suspense fallback={null}>
+      <BackgroundAnimation />
+    </Suspense>
+    {/* Entrance Screen removed as per request, using index.html splash instead */}
+
+    {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && (
+      <>
+        {/* Mobile Header: Visible on Home only (mostly) to avoid duplication */}
+        {currentView !== 'basketbuddy' && currentView !== 'all-categories' && currentView !== 'categories' && (
+          <div className="md:hidden">
+            <Header
+              onProfileClick={() => setCurrentView('account')}
+              onSearchChange={setSearchQuery}
+              onLocationClick={() => setCurrentView('location-picker')}
+              onWishlistClick={() => setCurrentView('wishlist')}
+              address={userAddress}
+              isDark={isDark}
+              toggleTheme={toggleTheme}
+              isScrolled={isScrolled}
+              onFilterClick={() => {
+                setShouldOpenFilter(true);
+                setCurrentView('categories');
+              }}
+              showFilter={false} // Hide Filter on Home
+            />
+          </div>
+        )}
+
+        {/* Desktop Header: Visible on Categories/BasketBuddy too */}
+        <DesktopHeader
+          currentView={currentView}
+          setCurrentView={setCurrentView}
+          onSearchChange={setSearchQuery}
+          cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
+          wishlistCount={wishlist.length}
+          isDark={isDark}
+          toggleTheme={toggleTheme}
+          isScrolled={isScrolled}
+          onFilterClick={() => {
+            setShouldOpenFilter(true);
+            setCurrentView('categories');
+          }}
+        />
+
+
+      </>
+    )}
+
+    <main
+      className="flex-1 overflow-y-auto no-scrollbar relative z-10"
+      onScroll={handleScroll}
+    >
+      <div className={`${currentView === 'categories' || currentView === 'all-categories' || currentView === 'basketbuddy' ? '' : 'md:max-w-6xl mx-auto'}`}>
+        {renderContent()}
+      </div>
+    </main>
+
+    {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && currentView !== 'basketbuddy' && (
+      <div className="md:hidden">
+        <BottomNav
+          currentView={currentView}
+          setCurrentView={setCurrentView}
+          cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
+        />
+      </div>
+    )}
+
+    {/* Floating Buttons Removed */}
+
+    {/* Green Floating Cart Icon - Mobile Only */}
+    {cart.length > 0 && currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'basketbuddy' && (
+      <div
+        onClick={() => setCurrentView('cart')}
+        className="fixed bottom-6 right-5 z-[50] md:hidden flex items-center gap-3 bg-green-600 text-white pl-4 pr-2 py-2 rounded-full shadow-[0_10px_30px_rgba(22,163,74,0.5)] border-4 border-white dark:border-slate-900 active:scale-95 transition-transform animate-slideUp"
+      >
+        <div className="flex flex-col leading-none">
+          <span className="text-[10px] font-medium opacity-80 uppercase tracking-wide">{cart.reduce((a, c) => a + c.cartQuantity, 0)} Items</span>
+          <span className="font-black text-lg">₹{cart.reduce((a, c) => a + (c.selectedUnit.price * c.cartQuantity), 0)}</span>
+        </div>
+        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+          <i className="fa-solid fa-cart-shopping"></i>
         </div>
       </div>
+    )}
 
-      {/* Global Toast Notification */}
-      <div
-        onClick={() => {
-          if (toast.type === 'cart') setCurrentView('cart');
-          if (toast.type === 'wishlist') setCurrentView('wishlist');
-          setToast(prev => ({ ...prev, show: false }));
-        }}
-        className={`hidden md:block fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) ${toast.show ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-20 opacity-0 scale-90 pointer-events-none'}`}
-      >
-        <div className="bg-gray-900/95 backdrop-blur-xl text-white pl-4 pr-6 py-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.3)] flex items-center gap-4 border border-white/10 cursor-pointer hover:scale-105 active:scale-95 transition-transform group">
-          <div className="bg-green-500 rounded-xl p-2 shadow-lg shadow-green-500/30 animate-pulse">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-            </svg>
+    {showLogin && (
+      <Suspense fallback={<div className="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center"><div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div></div>}>
+        <LoginModal onClose={() => setShowLogin(false)} onLogin={() => { setIsLoggedIn(true); setShowLogin(false); }} />
+      </Suspense>
+    )}
+
+    {/* Guest Welcome Popup (Small & Auto-dismiss) */}
+    <div
+      className={`fixed bottom-24 left-6 z-[70] transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1) ${showGuestPopup ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-20 opacity-0 scale-90 pointer-events-none'
+        }`}
+    >
+      <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-white/20 p-4 rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] max-w-[280px] relative overflow-hidden group">
+        {/* Glossy Effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none"></div>
+
+        <div className="relative z-10">
+          <div className="flex items-start justify-between mb-3">
+            <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-green-600 transform group-hover:rotate-12 transition-transform">
+              <i className="fa-solid fa-gift text-lg animate-bounce" aria-hidden="true"></i>
+            </div>
+            <button onClick={() => setShowGuestPopup(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" aria-label="Dismiss Welcome Popup">
+              <i className="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold tracking-wide text-gray-100">{toast.message}</span>
-            <span className="text-[10px] font-black text-green-400 uppercase tracking-widest mt-0.5 group-hover:underline">
-              {toast.type === 'cart' ? 'Tap to View Cart →' : toast.type === 'wishlist' ? 'Tap to View Favorites →' : 'Dismiss'}
-            </span>
-          </div>
+          <h3 className="font-black text-slate-900 dark:text-white mb-1 text-sm">Join Green Trust Grocery! 🌿</h3>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3 font-medium leading-relaxed">
+            Unlock exclusive deals, track orders & save addresses.
+          </p>
+          <button
+            onClick={() => { setShowGuestPopup(false); setShowLogin(true); }}
+            className="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider shadow-lg hover:shadow-xl active:scale-95 transition-all"
+          >
+            Login / Signup
+          </button>
         </div>
       </div>
     </div>
-  );
+
+    {/* Global Toast Notification */}
+    <div
+      onClick={() => {
+        if (toast.type === 'cart') setCurrentView('cart');
+        if (toast.type === 'wishlist') setCurrentView('wishlist');
+        setToast(prev => ({ ...prev, show: false }));
+      }}
+      className={`hidden md:block fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) ${toast.show ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-20 opacity-0 scale-90 pointer-events-none'}`}
+    >
+      <div className="bg-gray-900/95 backdrop-blur-xl text-white pl-4 pr-6 py-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.3)] flex items-center gap-4 border border-white/10 cursor-pointer hover:scale-105 active:scale-95 transition-transform group">
+        <div className="bg-green-500 rounded-xl p-2 shadow-lg shadow-green-500/30 animate-pulse">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div className="flex flex-col">
+          <span className="text-sm font-bold tracking-wide text-gray-100">{toast.message}</span>
+          <span className="text-[10px] font-black text-green-400 uppercase tracking-widest mt-0.5 group-hover:underline">
+            {toast.type === 'cart' ? 'Tap to View Cart →' : toast.type === 'wishlist' ? 'Tap to View Favorites →' : 'Dismiss'}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 };
 
 export default App;

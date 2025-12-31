@@ -41,6 +41,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           toggleFavorite();
         }}
         className={`absolute top-3 right-3 z-20 p-2 bg-white/80 dark:bg-slate-700/80 backdrop-blur-md rounded-full shadow-lg transition-all duration-300 ${isFavorite ? 'scale-110 shadow-red-100 dark:shadow-none bg-red-50 dark:bg-red-900/10' : 'hover:scale-110 active:scale-95'}`}
+        aria-label={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
       >
         <div className={`${isFavorite ? 'animate-heartBeat' : ''}`}>
           <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-colors duration-300 ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-300'}`} viewBox="0 0 20 20" fill="currentColor">
@@ -106,6 +107,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   addToCart();
                 }}
                 className="w-full h-full bg-slate-50 dark:bg-slate-700 hover:bg-green-50 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800 rounded-lg text-xs font-black shadow-sm active:scale-95 transition-all flex items-center justify-center gap-1 uppercase tracking-tight"
+                aria-label={`Add ${product.nameEn} to Cart`}
               >
                 ADD <i className="fa-solid fa-plus text-[10px]"></i>
               </button>

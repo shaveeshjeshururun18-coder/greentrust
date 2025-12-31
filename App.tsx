@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, Suspense, lazy } from 'react';
 import Draggable from './components/Draggable';
 import { ViewState, Product, Unit, CartItem } from './types.ts';
 import { auth, db } from './firebaseConfig.ts';
@@ -12,25 +12,25 @@ import AnimatedBanner from './components/AnimatedBanner.tsx';
 import CategoryGrid from './components/CategoryGrid.tsx';
 import ProductCard from './components/ProductCard.tsx';
 import BottomNav from './components/BottomNav.tsx';
-import CartView from './components/CartView.tsx';
-import CategoriesView from './components/CategoriesView.tsx';
-import AllCategoriesView from './components/AllCategoriesView.tsx';
-import OrderSuccessView from './components/OrderSuccessView.tsx';
-
-import AccountView from './components/AccountView.tsx';
-import LoginModal from './components/LoginModal.tsx';
-import ProductDetail from './components/ProductDetail.tsx';
-import WishlistView from './components/WishlistView.tsx';
-import LocationPicker from './components/LocationPicker.tsx';
-import BackgroundAnimation from './components/BackgroundAnimation.tsx';
-import DesktopHero from './components/DesktopHero.tsx';
-import DeveloperView from './components/DeveloperView.tsx';
-import AIAssistant from './components/AIAssistant.tsx';
-
-import BasketBuddyView from './components/BasketBuddyView.tsx';
-import SupportView from './components/SupportView.tsx';
 import MarqueeBanner from './components/MarqueeBanner.tsx';
 import Footer from './components/Footer.tsx';
+
+// Lazy Load Heavy Views
+const CartView = lazy(() => import('./components/CartView.tsx'));
+const CategoriesView = lazy(() => import('./components/CategoriesView.tsx'));
+const AllCategoriesView = lazy(() => import('./components/AllCategoriesView.tsx'));
+const OrderSuccessView = lazy(() => import('./components/OrderSuccessView.tsx'));
+const AccountView = lazy(() => import('./components/AccountView.tsx'));
+const LoginModal = lazy(() => import('./components/LoginModal.tsx'));
+const ProductDetail = lazy(() => import('./components/ProductDetail.tsx'));
+const WishlistView = lazy(() => import('./components/WishlistView.tsx'));
+const LocationPicker = lazy(() => import('./components/LocationPicker.tsx'));
+const BackgroundAnimation = lazy(() => import('./components/BackgroundAnimation.tsx'));
+const DeveloperView = lazy(() => import('./components/DeveloperView.tsx'));
+const BasketBuddyView = lazy(() => import('./components/BasketBuddyView.tsx'));
+const SupportView = lazy(() => import('./components/SupportView.tsx'));
+// DesktopHero and AIAssistant removed or lazy loaded if needed
+// EntranceScreen import removed
 
 // Inside App component
 // EntranceScreen import removed
@@ -430,27 +430,31 @@ const App: React.FC = () => {
     switch (currentView) {
       case 'all-categories':
         return (
-          <AllCategoriesView
-            onCategoryClick={handleCategoryClick}
-            onSearchChange={setSearchQuery}
-            cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
-          />
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <AllCategoriesView
+              onCategoryClick={handleCategoryClick}
+              onSearchChange={setSearchQuery}
+              cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
+            />
+          </Suspense>
         );
       case 'categories':
         return (
-          <CategoriesView
-            onBack={() => setCurrentView('home')}
-            onProductClick={openProduct}
-            addToCart={addToCart}
-            removeFromCart={removeFromCart}
-            getQuantity={getQuantity}
-            wishlist={wishlist}
-            toggleWishlist={toggleWishlist}
-            initialCategoryId={selectedCategory}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            initialFilterOpen={shouldOpenFilter}
-          />
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <CategoriesView
+              onBack={() => setCurrentView('home')}
+              onProductClick={openProduct}
+              addToCart={addToCart}
+              removeFromCart={removeFromCart}
+              getQuantity={getQuantity}
+              wishlist={wishlist}
+              toggleWishlist={toggleWishlist}
+              initialCategoryId={selectedCategory}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              initialFilterOpen={shouldOpenFilter}
+            />
+          </Suspense>
         );
       case 'home':
         return (
@@ -637,103 +641,142 @@ const App: React.FC = () => {
               </div>
             </div>
 
+            <MarqueeBanner />
             <Footer />
           </div>
         );
       case 'product-detail':
         return selectedProduct ? (
-          <ProductDetail
-            product={selectedProduct}
-            onBack={() => setCurrentView('home')}
-            addToCart={addToCart}
-            removeFromCart={removeFromCart}
-            cart={cart}
-            isFavorite={wishlist.includes(selectedProduct.id)}
-            toggleFavorite={() => toggleWishlist(selectedProduct.id)}
-            onSimilarProductClick={openProduct}
-          />
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <ProductDetail
+              product={selectedProduct}
+              onBack={() => setCurrentView('home')}
+              addToCart={addToCart}
+              removeFromCart={removeFromCart}
+              cart={cart}
+              isFavorite={wishlist.includes(selectedProduct.id)}
+              toggleFavorite={() => toggleWishlist(selectedProduct.id)}
+              onSimilarProductClick={openProduct}
+            />
+          </Suspense>
         ) : null;
       case 'cart':
-        return <CartView
-          cart={cart}
-          address={userAddress}
-          onBack={() => setCurrentView('home')}
-          removeFromCart={removeFromCart}
-          addToCart={addToCart}
-          clearCart={clearCart}
-          onExploreProducts={() => setCurrentView('home')}
-          isLoggedIn={isLoggedIn}
-          onLoginReq={() => setShowLogin(true)}
-          step="list"
-          onStepChange={(s) => s === 'checkout' ? setCurrentView('checkout') : setCurrentView('cart')}
-          onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
-        />;
+        return (
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <CartView
+              cart={cart}
+              address={userAddress}
+              onBack={() => setCurrentView('home')}
+              removeFromCart={removeFromCart}
+              addToCart={addToCart}
+              clearCart={clearCart}
+              onExploreProducts={() => setCurrentView('home')}
+              isLoggedIn={isLoggedIn}
+              onLoginReq={() => setShowLogin(true)}
+              step="list"
+              onStepChange={(s) => s === 'checkout' ? setCurrentView('checkout') : setCurrentView('cart')}
+              onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
+            />
+          </Suspense>
+        );
       case 'checkout':
-        return <CartView
-          cart={cart}
-          address={userAddress}
-          onBack={() => setCurrentView('cart')}
-          removeFromCart={removeFromCart}
-          addToCart={addToCart}
-          clearCart={clearCart}
-          onExploreProducts={() => setCurrentView('home')}
-          isLoggedIn={isLoggedIn}
-          onLoginReq={() => setShowLogin(true)}
-          step="checkout"
-          onStepChange={(s) => s === 'list' ? setCurrentView('cart') : setCurrentView('checkout')}
-          onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
-        />;
+        return (
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <CartView
+              cart={cart}
+              address={userAddress}
+              onBack={() => setCurrentView('cart')}
+              removeFromCart={removeFromCart}
+              addToCart={addToCart}
+              clearCart={clearCart}
+              onExploreProducts={() => setCurrentView('home')}
+              isLoggedIn={isLoggedIn}
+              onLoginReq={() => setShowLogin(true)}
+              step="checkout"
+              onStepChange={(s) => s === 'list' ? setCurrentView('cart') : setCurrentView('checkout')}
+              onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
+            />
+          </Suspense>
+        );
       case 'order-success':
-        return <OrderSuccessView
-          onContinueShopping={() => setCurrentView('home')}
-          onTrackOrder={() => setCurrentView('orders')}
-        />;
+        return (
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <OrderSuccessView
+              onContinueShopping={() => setCurrentView('home')}
+              onTrackOrder={() => setCurrentView('orders')}
+            />
+          </Suspense>
+        );
       case 'location-picker':
-        return <LocationPicker
-          onConfirm={(addr) => { setUserAddress(addr); setCurrentView('home'); }}
-          onBack={() => setCurrentView('home')}
-        />;
+        return (
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <LocationPicker
+              onConfirm={(addr) => { setUserAddress(addr); setCurrentView('home'); }}
+              onBack={() => setCurrentView('home')}
+            />
+          </Suspense>
+        );
       case 'account':
-        return <AccountView
-          onLoginClick={() => setShowLogin(true)}
-          isLoggedIn={isLoggedIn}
-          user={user}
-          toggleTheme={toggleTheme}
-          isDark={isDark}
-          onNavigate={setCurrentView}
-          onLogoutClick={() => {
-            auth.signOut().then(() => {
-              setToast({ show: true, message: "Signed out successfully", type: 'info' });
-              setIsLoggedIn(false);
-              setUser(null);
-            });
-          }}
-        />;
+        return (
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <AccountView
+              onLoginClick={() => setShowLogin(true)}
+              isLoggedIn={isLoggedIn}
+              user={user}
+              toggleTheme={toggleTheme}
+              isDark={isDark}
+              onNavigate={setCurrentView}
+              onLogoutClick={() => {
+                auth.signOut().then(() => {
+                  setToast({ show: true, message: "Signed out successfully", type: 'info' });
+                  setIsLoggedIn(false);
+                  setUser(null);
+                });
+              }}
+            />
+          </Suspense>
+        );
       case 'wishlist':
-        return <WishlistView
-          onBack={() => setCurrentView('home')}
-          wishlistItems={ALL_PRODUCTS.filter(p => wishlist.includes(p.id))}
-          onProductClick={openProduct}
-          cart={cart}
-          addToCart={(p) => addToCart(p, p.units[0])}
-          removeFromCart={(id) => {
-            const item = cart.find(c => c.id === id);
-            if (item) removeFromCart(id, item.selectedUnit.id);
-          }}
-          wishlist={wishlist}
-          toggleWishlist={toggleWishlist}
-        />;
+        return (
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <WishlistView
+              onBack={() => setCurrentView('home')}
+              wishlistItems={ALL_PRODUCTS.filter(p => wishlist.includes(p.id))}
+              onProductClick={openProduct}
+              cart={cart}
+              addToCart={(p) => addToCart(p, p.units[0])}
+              removeFromCart={(id) => {
+                const item = cart.find(c => c.id === id);
+                if (item) removeFromCart(id, item.selectedUnit.id);
+              }}
+              wishlist={wishlist}
+              toggleWishlist={toggleWishlist}
+            />
+          </Suspense>
+        );
       case 'basketbuddy':
-        return <BasketBuddyView
-          onBack={() => setCurrentView('home')}
-          onNavigate={setCurrentView}
-          onSelectCategory={setSelectedCategory}
-        />;
+        return (
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <BasketBuddyView
+              onBack={() => setCurrentView('home')}
+              onNavigate={setCurrentView}
+              onSelectCategory={setSelectedCategory}
+            />
+          </Suspense>
+        );
       case 'developer':
-        return <DeveloperView onBack={() => setCurrentView('account')} />;
+        return (
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <DeveloperView onBack={() => setCurrentView('account')} />
+          </Suspense>
+        );
       case 'support':
       case 'feedback':
-        return <SupportView onBack={() => setCurrentView('account')} />;
+        return (
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <SupportView onBack={() => setCurrentView('account')} />
+          </Suspense>
+        );
       default:
         return <div className="p-8 text-center text-gray-400">Section Coming Soon</div>;
     }
@@ -741,7 +784,9 @@ const App: React.FC = () => {
 
   return (
     <div className={`w-full h-screen relative overflow-hidden flex flex-col selection:bg-green-100 ${isDark ? 'dark text-white' : ''}`}>
-      <BackgroundAnimation />
+      <Suspense fallback={null}>
+        <BackgroundAnimation />
+      </Suspense>
       {/* Entrance Screen removed as per request, using index.html splash instead */}
 
       {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && (
@@ -782,7 +827,7 @@ const App: React.FC = () => {
               setCurrentView('categories');
             }}
           />
-          <MarqueeBanner />
+
 
         </>
       )}
@@ -824,7 +869,11 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} onLogin={() => { setIsLoggedIn(true); setShowLogin(false); }} />}
+      {showLogin && (
+        <Suspense fallback={<div className="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center"><div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div></div>}>
+          <LoginModal onClose={() => setShowLogin(false)} onLogin={() => { setIsLoggedIn(true); setShowLogin(false); }} />
+        </Suspense>
+      )}
 
       {/* Guest Welcome Popup (Small & Auto-dismiss) */}
       <div
@@ -838,13 +887,13 @@ const App: React.FC = () => {
           <div className="relative z-10">
             <div className="flex items-start justify-between mb-3">
               <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-green-600 transform group-hover:rotate-12 transition-transform">
-                <i className="fa-solid fa-gift text-lg animate-bounce"></i>
+                <i className="fa-solid fa-gift text-lg animate-bounce" aria-hidden="true"></i>
               </div>
-              <button onClick={() => setShowGuestPopup(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                <i className="fa-solid fa-xmark"></i>
+              <button onClick={() => setShowGuestPopup(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" aria-label="Dismiss Welcome Popup">
+                <i className="fa-solid fa-xmark" aria-hidden="true"></i>
               </button>
             </div>
-            <h4 className="font-black text-slate-900 dark:text-white mb-1 text-sm">Join Green Trust Grocery! 🌿</h4>
+            <h3 className="font-black text-slate-900 dark:text-white mb-1 text-sm">Join Green Trust Grocery! 🌿</h3>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3 font-medium leading-relaxed">
               Unlock exclusive deals, track orders & save addresses.
             </p>

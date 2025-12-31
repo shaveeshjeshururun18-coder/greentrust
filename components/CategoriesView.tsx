@@ -237,7 +237,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
             <div className="md:hidden sticky top-0 z-30 bg-white dark:bg-slate-900 shadow-sm flex flex-col transition-all">
                 <div className="px-4 py-3 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                        <button onClick={onBack} className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300">
+                        <button onClick={onBack} aria-label="Go Back" className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300">
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
                         <div>
@@ -252,6 +252,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                 value={searchQuery || ''}
                                 onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
                                 placeholder="Search..."
+                                aria-label="Search categories"
                                 className="w-full h-8 bg-slate-100 dark:bg-slate-800 rounded-full pl-8 pr-3 text-xs outline-none focus:ring-1 focus:ring-green-500"
                             />
                             <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400"></i>
@@ -273,7 +274,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                 <div className={`absolute right-0 top-0 bottom-0 w-[85%] max-w-[320px] bg-white dark:bg-slate-900 shadow-2xl transform transition-transform duration-300 flex flex-col ${isFiltersOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                     <div className="p-5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
                         <h2 className="text-xl font-black text-slate-900 dark:text-white">Filters</h2>
-                        <button onClick={() => setIsFiltersOpen(false)} className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                        <button onClick={() => setIsFiltersOpen(false)} aria-label="Close Filters" className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
                             <i className="fa-solid fa-xmark"></i>
                         </button>
                     </div>
@@ -312,7 +313,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
 
                 {/* 1. Slim Icon Rail (Always Visible) */}
                 <div className="w-[88px] flex-shrink-0 flex flex-col items-center py-6 bg-slate-50/50 dark:bg-slate-900/50 border-r border-slate-100 dark:border-slate-800 h-full overflow-y-auto custom-scrollbar no-scrollbar">
-                    <button onClick={onBack} className="w-10 h-10 mb-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+                    <button onClick={onBack} aria-label="Go Back" className="w-10 h-10 mb-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
                         <i className="fa-solid fa-arrow-left"></i>
                     </button>
 
@@ -466,6 +467,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                             {/* Filter Button - Triggers Modal */}
                             <button
                                 onClick={() => setIsMobileFilterOpen(true)}
+                                aria-label="Open Filters"
                                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors active:scale-95 relative ${selectedSubCategories.length > 0 || selectedPriceRanges.length > 0 ? 'bg-green-100 text-green-700' : 'bg-slate-50 text-slate-600'}`}
                             >
                                 <i className="fa-solid fa-sliders text-sm"></i>
@@ -587,6 +589,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                     <div className="flex items-center gap-3">
                                         <button
                                             onClick={() => setIsFiltersOpen(true)}
+                                            aria-label="Filter products"
                                             className="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-slate-300"
                                         >
                                             <i className="fa-solid fa-sliders"></i>

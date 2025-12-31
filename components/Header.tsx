@@ -70,7 +70,7 @@ const Header: React.FC<HeaderProps> = ({
               <i className="fa-solid fa-leaf"></i>
             </div>
             <h1 className="font-extrabold text-xl tracking-tight group-hover:text-green-600 transition-colors">Green Trust Grocery</h1>
-            <i className="fa-solid fa-angle-down text-sm mt-1 text-green-600"></i>
+            <i className="fa-solid fa-angle-down text-sm mt-1 text-green-600" aria-hidden="true"></i>
           </a>
           <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate max-w-[200px] leading-tight pl-6">
             {address || '11, Mugambigai Nagar 5th cross...'}
@@ -81,20 +81,23 @@ const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center gap-3">
           <button
             onClick={toggleTheme}
+            aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
             className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300 transition-colors"
           >
-            <i className={`fa-solid ${isDark ? 'fa-sun text-yellow-500' : 'fa-moon'}`}></i>
+            <i className={`fa-solid ${isDark ? 'fa-sun text-yellow-500' : 'fa-moon'}`} aria-hidden="true"></i>
           </button>
 
           <button
             onClick={onWishlistClick}
+            aria-label="View Wishlist"
             className="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500 transition-colors active:scale-95"
           >
-            <i className="fa-regular fa-heart text-lg font-bold"></i>
+            <i className="fa-regular fa-heart text-lg font-bold" aria-hidden="true"></i>
           </button>
 
           <button
             onClick={onProfileClick}
+            aria-label="View Profile"
             className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm"
           >
             <img src="https://picsum.photos/seed/user/100/100" alt="User" className="w-full h-full object-cover" />
@@ -112,14 +115,15 @@ const Header: React.FC<HeaderProps> = ({
             onChange={handleChange}
             className="w-full h-12 rounded-xl bg-green-50 dark:bg-slate-800 border-none pl-12 pr-10 text-sm font-semibold outline-none focus:ring-2 focus:ring-green-500/50 transition-colors text-slate-800 dark:text-white placeholder-slate-400/80"
             placeholder={SEARCH_PLACEHOLDERS[placeholderIndex]}
+            aria-label="Search Products"
           />
-          <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center pointer-events-none">
+          <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center pointer-events-none" aria-hidden="true">
             <i className="fa-solid fa-magnifying-glass text-green-600 text-lg"></i>
           </div>
           <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-3">
             {searchValue && (
-              <button onClick={() => { setSearchValue(''); onSearchChange(''); }} className="text-slate-400">
-                <i className="fa-solid fa-xmark"></i>
+              <button onClick={() => { setSearchValue(''); onSearchChange(''); }} className="text-slate-400" aria-label="Clear Search">
+                <i className="fa-solid fa-xmark" aria-hidden="true"></i>
               </button>
             )}
             {/* Microphone Removed */}
@@ -143,9 +147,10 @@ const Header: React.FC<HeaderProps> = ({
         {showFilter && (
           <button
             onClick={onFilterClick}
+            aria-label="Filter Products"
             className="flex flex-col items-center justify-center h-12 w-12 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 active:scale-95 transition-all"
           >
-            <i className="fa-solid fa-sliders text-lg"></i>
+            <i className="fa-solid fa-sliders text-lg" aria-hidden="true"></i>
           </button>
         )}
       </div>

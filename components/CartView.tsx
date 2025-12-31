@@ -137,8 +137,8 @@ const CartView: React.FC<CartViewProps> = ({
     return (
       <div className="fixed inset-0 bg-black/80 z-[80] flex flex-col items-center justify-center p-6 backdrop-blur-sm animate-fadeIn">
         <div className="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center relative">
-          <button onClick={() => setShowQR(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button onClick={() => setShowQR(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600" aria-label="Close QR Code">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -182,8 +182,8 @@ const CartView: React.FC<CartViewProps> = ({
       )}
       <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-6 py-6 flex items-center justify-between sticky top-0 z-20 border-b border-gray-100 dark:border-slate-800">
         <div className="flex items-center gap-4">
-          <button onClick={onBack} className="w-10 h-10 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center active-pop">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-800 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <button onClick={onBack} className="w-10 h-10 bg-gray-50 dark:bg-slate-800 rounded-full flex items-center justify-center active-pop" aria-label="Go Back">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-800 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
@@ -233,9 +233,9 @@ const CartView: React.FC<CartViewProps> = ({
                         <p className="text-sm font-black text-gray-900 dark:text-gray-200 mt-2">₹{item.selectedUnit.price * item.cartQuantity}</p>
                       </div>
                       <div className="flex items-center bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 h-12">
-                        <button onClick={() => removeFromCart(item.id, item.selectedUnit.id)} className="w-10 h-10 flex items-center justify-center font-black text-xl text-gray-500 dark:text-gray-400 active:scale-75 transition-transform">-</button>
+                        <button onClick={() => removeFromCart(item.id, item.selectedUnit.id)} className="w-10 h-10 flex items-center justify-center font-black text-xl text-gray-500 dark:text-gray-400 active:scale-75 transition-transform" aria-label="Decrease quantity">-</button>
                         <span className="w-8 text-center text-sm font-black text-gray-900 dark:text-white">{item.cartQuantity}</span>
-                        <button onClick={() => addToCart(item, item.selectedUnit)} className="w-10 h-10 flex items-center justify-center font-black text-xl text-green-600 active:scale-75 transition-transform">+</button>
+                        <button onClick={() => addToCart(item, item.selectedUnit)} className="w-10 h-10 flex items-center justify-center font-black text-xl text-green-600 active:scale-75 transition-transform" aria-label="Increase quantity">+</button>
                       </div>
                     </div>
                   ))}

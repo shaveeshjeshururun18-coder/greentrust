@@ -7,16 +7,16 @@ const Footer: React.FC = () => {
             {/* Social Icons (Floating Center) - HIDDEN ON MOBILE */}
             <div className="hidden md:block relative">
                 <div className="absolute left-1/2 -translate-x-1/2 -top-16 flex gap-4">
-                    <a href="#" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg shadow-green-600/20">
+                    <a href="#" aria-label="Follow us on Instagram" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg shadow-green-600/20">
                         <i className="fa-brands fa-instagram"></i>
                     </a>
-                    <a href="#" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg shadow-green-600/20">
+                    <a href="#" aria-label="Follow us on Facebook" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg shadow-green-600/20">
                         <i className="fa-brands fa-facebook-f"></i>
                     </a>
-                    <a href="#" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg shadow-green-600/20">
+                    <a href="#" aria-label="Subscribe to our YouTube channel" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg shadow-green-600/20">
                         <i className="fa-brands fa-youtube"></i>
                     </a>
-                    <a href="#" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg shadow-green-600/20">
+                    <a href="#" aria-label="Connect with us on LinkedIn" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg shadow-green-600/20">
                         <i className="fa-brands fa-linkedin-in"></i>
                     </a>
                 </div>
@@ -105,14 +105,14 @@ const Footer: React.FC = () => {
                     </p>
 
                     <div className="flex items-center gap-4">
-                        <button className="bg-black text-white px-4 py-1.5 rounded-lg flex items-center gap-2 hover:scale-105 transition-transform">
+                        <button aria-label="Get it on Google Play" className="bg-black text-white px-4 py-1.5 rounded-lg flex items-center gap-2 hover:scale-105 transition-transform">
                             <i className="fa-brands fa-google-play text-lg"></i>
                             <div className="text-left">
                                 <div className="text-[8px] uppercase leading-none opacity-80">Get it on</div>
                                 <div className="text-xs font-bold leading-none">Google Play</div>
                             </div>
                         </button>
-                        <button className="bg-black text-white px-4 py-1.5 rounded-lg flex items-center gap-2 hover:scale-105 transition-transform">
+                        <button aria-label="Download on the App Store" className="bg-black text-white px-4 py-1.5 rounded-lg flex items-center gap-2 hover:scale-105 transition-transform">
                             <i className="fa-brands fa-apple text-xl"></i>
                             <div className="text-left">
                                 <div className="text-[8px] uppercase leading-none opacity-80">Download on the</div>

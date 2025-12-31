@@ -11,16 +11,17 @@ const MarqueeBanner = () => {
     ];
 
     return (
-        <div className="bg-green-600 text-white py-2 overflow-hidden border-y border-green-700 relative z-30">
-            <div className="flex animate-marquee whitespace-nowrap">
-                {/* Triple the content to ensure smooth seamless loop on wide screens */}
-                {[...Array(6)].map((_, groupIndex) => (
-                    <div key={groupIndex} className="flex items-center gap-8 mx-4">
+        <div className="relative z-30 py-4 bg-gradient-to-r from-green-900 via-green-800 to-green-900 border-y border-white/10 shadow-2xl overflow-hidden glass-effect">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+            <div className="flex animate-marquee whitespace-nowrap relative z-10">
+                {/* Quadruple the content for ultra-wide screens */}
+                {[...Array(12)].map((_, groupIndex) => (
+                    <div key={groupIndex} className="flex items-center gap-12 mx-6">
                         {content.map((item, idx) => (
-                            <div key={`${groupIndex}-${idx}`} className="flex items-center gap-2 font-black uppercase text-xs track-widest">
-                                <i className={`fa-solid ${item.icon} text-green-200`}></i>
-                                <span>{item.text}</span>
-                                <span className="w-1.5 h-1.5 bg-green-400 rounded-full ml-6"></span>
+                            <div key={`${groupIndex}-${idx}`} className="flex items-center gap-3">
+                                <i className={`fa-solid ${item.icon} text-green-400 text-lg drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]`}></i>
+                                <span className="text-sm font-black uppercase tracking-[0.2em] text-white/90 drop-shadow-sm font-sans">{item.text}</span>
+                                <span className="w-1.5 h-1.5 bg-green-500 rounded-full ml-8 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
                             </div>
                         ))}
                     </div>
@@ -33,7 +34,11 @@ const MarqueeBanner = () => {
           100% { transform: translateX(-50%); }
         }
         .animate-marquee {
-          animation: marquee 40s linear infinite;
+          animation: marquee 60s linear infinite;
+        }
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
       `}</style>
         </div>

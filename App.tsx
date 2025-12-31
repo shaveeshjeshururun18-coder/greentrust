@@ -1,5 +1,6 @@
 
 import React, { useState, useCallback, useEffect, Suspense, lazy } from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Draggable from './components/Draggable';
 import { ViewState, Product, Unit, CartItem } from './types.ts';
 import { auth, db } from './firebaseConfig.ts';
@@ -933,6 +934,9 @@ const App: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Vercel Speed Insights */}
+      <SpeedInsights />
     </div>
   );
 };

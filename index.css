@@ -2,6 +2,7 @@
 
 @layer base {
   :root {
+    color-scheme: light;
     --premium-emerald: #10b981;
     --premium-emerald-dark: #059669;
     --premium-glass: rgba(255, 255, 255, 0.8);

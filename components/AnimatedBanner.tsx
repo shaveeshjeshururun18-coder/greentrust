@@ -30,7 +30,7 @@ const AnimatedBanner: React.FC = () => {
                         loop
                         muted
                         playsInline
-                        className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
+                        className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay"
                         poster="https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=2670&auto=format&fit=crop"
                     >
                         {/* A high quality free stock video of vegetables or nature */}
@@ -38,9 +38,9 @@ const AnimatedBanner: React.FC = () => {
                         Your browser does not support the video tag.
                     </video>
 
-                    {/* Gradient Overlay for Text Readability - Warm/Daylight */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10"></div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-green-950/90 via-transparent to-transparent z-10"></div>
+                    {/* Gradient Overlay for Text Readability - Lighter for Fresh Look */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/10 to-transparent z-10"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-green-900/60 via-transparent to-transparent z-10"></div>
                 </div>
 
                 {/* ANIMATED PARTICLES & REFLECTIONS */}

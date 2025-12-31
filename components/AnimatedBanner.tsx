@@ -110,7 +110,7 @@ const AnimatedBanner: React.FC = () => {
                             { icon: 'fa-truck-fast', color: 'text-orange-400', text: 'Fast Delivery' },
                             { icon: 'fa-shield-halved', color: 'text-purple-400', text: 'Secure Pay' },
                         ].map((badge, i) => (
-                            <div key={i} className="flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 hover:bg-white/10 hover:scale-105 transition-all cursor-default shadow-lg">
+                            <div key={i} className="flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 hover:bg-white/30 hover:scale-105 transition-all cursor-default shadow-lg">
                                 <i className={`fa-solid ${badge.icon} ${badge.color}`}></i>
                                 <span className="text-xs font-bold text-white">{badge.text}</span>
                             </div>

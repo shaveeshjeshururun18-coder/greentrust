@@ -89,7 +89,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
 
           {/* Desktop Image Gallery */}
           <div className="hidden md:flex flex-col gap-4">
-            <div className="aspect-square bg-slate-50 dark:bg-slate-900 rounded-[2.5rem] flex items-center justify-center p-10 border border-slate-100 dark:border-slate-800 relative overflow-hidden group">
+            <div className="aspect-square bg-white dark:bg-white rounded-[2.5rem] flex items-center justify-center p-10 border border-slate-100 dark:border-slate-100 relative overflow-hidden group">
               {/* Decorative Blob */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-green-500/5 rounded-full blur-3xl -translate-y-20 translate-x-20"></div>
               <img
@@ -223,7 +223,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                   </button>
                   <button
                     onClick={() => { addToCart(product, selectedUnit); }}
-                    className="h-14 bg-black text-white rounded-xl font-bold text-xs uppercase tracking-wider hover:scale-[1.02] active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2"
+                    className="h-14 bg-white border-2 border-slate-200 text-slate-700 rounded-xl font-bold text-xs uppercase tracking-wider hover:scale-[1.02] active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2"
                   >
                     <img src="/assets/gpay-new.png" alt="GPay" className="h-8 object-contain" />
                     <span className="hidden lg:inline">Google Pay</span>
@@ -299,7 +299,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         <div className="hidden md:block mt-16 p-8 bg-slate-50 dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800 border-dashed">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center text-xl">
+              <div className="w-12 h-12 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xl">
                 <i className="fa-solid fa-percent"></i>
               </div>
               <div>

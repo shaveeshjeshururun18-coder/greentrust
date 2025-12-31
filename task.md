@@ -15,6 +15,7 @@
     - [x] Implement lazy loading for heavy components [x]
     - [x] Configure proper caching in `vercel.json` [x]
     - [x] Defer/inline render-blocking resources [x]
+    - [x] Enforce White Mode as default (CSS + Config) [x]
 - [x] Verification [x]
     - [x] Run local build and check for errors [x]
     - [x] Document changes in `walkthrough.md` [x]

@@ -19,7 +19,7 @@ const AnimatedBanner: React.FC = () => {
                 <div className="absolute inset-0 bg-slate-100 z-0">
                     {/* Fallback Image with Ken Burns Effect */}
                     <img
-                        src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=2670&auto=format&fit=crop"
+                        src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=1200&auto=format&fit=crop"
                         alt="Fresh Farm Vegetables"
                         className="w-full h-full object-cover opacity-90 animate-[kenBurns_20s_infinite_alternate]"
                         fetchPriority="high"

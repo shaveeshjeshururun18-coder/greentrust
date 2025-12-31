@@ -22,6 +22,7 @@ const AnimatedBanner: React.FC = () => {
                         src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=2670&auto=format&fit=crop"
                         alt="Fresh Farm Vegetables"
                         className="w-full h-full object-cover opacity-90 animate-[kenBurns_20s_infinite_alternate]"
+                        fetchPriority="high"
                     />
                     {/* Real Video Overlay (Try to load if available) */}
                     <video

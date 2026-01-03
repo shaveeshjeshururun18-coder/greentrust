@@ -8,7 +8,6 @@ interface HeaderProps {
   onWishlistClick?: () => void;
   onFilterClick?: () => void;
   address: string;
-  address: string;
   isScrolled?: boolean;
   showFilter?: boolean;
 }

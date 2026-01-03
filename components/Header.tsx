@@ -11,8 +11,6 @@ interface HeaderProps {
   address: string;
   isScrolled?: boolean;
   showFilter?: boolean;
-  theme: 'light' | 'dark';
-  toggleTheme: () => void;
 }
 
 const SEARCH_PLACEHOLDERS = [
@@ -33,9 +31,7 @@ const Header: React.FC<HeaderProps> = ({
   onFilterClick,
   address,
   isScrolled = false,
-  showFilter = true,
-  theme,
-  toggleTheme
+  showFilter = true
 }) => {
   const [searchValue, setSearchValue] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -81,17 +77,7 @@ const Header: React.FC<HeaderProps> = ({
         {/* Right Actions */}
         <div className="flex items-center gap-3">
 
-          <button
-            onClick={toggleTheme}
-            className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-yellow-400 transition-colors active:scale-95"
-            aria-label="Toggle Theme"
-          >
-            {theme === 'light' ? (
-              <i className="fa-solid fa-moon"></i>
-            ) : (
-              <i className="fa-solid fa-sun"></i>
-            )}
-          </button>
+
 
 
 

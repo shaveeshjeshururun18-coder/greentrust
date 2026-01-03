@@ -55,33 +55,6 @@ const App: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [shouldOpenFilter, setShouldOpenFilter] = useState(false);
 
-  // Theme State
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark' || savedTheme === 'light') return savedTheme;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    return 'light';
-  });
-
-  // Apply Theme to Document
-  useEffect(() => {
-    const root = window.document.documentElement;
-    console.log('Theme changed to:', theme);
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    console.log('Toggling theme...');
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
-
   // Handle Basic Routing for SEO / Deep Linking
   useEffect(() => {
     const handleUrl = () => {
@@ -803,7 +776,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`w-full h-screen relative overflow-hidden flex flex-col selection:bg-green-100 bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white transition-colors duration-300`}>
+    <div className={`w-full h-screen relative overflow-hidden flex flex-col selection:bg-green-100`}>
       <Suspense fallback={null}>
         <BackgroundAnimation />
       </Suspense>
@@ -825,8 +798,7 @@ const App: React.FC = () => {
                   setCurrentView('categories');
                 }}
                 showFilter={false} // Hide Filter on Home
-                theme={theme}
-                toggleTheme={toggleTheme}
+
 
               />
             </div>
@@ -841,8 +813,6 @@ const App: React.FC = () => {
             wishlistCount={wishlist.length}
 
             isScrolled={isScrolled}
-            theme={theme}
-            toggleTheme={toggleTheme}
             onFilterClick={() => {
               setShouldOpenFilter(true);
               setCurrentView('categories');

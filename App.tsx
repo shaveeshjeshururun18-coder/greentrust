@@ -51,18 +51,36 @@ const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [userAddress, setUserAddress] = useState('Vivekananda Nagar, Chennai');
   const [cartAnimate, setCartAnimate] = useState(false);
-  const [isDark, setIsDark] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isScrolled, setIsScrolled] = useState(false);
   const [shouldOpenFilter, setShouldOpenFilter] = useState(false);
 
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+  // Theme State
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || savedTheme === 'light') return savedTheme;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
-  }, [isDark]);
+    return 'light';
+  });
+
+  // Apply Theme to Document
+  useEffect(() => {
+    const root = window.document.documentElement;
+    console.log('Theme changed to:', theme);
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    console.log('Toggling theme...');
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
 
   // Handle Basic Routing for SEO / Deep Linking
   useEffect(() => {
@@ -224,7 +242,7 @@ const App: React.FC = () => {
     }
   }, [wishlist, user]);
 
-  const toggleTheme = useCallback(() => setIsDark(prev => !prev), []);
+
 
   // Trigger cart pulse animation
   useEffect(() => {
@@ -726,8 +744,7 @@ const App: React.FC = () => {
               onLoginClick={() => setShowLogin(true)}
               isLoggedIn={isLoggedIn}
               user={user}
-              toggleTheme={toggleTheme}
-              isDark={isDark}
+
               onNavigate={setCurrentView}
               onLogoutClick={() => {
                 auth.signOut().then(() => {
@@ -786,7 +803,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`w-full h-screen relative overflow-hidden flex flex-col selection:bg-green-100 ${isDark ? 'dark text-white' : ''}`}>
+    <div className={`w-full h-screen relative overflow-hidden flex flex-col selection:bg-green-100 bg-white dark:bg-[#0f172a] text-slate-900 dark:text-white transition-colors duration-300`}>
       <Suspense fallback={null}>
         <BackgroundAnimation />
       </Suspense>
@@ -803,14 +820,14 @@ const App: React.FC = () => {
                 onLocationClick={() => setCurrentView('location-picker')}
                 onWishlistClick={() => setCurrentView('wishlist')}
                 address={userAddress}
-                isDark={isDark}
-                toggleTheme={toggleTheme}
-                isScrolled={isScrolled}
                 onFilterClick={() => {
                   setShouldOpenFilter(true);
                   setCurrentView('categories');
                 }}
                 showFilter={false} // Hide Filter on Home
+                theme={theme}
+                toggleTheme={toggleTheme}
+
               />
             </div>
           )}
@@ -822,9 +839,10 @@ const App: React.FC = () => {
             onSearchChange={setSearchQuery}
             cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
             wishlistCount={wishlist.length}
-            isDark={isDark}
-            toggleTheme={toggleTheme}
+
             isScrolled={isScrolled}
+            theme={theme}
+            toggleTheme={toggleTheme}
             onFilterClick={() => {
               setShouldOpenFilter(true);
               setCurrentView('categories');

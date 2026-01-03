@@ -7,9 +7,11 @@ interface DesktopHeaderProps {
     onSearchChange: (val: string) => void;
     cartCount: number;
     wishlistCount: number;
-    isDark?: boolean;
-    toggleTheme?: () => void;
+    wishlistCount: number;
     isScrolled?: boolean;
+    onFilterClick?: () => void; // Added missing prop def from App.tsx usage
+    theme: 'light' | 'dark';
+    toggleTheme: () => void;
 }
 
 const DesktopHeader: React.FC<DesktopHeaderProps> = ({
@@ -18,9 +20,10 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
     onSearchChange,
     cartCount,
     wishlistCount,
-    isDark,
-    toggleTheme,
-    isScrolled
+
+    isScrolled,
+    theme,
+    toggleTheme
 }) => {
     const [searchValue, setSearchValue] = useState('');
 
@@ -98,17 +101,21 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                     </div>
 
                     {/* Actions */}
+                    {/* Actions */}
                     <div className="flex items-center gap-2">
+
                         {/* Theme Toggle */}
-                        {toggleTheme && (
-                            <button
-                                onClick={toggleTheme}
-                                className="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all active:scale-95"
-                                title="Toggle Theme"
-                            >
-                                <i className={`fa-solid ${isDark ? 'fa-sun text-yellow-500' : 'fa-moon'}`}></i>
-                            </button>
-                        )}
+                        <button
+                            onClick={toggleTheme}
+                            className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-yellow-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all active:scale-95"
+                            aria-label="Toggle Theme"
+                        >
+                            {theme === 'light' ? (
+                                <i className="fa-solid fa-moon text-lg"></i>
+                            ) : (
+                                <i className="fa-solid fa-sun text-lg"></i>
+                            )}
+                        </button>
 
                         <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-700 mx-2"></div>
 

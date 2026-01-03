@@ -11,11 +11,7 @@
     content="Green Trust Grocery, Green Trust Chennai, Organic Store Chennai, Vegetable Delivery Vivekananda Nagar, A2 Milk Chennai, Nattu Thakkali, Cold Pressed Oil, Organic Grocery Delivery, Iyarkai Angadi, Natural Store Chennai, Farm Fresh Vegetables, Green Trust Organic, Best Organic Shop Chennai, Pesticide-free food delivery, Sustainable farming Chennai">
   <meta name="author" content="Green Trust Grocery">
   <link rel="canonical" href="https://greentrust-two.vercel.app" />
-  <script>
-    // Strictly enforce White Mode
-    document.documentElement.classList.remove('dark');
-    localStorage.removeItem('theme'); // Clear any legacy preferences
-  </script>
+
 
   <!-- Icons -->
   <link rel="icon" type="image/png" href="/logo.png" />
@@ -182,7 +178,7 @@
     }
   </style>
 
-<body class="bg-white">
+<body class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors duration-300">
   <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>

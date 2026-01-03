@@ -6,8 +6,7 @@ interface AccountViewProps {
   onLoginClick: () => void;
   isLoggedIn: boolean;
   user: any;
-  toggleTheme: () => void;
-  isDark: boolean;
+
   onNavigate: (view: any) => void;
   onLogoutClick: () => void;
 }
@@ -27,7 +26,7 @@ const MenuLink = ({ icon, label, sub }: { icon: React.ReactNode, label: string, 
   </div>
 );
 
-const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, user, toggleTheme, isDark, onNavigate, onLogoutClick }) => {
+const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, user, onNavigate, onLogoutClick }) => {
   const [showEditProfile, setShowEditProfile] = useState(false);
 
   return (
@@ -127,24 +126,7 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
         </div>
       </div>
 
-      <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={toggleTheme}>
-          <div className="flex items-center gap-4">
-            <div className="text-green-600">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-bold text-gray-800">Dark Mode</p>
-              <p className="text-[10px] text-gray-400">{isDark ? 'On' : 'Off'}</p>
-            </div>
-          </div>
-          <div className={`w-10 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out ${isDark ? 'bg-green-600' : ''}`}>
-            <div className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out ${isDark ? 'translate-x-4' : ''}`}></div>
-          </div>
-        </div>
-      </div>
+
 
       {isLoggedIn && (
         <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100 mb-6">

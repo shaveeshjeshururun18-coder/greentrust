@@ -8,10 +8,11 @@ interface HeaderProps {
   onWishlistClick?: () => void;
   onFilterClick?: () => void;
   address: string;
-  isDark?: boolean;
-  toggleTheme?: () => void;
+  address: string;
   isScrolled?: boolean;
-  showFilter?: boolean; // NEW PROP
+  showFilter?: boolean;
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
 }
 
 const SEARCH_PLACEHOLDERS = [
@@ -31,10 +32,10 @@ const Header: React.FC<HeaderProps> = ({
   onWishlistClick,
   onFilterClick,
   address,
-  isDark,
-  toggleTheme,
   isScrolled = false,
-  showFilter = true // Default to true
+  showFilter = true,
+  theme,
+  toggleTheme
 }) => {
   const [searchValue, setSearchValue] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -79,13 +80,20 @@ const Header: React.FC<HeaderProps> = ({
 
         {/* Right Actions */}
         <div className="flex items-center gap-3">
+
           <button
             onClick={toggleTheme}
-            aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300 transition-colors"
+            className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-yellow-400 transition-colors active:scale-95"
+            aria-label="Toggle Theme"
           >
-            <i className={`fa-solid ${isDark ? 'fa-sun text-yellow-500' : 'fa-moon'}`} aria-hidden="true"></i>
+            {theme === 'light' ? (
+              <i className="fa-solid fa-moon"></i>
+            ) : (
+              <i className="fa-solid fa-sun"></i>
+            )}
           </button>
+
+
 
           <button
             onClick={onWishlistClick}

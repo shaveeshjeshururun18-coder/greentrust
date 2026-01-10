@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ViewState } from '../types';
 
 interface DesktopHeaderProps {
@@ -11,6 +11,9 @@ interface DesktopHeaderProps {
     onFilterClick?: () => void; // Added missing prop def from App.tsx usage
     isDarkMode?: boolean;
     toggleDarkMode?: () => void;
+    userAddress?: string;
+    onLocationClick?: () => void;
+    searchValue?: string;
 }
 
 const DesktopHeader: React.FC<DesktopHeaderProps> = ({
@@ -21,9 +24,19 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
     wishlistCount,
     isScrolled,
     isDarkMode = false,
-    toggleDarkMode
+    toggleDarkMode,
+    userAddress = 'Select Location',
+    onLocationClick,
+    searchValue: externalSearchValue
 }) => {
-    const [searchValue, setSearchValue] = useState('');
+    const [searchValue, setSearchValue] = useState(externalSearchValue || '');
+
+    // Sync with external search value
+    useEffect(() => {
+        if (externalSearchValue !== undefined) {
+            setSearchValue(externalSearchValue);
+        }
+    }, [externalSearchValue]);
 
     // Debounce Search to prevent re-rendering App on every keystroke
     React.useEffect(() => {
@@ -53,6 +66,26 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                                 <div>
                                     <h1 className="text-2xl font-black text-slate-900 dark:text-white leading-none tracking-tight group-hover:text-green-600 transition-colors">Green<span className="text-green-600">Trust</span></h1>
                                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Organic Market</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        {/* Location Picker (New - Cartoon Style) */}
+                        <div onClick={onLocationClick} className="hidden xl:flex items-center gap-2 cursor-pointer group bg-gradient-to-r from-green-50 to-emerald-50 dark:from-slate-800 dark:to-slate-800 border-2 border-green-100 dark:border-slate-700 p-1.5 pr-4 rounded-full transition-all hover:scale-105 hover:shadow-lg hover:border-green-300 -ml-2 max-w-[200px]">
+                            <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white shadow-md group-hover:animate-bounce">
+                                <i className="fa-solid fa-location-dot text-sm"></i>
+                            </div>
+                            <div className="flex flex-col overflow-hidden">
+                                <span className="text-[10px] font-black text-green-600 dark:text-green-400 uppercase tracking-wider leading-none mb-0.5 group-hover:text-green-700 transition-colors">
+                                    Delivery to
+                                </span>
+                                <div className="flex items-center gap-1">
+                                    <span className="text-xs font-bold text-slate-700 dark:text-slate-200 truncate group-hover:text-slate-900 transition-colors max-w-[120px]">
+                                        {userAddress.split(',')[0]}
+                                    </span>
+                                    <i className="fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:rotate-180 transition-transform duration-300"></i>
                                 </div>
                             </div>
                         </div>
@@ -133,16 +166,21 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                         </button>
 
                         {/* Theme Toggle */}
+                        {/* Theme Toggle - Livelier */}
+                        {/* Theme Toggle - Smaller & Cartoonish */}
                         <button
                             onClick={toggleDarkMode}
-                            className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 dark:from-slate-700 dark:to-slate-900 flex items-center justify-center shadow-md hover:shadow-lg transition-all active:scale-95"
+                            className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-300 to-amber-500 dark:from-indigo-600 dark:to-purple-900 flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 active:scale-90 active:rotate-[360deg] transition-all duration-500 group relative overflow-hidden"
                             aria-label="Toggle Theme"
                         >
-                            {isDarkMode ? (
-                                <i className="fa-solid fa-sun text-yellow-200 text-lg"></i>
-                            ) : (
-                                <i className="fa-solid fa-moon text-white text-lg"></i>
-                            )}
+                            <div className="relative z-10">
+                                {isDarkMode ? (
+                                    <i className="fa-solid fa-sun text-yellow-100 text-sm animate-spin-slow"></i>
+                                ) : (
+                                    <i className="fa-solid fa-moon text-white text-sm group-hover:-rotate-12 transition-transform"></i>
+                                )}
+                            </div>
+                            <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         </button>
 
                         {/* Cart */}
@@ -164,7 +202,7 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                     </div>
                 </div>
             </div>
-        </header>
+        </header >
     );
 };
 

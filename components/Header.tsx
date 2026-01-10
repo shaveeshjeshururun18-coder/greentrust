@@ -12,6 +12,7 @@ interface HeaderProps {
   showFilter?: boolean;
   isDarkMode?: boolean;
   toggleDarkMode?: () => void;
+  searchValue?: string;
 }
 
 const SEARCH_PLACEHOLDERS = [
@@ -34,11 +35,19 @@ const Header: React.FC<HeaderProps> = ({
   isScrolled = false,
   showFilter = true,
   isDarkMode = false,
-  toggleDarkMode
+  toggleDarkMode,
+  searchValue: externalSearchValue
 }) => {
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState(externalSearchValue || '');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isVegMode, setIsVegMode] = useState(false);
+
+  // Sync with external search value (e.g. when cleared by App)
+  useEffect(() => {
+    if (externalSearchValue !== undefined) {
+      setSearchValue(externalSearchValue);
+    }
+  }, [externalSearchValue]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -94,16 +103,21 @@ const Header: React.FC<HeaderProps> = ({
 
           <div className="flex items-center gap-2">
             {/* Theme Toggle Button */}
+            {/* Theme Toggle Button - Livelier & Smaller */}
             <button
               onClick={toggleDarkMode}
-              className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 dark:from-slate-700 dark:to-slate-900 flex items-center justify-center shadow-md hover:shadow-lg transition-all active:scale-95"
+              className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-300 to-orange-500 dark:from-slate-700 dark:to-slate-900 flex items-center justify-center shadow-md hover:shadow-lg hover:scale-110 active-rotate transition-all duration-300 group overflow-hidden relative"
               aria-label="Toggle Theme"
             >
-              {isDarkMode ? (
-                <i className="fa-solid fa-sun text-yellow-200 text-base"></i>
-              ) : (
-                <i className="fa-solid fa-moon text-white text-base"></i>
-              )}
+              <div className="relative z-10">
+                {isDarkMode ? (
+                  <i className="fa-solid fa-sun text-yellow-100 text-sm animate-spin-slow"></i>
+                ) : (
+                  <i className="fa-solid fa-moon text-white text-sm group-hover:-rotate-12 transition-transform"></i>
+                )}
+              </div>
+              {/* Glow Effect */}
+              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </button>
 
             <button

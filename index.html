@@ -142,9 +142,9 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;600;700;800;900&family=Pacifico&display=swap"
     rel="stylesheet">
 
-  <!-- Mappls SDK Scripts -->
-  <script
-    src="https://apis.mappls.com/advancedmaps/api/0d3a3a0f0d1ce83085b76c12f9cf5db3/map_sdk?v=3.0&layer=vector"></script>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
 
   <!-- Optimized FontAwesome Loading -->
@@ -158,7 +158,6 @@
     body {
       font-family: 'Inter', sans-serif;
       -webkit-tap-highlight-color: transparent;
-      background-color: #ffffff;
       overflow-x: hidden;
     }
 
@@ -228,7 +227,7 @@
     }
   </style>
 
-<body class="bg-white">
+<body>
   <!-- Hidden H1 for SEO - Establishing Page Context -->
   <h1
     style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">

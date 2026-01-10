@@ -13,7 +13,7 @@ const AnimatedBanner: React.FC = () => {
     return (
         <div className="px-4 mt-2 animate-slideUp">
             {/* Main Banner Container with Farm/Fresh Theme */}
-            <div className="relative w-full overflow-hidden rounded-2xl md:rounded-[2rem] shadow-2xl group border border-green-100 min-h-[280px] md:min-h-[500px]">
+            <div className="relative w-full overflow-hidden rounded-2xl md:rounded-[2rem] shadow-2xl group border border-green-100 min-h-[180px] md:min-h-[320px]">
 
                 {/* VIDEO BACKGROUND LAYER */}
                 <div className="absolute inset-0 bg-slate-100 z-0">

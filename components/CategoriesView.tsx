@@ -214,16 +214,30 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                                 </div>
                                 <span className="font-bold text-sm">All Products</span>
                             </button>
-                            {DETAILED_CATEGORIES.map(cat => {
+                            {DETAILED_CATEGORIES.map((cat, index) => {
                                 const isActive = activeCategoryId === cat.id;
+                                // Unique pastel colors for each category
+                                const pastelColors = [
+                                    'bg-green-50 hover:bg-green-100',
+                                    'bg-orange-50 hover:bg-orange-100',
+                                    'bg-pink-50 hover:bg-pink-100',
+                                    'bg-yellow-50 hover:bg-yellow-100',
+                                    'bg-blue-50 hover:bg-blue-100',
+                                    'bg-purple-50 hover:bg-purple-100',
+                                    'bg-red-50 hover:bg-red-100',
+                                    'bg-teal-50 hover:bg-teal-100',
+                                    'bg-amber-50 hover:bg-amber-100',
+                                    'bg-cyan-50 hover:bg-cyan-100',
+                                ];
+                                const pastelColor = pastelColors[index % pastelColors.length];
                                 return (
                                     <button
                                         key={cat.id}
                                         onClick={() => handleCategoryChange(cat.id)}
-                                        className={`w-full px-6 py-4 flex items-center gap-4 transition-all relative ${isActive ? 'bg-purple-50 text-purple-700' : 'hover:bg-slate-50 text-slate-600 dark:text-slate-400'}`}
+                                        className={`w-full px-6 py-4 flex items-center gap-4 transition-all relative ${isActive ? 'bg-green-100 text-green-700' : `${pastelColor} text-slate-600 dark:text-slate-400`}`}
                                     >
-                                        {isActive && <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-purple-600 rounded-r-xl"></div>}
-                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isActive ? 'bg-purple-100' : 'bg-slate-100 dark:bg-slate-800'}`}>
+                                        {isActive && <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-green-600 rounded-r-xl"></div>}
+                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isActive ? 'bg-green-200' : 'bg-white dark:bg-slate-800 shadow-sm'}`}>
                                             <i className={`fa-solid ${cat.icon} text-lg`}></i>
                                         </div>
                                         <span className="font-bold text-sm">{cat.name}</span>
@@ -234,46 +248,25 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                     </div>
                 </div>
 
-                {/* Desktop Content Area */}
-                <div className="flex-1 h-full overflow-y-auto bg-slate-50 dark:bg-slate-950 no-scrollbar pb-20">
+                {/* Desktop Content Area with Category-Specific Pastel Background */}
+                <div className={`flex-1 h-full overflow-y-auto no-scrollbar pb-20 transition-colors duration-300 ${activeCategoryId === 'all' ? 'bg-slate-50 dark:bg-slate-950' :
+                        activeCategoryId === 'dc1' ? 'bg-green-50 dark:bg-green-950/20' :
+                            activeCategoryId === 'dc2' ? 'bg-orange-50 dark:bg-orange-950/20' :
+                                activeCategoryId === 'dc3' ? 'bg-emerald-50 dark:bg-emerald-950/20' :
+                                    activeCategoryId === 'dc4' ? 'bg-pink-50 dark:bg-pink-950/20' :
+                                        activeCategoryId === 'dc5' ? 'bg-amber-50 dark:bg-amber-950/20' :
+                                            activeCategoryId === 'dc6' ? 'bg-blue-50 dark:bg-blue-950/20' :
+                                                activeCategoryId === 'dc7' ? 'bg-rose-50 dark:bg-rose-950/20' :
+                                                    activeCategoryId === 'dc8' ? 'bg-cyan-50 dark:bg-cyan-950/20' :
+                                                        activeCategoryId === 'dc9' ? 'bg-yellow-50 dark:bg-yellow-950/20' :
+                                                            'bg-purple-50 dark:bg-purple-950/20'
+                    }`}>
                     <div className="p-8 pb-0">
-                        {/* Hero Banner Section */}
-                        <div className="relative w-full h-72 rounded-[2.5rem] overflow-hidden shadow-2xl mb-12 group">
-                            <img
-                                src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1200"
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-                                alt="Fresh Collection"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex flex-col justify-center px-16">
-                                <span className="text-purple-400 font-black uppercase tracking-[0.4em] text-[10px] mb-5">Premium Selections</span>
-                                <h2 className="text-6xl font-black text-white mb-8 leading-tight">Freshly Picked<br />Daily Harvest</h2>
-                                <button className="w-max px-12 py-5 bg-purple-600 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:bg-purple-700 hover:scale-105 transition-all shadow-2xl shadow-purple-900/40">Shop the Range</button>
-                            </div>
-                        </div>
-
-                        {/* Secondary Banners */}
-                        <div className="grid grid-cols-2 gap-8 mb-16">
-                            <div className="h-56 rounded-[2.5rem] overflow-hidden shadow-xl border border-white/5 relative group bg-pink-100">
-                                <img src="https://images.unsplash.com/photo-1628113315911-d19f99238d28?auto=format&fit=crop&q=80&w=600" className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-1000" alt="Berries" />
-                                <div className="absolute inset-0 flex flex-col justify-center px-12">
-                                    <h3 className="text-3xl font-black text-pink-900 leading-tight">Sweetest<br />Fresh Berries</h3>
-                                    <p className="text-[11px] font-black text-pink-700 uppercase tracking-widest mt-5 bg-white/40 w-max px-4 py-1 rounded-full">Save 40% Today</p>
-                                </div>
-                            </div>
-                            <div className="h-56 rounded-[2.5rem] overflow-hidden shadow-xl border border-white/5 relative group bg-orange-100">
-                                <img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&q=80&w=600" className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-1000" alt="Fruits" />
-                                <div className="absolute inset-0 flex flex-col justify-center px-12">
-                                    <h3 className="text-3xl font-black text-orange-900 leading-tight">Seasonal<br />Orchard Harvest</h3>
-                                    <p className="text-[11px] font-black text-orange-700 uppercase tracking-widest mt-5 bg-white/40 w-max px-4 py-1 rounded-full">Limited Stock</p>
-                                </div>
-                            </div>
-                        </div>
-
                         {/* Category Headline */}
                         <div className="flex items-center justify-between mb-8 px-2">
                             <h3 className="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3">
                                 {activeCategory.name}
-                                <span className="text-sm font-bold text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">{filteredProducts.length} Items</span>
+                                <span className="text-sm font-bold text-slate-400 bg-white/80 dark:bg-slate-800 px-3 py-1 rounded-lg shadow-sm">{filteredProducts.length} Items</span>
                             </h3>
                         </div>
 

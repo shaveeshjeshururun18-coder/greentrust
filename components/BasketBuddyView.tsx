@@ -4,9 +4,11 @@ interface BasketBuddyViewProps {
     onBack: () => void;
     onNavigate: (view: any) => void;
     onSelectCategory: (category: string) => void;
+    initialAction?: string | null;
+    onClearAction?: () => void;
 }
 
-const BasketBuddyView: React.FC<BasketBuddyViewProps> = ({ onBack, onNavigate, onSelectCategory }) => {
+const BasketBuddyView: React.FC<BasketBuddyViewProps> = ({ onBack, onNavigate, onSelectCategory, initialAction, onClearAction }) => {
     const [messages, setMessages] = useState<{ type: 'bot' | 'user'; text: string }[]>([
         { type: 'bot', text: 'Hi! I am BasketBuddy 🧺. I can help you shop and learn how to order.' }
     ]);
@@ -52,8 +54,21 @@ const BasketBuddyView: React.FC<BasketBuddyViewProps> = ({ onBack, onNavigate, o
             setTimeout(() => {
                 setMessages(prev => [...prev, { type: 'bot', text: '📞 Call us anytime at +91 95002 45626' }]);
             }, 800);
+        } else if (action === 'order_support') {
+            setMessages(prev => [...prev, { type: 'user', text: 'I need help with my order' }]);
+            setTimeout(() => {
+                setMessages(prev => [...prev, { type: 'bot', text: 'Hello! I see you need help with an order. Please tell me what happened so I can assist you quickly.' }]);
+            }, 800);
         }
     };
+
+    // Handle Initial Action
+    useEffect(() => {
+        if (initialAction) {
+            handleAction(initialAction);
+            if (onClearAction) onClearAction();
+        }
+    }, [initialAction]);
 
     return (
         <div className="h-screen flex flex-col bg-slate-50 dark:bg-slate-950 animate-fadeIn relative z-40">

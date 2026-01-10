@@ -92,20 +92,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   e.stopPropagation();
                   addToCart();
                 }}
-                className="px-6 py-2 bg-white dark:bg-slate-800 text-pink-600 dark:text-pink-400 border-2 border-pink-100 dark:border-pink-900 rounded-xl text-xs font-black shadow-sm hover:shadow-md hover:bg-pink-50 transition-all uppercase"
+                className="px-8 py-2 bg-white dark:bg-slate-800 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-900 rounded-lg text-xs font-black shadow-sm hover:shadow-md hover:bg-green-50 transition-all uppercase tracking-wider active:scale-95"
               >
                 ADD
               </button>
             ) : (
-              <div className="flex items-center bg-pink-600 text-white rounded-xl shadow-lg px-1 py-1 h-9 min-w-[80px] justify-between">
+              <div className="flex items-center bg-green-600 text-white rounded-lg shadow-lg px-0 py-0 h-9 min-w-[85px] justify-between overflow-hidden">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     removeFromCart();
                   }}
-                  className="w-7 h-full flex items-center justify-center active:scale-75 transition-transform"
+                  className="w-8 h-full flex items-center justify-center active:bg-green-700 transition-colors"
                 >
-                  <i className="fa-solid fa-minus text-xs"></i>
+                  <i className="fa-solid fa-minus text-[10px]"></i>
                 </button>
                 <span className="text-xs font-black px-1">{quantity}</span>
                 <button
@@ -113,9 +113,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     e.stopPropagation();
                     addToCart();
                   }}
-                  className="w-7 h-full flex items-center justify-center active:scale-75 transition-transform"
+                  className="w-8 h-full flex items-center justify-center active:bg-green-700 transition-colors"
                 >
-                  <i className="fa-solid fa-plus text-xs"></i>
+                  <i className="fa-solid fa-plus text-[10px]"></i>
                 </button>
               </div>
             )}

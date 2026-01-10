@@ -2,7 +2,9 @@ import React from 'react';
 
 const Footer: React.FC = () => {
     return (
-        <footer className="bg-green-50/50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-20 pt-10">
+        <footer className="bg-green-50/50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-32 pt-10 relative overflow-hidden">
+
+
             {/* Social Icons (Floating Center) */}
             {/* Social Icons (Floating Center) - HIDDEN ON MOBILE */}
             <div className="hidden md:block relative">

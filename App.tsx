@@ -29,6 +29,8 @@ const BackgroundAnimation = lazy(() => import('./components/BackgroundAnimation.
 const DeveloperView = lazy(() => import('./components/DeveloperView.tsx'));
 const BasketBuddyView = lazy(() => import('./components/BasketBuddyView.tsx'));
 const SupportView = lazy(() => import('./components/SupportView.tsx'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard.tsx'));
+const OrdersView = lazy(() => import('./components/OrdersView.tsx'));
 // DesktopHero and AIAssistant removed or lazy loaded if needed
 // EntranceScreen import removed
 
@@ -54,12 +56,17 @@ const App: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isScrolled, setIsScrolled] = useState(false);
   const [shouldOpenFilter, setShouldOpenFilter] = useState(false);
+  const [basketBuddyAction, setBasketBuddyAction] = useState<string | null>(null);
 
   // Theme Toggle State - DEFAULTS TO LIGHT MODE
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
-    // Default to light mode (false) unless user explicitly chose dark
-    return savedTheme === 'dark';
+    // Check if running in browser environment
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      // STRICTLY default to false (light) unless 'dark' is explicitly saved
+      return savedTheme === 'dark';
+    }
+    return false;
   });
 
   // Apply theme changes
@@ -83,8 +90,8 @@ const App: React.FC = () => {
   useEffect(() => {
     const detectLocation = async () => {
       try {
-        // Import the Mappls service functions dynamically
-        const { getCurrentLocation, reverseGeocode } = await import('./services/mapplsService');
+        // Import the location service functions dynamically
+        const { getCurrentLocation, reverseGeocode } = await import('./services/locationService');
 
         // Get current coordinates
         const coords = await getCurrentLocation();
@@ -125,7 +132,7 @@ const App: React.FC = () => {
       const validViews: ViewState[] = [
         'home', 'categories', 'cart', 'checkout', 'order-success', 'account', 'product-detail',
         'location-picker', 'wishlist', 'orders', 'basketbuddy',
-        'wallet', 'all-categories', 'developer', 'support', 'feedback'
+        'wallet', 'all-categories', 'developer', 'support', 'feedback', 'admin'
       ];
 
       if (path === '' || path === 'home') {
@@ -372,8 +379,8 @@ const App: React.FC = () => {
   };
 
   const renderContent = () => {
-    // Global Search Override: If there is a search query AND we are not in categories view, show search results
-    if (searchQuery && currentView !== 'categories') {
+    // Global Search Override: If there is a search query AND we are not in categories view (and not in admin/cart/checkout which need their own space), show search results
+    if (searchQuery && currentView !== 'categories' && currentView !== 'admin' && currentView !== 'cart' && currentView !== 'checkout') {
       // 1. Filter Products
       const filteredProducts = ALL_PRODUCTS.filter(p =>
         p.nameEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -480,6 +487,34 @@ const App: React.FC = () => {
               </div>
             )
           }
+          {/* Admin Dashboard Search Result - Hidden Easter Egg */}
+          {(searchQuery.toLowerCase().includes('admin') || searchQuery.toLowerCase().includes('dashboard')) && (
+            <div className="mb-8 animate-fadeIn">
+              <h2 className="text-lg font-bold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2">
+                <i className="fa-solid fa-lock text-red-500"></i>
+                Administrative Tools
+              </h2>
+              <div
+                onClick={() => {
+                  setSearchQuery('');
+                  setCurrentView('admin');
+                }}
+                className="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-2xl shadow-lg border border-slate-700 flex items-center gap-5 cursor-pointer hover:scale-[1.02] transition-transform"
+              >
+                <div className="w-16 h-16 rounded-xl bg-white/10 flex items-center justify-center text-white">
+                  <i className="fa-solid fa-gauge-high text-2xl"></i>
+                </div>
+                <div>
+                  <h3 className="font-black text-xl text-white">Open Admin Dashboard</h3>
+                  <p className="text-sm text-slate-400 font-medium">Manage orders, products, and store settings</p>
+                </div>
+                <div className="ml-auto w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white">
+                  <i className="fa-solid fa-arrow-right"></i>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div >
       );
     }
@@ -536,6 +571,34 @@ const App: React.FC = () => {
                 onCategoryClick={handleCategoryClick}
                 activeCategory={selectedCategory}
               />
+            </div>
+
+            {/* Promotional Mini Banners - Attractive */}
+            <div className="px-4 md:px-6 mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 animate-popIn stagger-2">
+              <div className="bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl p-4 text-white relative overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform shadow-lg" onClick={() => { setSelectedCategory('dc2'); setCurrentView('categories'); }}>
+                <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-white/10 rounded-full"></div>
+                <i className="fa-solid fa-apple-whole text-2xl mb-2 drop-shadow"></i>
+                <h3 className="font-black text-sm">Fresh Fruits</h3>
+                <p className="text-[10px] opacity-80 font-medium">Farm Fresh Daily</p>
+              </div>
+              <div className="bg-gradient-to-br from-green-500 to-emerald-700 rounded-2xl p-4 text-white relative overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform shadow-lg" onClick={() => { setSelectedCategory('dc1'); setCurrentView('categories'); }}>
+                <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-white/10 rounded-full"></div>
+                <i className="fa-solid fa-carrot text-2xl mb-2 drop-shadow"></i>
+                <h3 className="font-black text-sm">Vegetables</h3>
+                <p className="text-[10px] opacity-80 font-medium">100% Organic</p>
+              </div>
+              <div className="bg-gradient-to-br from-amber-400 to-yellow-600 rounded-2xl p-4 text-white relative overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform shadow-lg" onClick={() => { setSelectedCategory('dc5'); setCurrentView('categories'); }}>
+                <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-white/10 rounded-full"></div>
+                <i className="fa-solid fa-wheat-awn text-2xl mb-2 drop-shadow"></i>
+                <h3 className="font-black text-sm">Grains & Pulses</h3>
+                <p className="text-[10px] opacity-80 font-medium">Protein Rich</p>
+              </div>
+              <div className="bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl p-4 text-white relative overflow-hidden cursor-pointer hover:scale-[1.02] transition-transform shadow-lg" onClick={() => { setSelectedCategory('dc8'); setCurrentView('categories'); }}>
+                <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-white/10 rounded-full"></div>
+                <i className="fa-solid fa-cow text-2xl mb-2 drop-shadow"></i>
+                <h3 className="font-black text-sm">Dairy & Milk</h3>
+                <p className="text-[10px] opacity-80 font-medium">A2 Milk Available</p>
+              </div>
             </div>
 
             {/* Trending Section */}
@@ -791,7 +854,25 @@ const App: React.FC = () => {
                   setUser(null);
                 });
               }}
+              isDarkMode={isDarkMode}
+              toggleTheme={toggleTheme}
+              onSupportClick={() => {
+                setBasketBuddyAction('order_support');
+                setCurrentView('basketbuddy');
+              }}
             />
+          </Suspense>
+        );
+      case 'admin':
+        return (
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <AdminDashboard />
+          </Suspense>
+        );
+      case 'orders':
+        return (
+          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <OrdersView onBack={() => setCurrentView('home')} />
           </Suspense>
         );
       case 'wishlist':
@@ -841,7 +922,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`w-full h-screen relative overflow-hidden flex flex-col selection:bg-green-100 dark:selection:bg-green-900 dark:bg-slate-900 dark:text-gray-100`}>
+    <div className={`w-full h-screen relative overflow-hidden flex flex-col selection:bg-green-100 dark:selection:bg-green-900 bg-white dark:bg-slate-900 dark:text-gray-100`}>
       <Suspense fallback={null}>
         <BackgroundAnimation />
       </Suspense>
@@ -865,6 +946,7 @@ const App: React.FC = () => {
                 showFilter={false} // Hide Filter on Home
                 isDarkMode={isDarkMode}
                 toggleDarkMode={toggleTheme}
+                searchValue={searchQuery}
               />
             </div>
           )}
@@ -874,9 +956,12 @@ const App: React.FC = () => {
             currentView={currentView}
             setCurrentView={setCurrentView}
             onSearchChange={setSearchQuery}
+            searchValue={searchQuery}
             cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
             wishlistCount={wishlist.length}
             isScrolled={isScrolled}
+            userAddress={userAddress}
+            onLocationClick={() => setCurrentView('location-picker')}
             onFilterClick={() => {
               setShouldOpenFilter(true);
               setCurrentView('categories');

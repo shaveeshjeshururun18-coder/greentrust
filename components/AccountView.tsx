@@ -9,25 +9,62 @@ interface AccountViewProps {
 
   onNavigate: (view: any) => void;
   onLogoutClick: () => void;
+  isDarkMode: boolean;
+  toggleTheme: () => void;
+  onSupportClick: () => void;
 }
 
-const MenuLink = ({ icon, label, sub }: { icon: React.ReactNode, label: string, sub?: string }) => (
-  <div className="flex items-center justify-between p-4 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors">
+const MenuLink = ({ icon, label, sub, onClick }: { icon: React.ReactNode, label: string, sub?: string, onClick?: () => void }) => (
+  <div onClick={onClick} className="flex items-center justify-between p-4 border-b border-gray-50 dark:border-slate-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
     <div className="flex items-center gap-4">
-      <div className="text-green-600">{icon}</div>
+      <div className="text-green-600 dark:text-green-400">{icon}</div>
       <div>
-        <p className="text-sm font-bold text-gray-800">{label}</p>
-        {sub && <p className="text-[10px] text-gray-400">{sub}</p>}
+        <p className="text-sm font-bold text-gray-800 dark:text-white">{label}</p>
+        {sub && <p className="text-[10px] text-gray-400 dark:text-gray-500">{sub}</p>}
       </div>
     </div>
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-300 dark:text-slate-600" viewBox="0 0 20 20" fill="currentColor">
       <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
     </svg>
   </div>
 );
 
-const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, user, onNavigate, onLogoutClick }) => {
+const ToggleRow = ({ icon, label, sub, checked, onToggle }: { icon: React.ReactNode, label: string, sub?: string, checked: boolean, onToggle: () => void }) => (
+  <div className="flex items-center justify-between p-4 border-b border-gray-50 dark:border-slate-800 cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors" onClick={onToggle}>
+    <div className="flex items-center gap-4">
+      <div className="text-green-600 dark:text-green-400">{icon}</div>
+      <div>
+        <p className="text-sm font-bold text-gray-800 dark:text-white">{label}</p>
+        {sub && <p className="text-[10px] text-gray-400 dark:text-gray-500">{sub}</p>}
+      </div>
+    </div>
+    <div className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${checked ? 'bg-green-600' : 'bg-gray-300 dark:bg-slate-700'}`}>
+      <div className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${checked ? 'translate-x-5' : 'translate-x-0'}`}></div>
+    </div>
+  </div>
+);
+
+const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, user, onNavigate, onLogoutClick, isDarkMode, toggleTheme, onSupportClick }) => {
   const [showEditProfile, setShowEditProfile] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Green Trust Grocery',
+          text: 'Check out the best organic grocery store in Chennai!',
+          url: window.location.origin,
+        });
+      } catch (error) {
+        console.log('Error sharing:', error);
+      }
+    } else {
+      // Fallback
+      navigator.clipboard.writeText(window.location.origin);
+      alert('Link copied to clipboard!');
+    }
+  };
 
   return (
     <div className="bg-transparent min-h-full pb-20 animate-fadeIn">
@@ -70,7 +107,7 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
         <div className="absolute bottom-0 right-0 w-24 h-24 bg-white/10 rounded-full translate-x-12 translate-y-12"></div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 p-4 mt-4 relative z-20">
+      <div className="grid grid-cols-3 gap-3 p-4 mt-4 relative z-20">
         <div onClick={() => onNavigate('orders')} className="bg-white p-3 rounded-2xl shadow-lg border border-gray-100 flex flex-col items-center text-center cursor-pointer active:scale-95 transition-transform">
           <div className="bg-blue-50 p-2 rounded-lg mb-2">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -87,9 +124,22 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
           </div>
           <span className="text-[10px] font-black text-gray-800">REWARDS</span>
         </div>
+        <div onClick={onSupportClick} className="bg-white p-3 rounded-2xl shadow-lg border border-gray-100 flex flex-col items-center text-center cursor-pointer active:scale-95 transition-transform">
+          <div className="bg-amber-50 p-2 rounded-lg mb-2">
+            <i className="fa-solid fa-headset text-amber-600 text-lg"></i>
+          </div>
+          <span className="text-[10px] font-black text-gray-800">NEED HELP?</span>
+        </div>
       </div>
 
-      <div className="mt-4 bg-white mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100">
+      <div className="mt-4 bg-white dark:bg-slate-900 mx-4 rounded-3xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-800">
+        <ToggleRow
+          label="App Theme"
+          sub={isDarkMode ? "Dark Mode" : "Light Mode"}
+          icon={<i className={`fa-solid ${isDarkMode ? 'fa-moon' : 'fa-sun'}`}></i>}
+          checked={isDarkMode}
+          onToggle={toggleTheme}
+        />
         <MenuLink
           label="App Language"
           sub="Current: English (Bilingual)"
@@ -106,11 +156,31 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
             icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
           />
         </div>
+
         <MenuLink
           label="Refer & Earn"
           sub="Earn ₹250 for every referral"
           icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
         />
+        <MenuLink
+          label="Share Website"
+          sub="Spread the green love"
+          icon={<i className="fa-solid fa-share-nodes"></i>}
+          onClick={handleShare}
+        />
+        <MenuLink
+          label="About Us"
+          sub="Our story & mission"
+          icon={<i className="fa-solid fa-store"></i>}
+          onClick={() => setShowAbout(true)}
+        />
+        <div onClick={() => onNavigate('admin')}>
+          <MenuLink
+            label="Admin Dashboard"
+            sub="Manage orders & products"
+            icon={<i className="fa-solid fa-lock"></i>}
+          />
+        </div>
         <div onClick={() => onNavigate('developer')}>
           <MenuLink
             label="Developer"
@@ -118,9 +188,10 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
             icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
           />
         </div>
-        <div onClick={() => onNavigate('support')}>
+        <div onClick={onSupportClick}>
           <MenuLink
-            label="Help & Support"
+            label="Need Help?"
+            sub="Chat with Basket Buddy"
             icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
           />
         </div>
@@ -166,6 +237,29 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
             setShowEditProfile(false);
           }}
         />
+      )}
+
+      {/* Simple About Modal */}
+      {showAbout && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn" onClick={() => setShowAbout(false)}>
+          <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[2rem] p-8 relative" onClick={e => e.stopPropagation()}>
+            <button onClick={() => setShowAbout(false)} className="absolute top-4 right-4 w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
+              <i className="fa-solid fa-xmark text-slate-500"></i>
+            </button>
+            <div className="text-center mb-6">
+              <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">🌿</div>
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white">Green Trust</h2>
+              <p className="text-sm text-green-600 font-bold">Organic & Fresh</p>
+            </div>
+            <div className="space-y-4 text-sm text-slate-600 dark:text-slate-400 leading-relaxed text-center">
+              <p>We are a farm-to-table organic grocery service based in Chennai, dedicated to providing chemical-free, fresh produce directly from farmers to your doorstep.</p>
+              <p>Licensed & Certified for quality.</p>
+            </div>
+            <div className="mt-8 text-center">
+              <p className="text-xs font-bold text-slate-300 uppercase tracking-widest">© 2025 Green Trust Grocery</p>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -67,3 +67,8 @@ declare global {
     recaptchaVerifier: any;
   }
 }
+
+declare const grecaptcha: any;
+
+declare module 'canvas-confetti';
+

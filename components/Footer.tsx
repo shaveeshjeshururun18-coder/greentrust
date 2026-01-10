@@ -95,6 +95,24 @@ const Footer: React.FC = () => {
                         </ul>
                     </div>
                 </div>
+
+                {/* Popular Keywords Section for SEO */}
+                <div className="mt-16 pt-10 border-t border-slate-100 dark:border-slate-800/50">
+                    <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 px-1">Top Searches & Regions</h3>
+                    <div className="flex flex-wrap gap-x-6 gap-y-3 text-[10px] text-slate-400 font-medium">
+                        <span className="hover:text-green-600 cursor-default">Organic Vegetables Chennai</span>
+                        <span className="hover:text-green-600 cursor-default">Buy Online Tomato</span>
+                        <span className="hover:text-green-600 cursor-default">Fresh Organic Grocery Delivery</span>
+                        <span className="hover:text-green-600 cursor-default">Best Organic Store Vivekananda Nagar</span>
+                        <span className="hover:text-green-600 cursor-default">Nattu Thakkali Chennai</span>
+                        <span className="hover:text-green-600 cursor-default">Chemical-Free Produce</span>
+                        <span className="hover:text-green-600 cursor-default">Farm Direct Delivery Chennai</span>
+                        <span className="hover:text-green-600 cursor-default">Instant Grocery Delivery T Nagar</span>
+                        <span className="hover:text-green-600 cursor-default">Organic Food Store Adyar</span>
+                        <span className="hover:text-green-600 cursor-default">Fresh Fruits Delivery Anna Nagar</span>
+                        <span className="hover:text-green-600 cursor-default">Healthy Food Market Chennai</span>
+                    </div>
+                </div>
             </div>
 
             {/* Bottom Bar */}

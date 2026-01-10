@@ -16,7 +16,9 @@ interface CartViewProps {
   step?: 'list' | 'checkout';
   onStepChange?: (step: 'list' | 'checkout') => void;
   onOrderSuccess: () => void;
+  onLocationClick?: () => void;  // Add location picker callback
 }
+
 
 const CartView: React.FC<CartViewProps> = ({
   cart,
@@ -30,7 +32,8 @@ const CartView: React.FC<CartViewProps> = ({
   onLoginReq,
   step = 'list',
   onStepChange,
-  onOrderSuccess
+  onOrderSuccess,
+  onLocationClick
 }) => {
   const [showQR, setShowQR] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'gpay' | 'phonepe'>('cod');
@@ -198,22 +201,44 @@ const CartView: React.FC<CartViewProps> = ({
           {/* LEFT COLUMN: Address & Items */}
           <div className={`w-full md:w-[60%] space-y-6 ${step === 'checkout' ? 'hidden md:block' : ''}`}>
 
-            {/* Delivery Address Card */}
-            <div className="mx-6 md:mx-0 mt-6 md:mt-0 bg-white dark:bg-slate-900 p-6 rounded-[2rem] shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-gray-100 dark:border-slate-800 animate-popIn stagger-1">
+            {/* Delivery Address Card - Enhanced */}
+            <div
+              onClick={() => onLocationClick?.()}
+              className="mx-6 md:mx-0 mt-6 md:mt-0 bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-900/20 dark:to-green-800/10 p-6 rounded-[2rem] shadow-[0_10px_30px_rgba(34,197,94,0.1)] border-2 border-green-200 dark:border-green-800 animate-popIn stagger-1 cursor-pointer hover:shadow-[0_10px_40px_rgba(34,197,94,0.2)] hover:scale-[1.01] transition-all active:scale-[0.99]"
+            >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-12 h-12 bg-green-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     </svg>
                   </div>
-                  <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Delivering to</p>
+                  <div>
+                    <p className="text-[11px] font-black text-green-700 dark:text-green-400 uppercase tracking-widest">Delivering to</p>
+                    <p className="text-[9px] font-bold text-green-600 dark:text-green-500 mt-0.5">Tap to change address</p>
+                  </div>
                 </div>
-                <button onClick={onBack} className="text-blue-600 text-[10px] font-black uppercase tracking-wider">Change</button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onLocationClick?.(); }}
+                  className="flex items-center gap-1.5 text-green-700 dark:text-green-400 text-xs font-black uppercase tracking-wider bg-white dark:bg-green-900/30 px-3 py-2 rounded-xl hover:bg-green-50 dark:hover:bg-green-900/40 active:scale-95 transition-all"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                  </svg>
+                  Change
+                </button>
               </div>
               <div className="pl-1">
-                <p className="text-base font-black text-gray-900 dark:text-white mb-1">{street}</p>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{area}, {cityInfo}</p>
+                <p className="text-base font-black text-gray-900 dark:text-white mb-1 leading-tight">{street}</p>
+                <p className="text-sm font-bold text-gray-600 dark:text-gray-400">{area}, {cityInfo}</p>
+              </div>
+
+              {/* Visual indicator */}
+              <div className="mt-4 pt-3 border-t border-green-300 dark:border-green-700 flex items-center justify-center gap-2 text-green-600 dark:text-green-500">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span className="text-[10px] font-black uppercase tracking-wider">15-min instant delivery</span>
               </div>
             </div>
 

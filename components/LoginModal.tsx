@@ -3,7 +3,9 @@ import { auth, googleProvider } from '../firebaseConfig';
 import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult, signInWithPopup } from 'firebase/auth';
 import { ALL_PRODUCTS } from '../constants';
 
+
 interface LoginModalProps {
+
   onClose: () => void;
   onLogin: () => void;
 }

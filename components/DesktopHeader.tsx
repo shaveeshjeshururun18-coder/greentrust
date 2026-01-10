@@ -7,9 +7,10 @@ interface DesktopHeaderProps {
     onSearchChange: (val: string) => void;
     cartCount: number;
     wishlistCount: number;
-    wishlistCount: number;
     isScrolled?: boolean;
     onFilterClick?: () => void; // Added missing prop def from App.tsx usage
+    isDarkMode?: boolean;
+    toggleDarkMode?: () => void;
 }
 
 const DesktopHeader: React.FC<DesktopHeaderProps> = ({
@@ -18,8 +19,9 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
     onSearchChange,
     cartCount,
     wishlistCount,
-
     isScrolled,
+    isDarkMode = false,
+    toggleDarkMode
 }) => {
     const [searchValue, setSearchValue] = useState('');
 
@@ -100,10 +102,6 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                     {/* Actions */}
                     <div className="flex items-center gap-2">
 
-
-
-                        <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-700 mx-2"></div>
-
                         {/* Account */}
                         <button
                             onClick={() => setCurrentView('account')}
@@ -131,6 +129,19 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                                 <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900">
                                     {wishlistCount}
                                 </span>
+                            )}
+                        </button>
+
+                        {/* Theme Toggle */}
+                        <button
+                            onClick={toggleDarkMode}
+                            className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 dark:from-slate-700 dark:to-slate-900 flex items-center justify-center shadow-md hover:shadow-lg transition-all active:scale-95"
+                            aria-label="Toggle Theme"
+                        >
+                            {isDarkMode ? (
+                                <i className="fa-solid fa-sun text-yellow-200 text-lg"></i>
+                            ) : (
+                                <i className="fa-solid fa-moon text-white text-lg"></i>
                             )}
                         </button>
 

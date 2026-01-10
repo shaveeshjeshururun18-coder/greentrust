@@ -49,11 +49,74 @@ const App: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [userAddress, setUserAddress] = useState('Vivekananda Nagar, Chennai');
+  const [userAddress, setUserAddress] = useState('Detecting location...');
   const [cartAnimate, setCartAnimate] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isScrolled, setIsScrolled] = useState(false);
   const [shouldOpenFilter, setShouldOpenFilter] = useState(false);
+
+  // Theme Toggle State - DEFAULTS TO LIGHT MODE
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    // Default to light mode (false) unless user explicitly chose dark
+    return savedTheme === 'dark';
+  });
+
+  // Apply theme changes
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDarkMode]);
+
+  // Toggle theme function
+  const toggleTheme = useCallback(() => {
+    setIsDarkMode(prev => !prev);
+  }, []);
+
+
+  // Auto-detect current location on app load
+  useEffect(() => {
+    const detectLocation = async () => {
+      try {
+        // Import the Mappls service functions dynamically
+        const { getCurrentLocation, reverseGeocode } = await import('./services/mapplsService');
+
+        // Get current coordinates
+        const coords = await getCurrentLocation();
+
+        // Get address from coordinates
+        const address = await reverseGeocode(coords.lat, coords.lng);
+
+        setUserAddress(address);
+      } catch (error) {
+        console.log('Location detection failed:', error);
+        // Fallback to default address if location detection fails
+        setUserAddress('Vivekananda Nagar, Chennai');
+      }
+    };
+
+    // Check if user has a saved address
+    const savedAddress = localStorage.getItem('userAddress');
+    if (savedAddress) {
+      setUserAddress(savedAddress);
+    } else {
+      // Auto-detect location if no saved address
+      detectLocation();
+    }
+  }, []);
+
+  // Save address to localStorage when it changes
+  useEffect(() => {
+    if (userAddress && userAddress !== 'Detecting location...') {
+      localStorage.setItem('userAddress', userAddress);
+    }
+  }, [userAddress]);
+
 
   // Handle Basic Routing for SEO / Deep Linking
   useEffect(() => {
@@ -607,28 +670,28 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* SEO Content Section */}
+            {/* SEO Content Section - Extreme Optimization */}
             <div className="px-6 mt-16 mb-12 animate-popIn stagger-5">
               <div className="bg-slate-50 dark:bg-slate-800/40 rounded-[2.5rem] p-8 md:p-12 border border-slate-100 dark:border-slate-800">
-                <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-6">About Green Trust Grocery - Organic Fresh Market</h2>
+                <h2 className="text-3xl font-black text-slate-900 dark:text-white mb-6">Green Trust: Your Top Destination for Organic Grocery & Fresh Vegetables</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-600 dark:text-slate-400">
                   <div className="space-y-4">
                     <p className="leading-relaxed">
-                      At <strong className="text-green-600">Green Trust Grocery</strong>, we are committed to bringing the freshest, most authentic organic produce directly from local farms in Tamil Nadu to your home in Chennai. Our mission is to promote sustainable farming while ensuring your family gets the purest quality vegetables and fruits.
+                      At <strong className="text-green-600">Green Trust Grocery</strong>, we are the top-rated provider of farm-fresh <strong className="text-green-600">organic vegetables</strong> and high-quality <strong className="text-green-600">organic grocery</strong> items in Chennai. Whether you are looking for the freshest <strong className="text-green-600">tomato</strong>, crisp organic fruits, or daily essentials, our farm-direct model ensures the highest purity.
                     </p>
                     <p className="leading-relaxed">
-                      Why choose <strong className="text-green-600">Green Trust Grocery</strong>? Because we eliminate the middleman, ensuring farmers get a fair price and you get produce harvested within hours of delivery. From farm-fresh country tomatoes to exotic Hass avocados, we deliver everything in 15 minutes.
+                      Searching for "buy vegetables online Chennai" or "best organic store near me"? <strong className="text-green-600">Green Trust</strong> is the answer. We specialize in <strong className="text-green-600">Nattu Thakkali</strong> (country tomato), A2 milk, and chemical-free produce, delivering within 15 minutes to Vivekananda Nagar and surrounding areas.
                     </p>
                   </div>
                   <div className="space-y-4">
                     <p className="leading-relaxed font-semibold text-slate-800 dark:text-slate-200">
-                      Our Promise:
+                      Why Green Trust is the Best Organic Shop in Chennai:
                     </p>
                     <ul className="space-y-2">
-                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> 100% Certified Organic Produce</li>
-                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> 15-Minute Instant Delivery in Chennai</li>
-                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> Direct Sourcing from Sustainable Farms</li>
-                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> Daily Selection of Fresh Herbs & Greens</li>
+                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> Top Quality Certified Organic Vegetables</li>
+                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> Fresh Tomato & Nattu Thakkali Online Delivery</li>
+                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> Best Organic Grocery Store for Daily Essentials</li>
+                      <li className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> 15-Minute Instant Grocery Delivery in Chennai</li>
                     </ul>
                   </div>
                 </div>
@@ -670,6 +733,7 @@ const App: React.FC = () => {
               step="list"
               onStepChange={(s) => s === 'checkout' ? setCurrentView('checkout') : setCurrentView('cart')}
               onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
+              onLocationClick={() => setCurrentView('location-picker')}
             />
           </Suspense>
         );
@@ -689,6 +753,7 @@ const App: React.FC = () => {
               step="checkout"
               onStepChange={(s) => s === 'list' ? setCurrentView('cart') : setCurrentView('checkout')}
               onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
+              onLocationClick={() => setCurrentView('location-picker')}
             />
           </Suspense>
         );
@@ -776,7 +841,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`w-full h-screen relative overflow-hidden flex flex-col selection:bg-green-100`}>
+    <div className={`w-full h-screen relative overflow-hidden flex flex-col selection:bg-green-100 dark:selection:bg-green-900 dark:bg-slate-900 dark:text-gray-100`}>
       <Suspense fallback={null}>
         <BackgroundAnimation />
       </Suspense>
@@ -798,8 +863,8 @@ const App: React.FC = () => {
                   setCurrentView('categories');
                 }}
                 showFilter={false} // Hide Filter on Home
-
-
+                isDarkMode={isDarkMode}
+                toggleDarkMode={toggleTheme}
               />
             </div>
           )}
@@ -811,12 +876,13 @@ const App: React.FC = () => {
             onSearchChange={setSearchQuery}
             cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
             wishlistCount={wishlist.length}
-
             isScrolled={isScrolled}
             onFilterClick={() => {
               setShouldOpenFilter(true);
               setCurrentView('categories');
             }}
+            isDarkMode={isDarkMode}
+            toggleDarkMode={toggleTheme}
           />
 
 

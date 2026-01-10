@@ -25,7 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const defaultUnit = product.units[0];
 
   return (
-    <div className="h-full bg-white dark:bg-slate-800 rounded-[2rem] border border-gray-50 dark:border-slate-700 shadow-[0_10px_30px_rgba(0,0,0,0.03)] dark:shadow-xl overflow-hidden flex flex-col transition-all hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] relative group animate-popIn">
+    <div className="h-full bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col relative group animate-popIn">
       {/* Top badges */}
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-1">
         {product.units.length > 1 && (
@@ -50,19 +50,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </button>
 
-      <div className="relative cursor-pointer overflow-hidden p-3" onClick={onClick}>
-        <div className="h-48 bg-gray-50/50 dark:bg-white rounded-2xl p-2 flex items-center justify-center relative overflow-hidden group-hover:bg-gray-100/50 dark:group-hover:bg-gray-100 transition-colors">
-          {/* Animated Background Shimmer on Card */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
-
+      <div className="relative cursor-pointer overflow-hidden p-3 pb-0" onClick={onClick}>
+        <div className="h-40 bg-white dark:bg-white rounded-2xl flex items-center justify-center relative overflow-hidden">
           <img
             src={product.image}
             alt={`Fresh Organic ${product.nameEn} available at Green Trust Chennai`}
-            className="w-full h-full object-contain mix-blend-multiply transition-all duration-700 group-hover:scale-110 group-hover:rotate-2 drop-shadow-sm"
+            className="w-full h-full object-contain mix-blend-multiply transition-all duration-700 group-hover:scale-105"
           />
         </div>
-
-        {/* Floating buttons removed */}
       </div>
 
       <div className="px-4 pb-5 flex-1 flex flex-col">
@@ -75,62 +70,52 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </div>
           </div>
 
-          <h3 className="text-xs font-black text-gray-800 dark:text-slate-200 line-clamp-2 leading-snug h-9 mb-1 group-hover:text-green-600 transition-colors">
-            {product.brandEn && <span className="text-gray-400 mr-1">{product.brandEn}</span>}
+          <h3 className="text-sm font-black text-slate-800 dark:text-slate-200 line-clamp-2 leading-tight h-10 mb-2 group-hover:text-purple-600 transition-colors">
             {product.nameEn}
           </h3>
 
-          <div className="flex items-center gap-1 text-[9px] text-gray-400 font-black mb-3 italic">
-            <svg className="w-3 h-3 text-green-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-            {product.deliveryTime}
+          <div className="flex items-center gap-1.5 mb-3">
+            <span className="text-[10px] text-slate-400 font-bold">{defaultUnit.weight}</span>
           </div>
         </div>
 
-        <div className="mt-auto flex items-end justify-between gap-1">
-          <div>
-            <div className="text-[10px] text-blue-600 font-black mb-0.5 uppercase tracking-tighter">
-              {defaultUnit.discount}
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-black text-gray-900 dark:text-white">₹{defaultUnit.price}</span>
-              <span className="text-[10px] text-gray-300 font-bold line-through">₹{defaultUnit.mrp}</span>
-            </div>
+        <div className="mt-auto flex items-center justify-between pt-2 border-t border-slate-50 dark:border-slate-700">
+          <div className="flex flex-col">
+            <span className="text-xs text-slate-400 font-bold line-through">₹{defaultUnit.mrp}</span>
+            <span className="text-lg font-black text-slate-900 dark:text-white leading-none">₹{defaultUnit.price}</span>
           </div>
 
-          <div className="flex items-end z-10 w-[70px] h-[30px] justify-end">
+          <div className="relative z-10">
             {quantity === 0 ? (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   addToCart();
                 }}
-                className="w-full h-full bg-slate-50 dark:bg-slate-700 hover:bg-green-50 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800 rounded-lg text-xs font-black shadow-sm active:scale-95 transition-all flex items-center justify-center gap-1 uppercase tracking-tight"
-                aria-label={`Add ${product.nameEn} to Cart`}
+                className="px-6 py-2 bg-white dark:bg-slate-800 text-pink-600 dark:text-pink-400 border-2 border-pink-100 dark:border-pink-900 rounded-xl text-xs font-black shadow-sm hover:shadow-md hover:bg-pink-50 transition-all uppercase"
               >
-                ADD <i className="fa-solid fa-plus text-[10px]"></i>
+                ADD
               </button>
             ) : (
-              <div className="w-full h-full flex items-center justify-between bg-green-600 text-white rounded-lg shadow-md overlow-hidden px-1">
+              <div className="flex items-center bg-pink-600 text-white rounded-xl shadow-lg px-1 py-1 h-9 min-w-[80px] justify-between">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     removeFromCart();
                   }}
-                  className="w-5 h-full flex items-center justify-center active:scale-75 transition-transform"
+                  className="w-7 h-full flex items-center justify-center active:scale-75 transition-transform"
                 >
-                  <i className="fa-solid fa-minus text-[9px]"></i>
+                  <i className="fa-solid fa-minus text-xs"></i>
                 </button>
-                <span className="text-xs font-black min-w-[14px] text-center">{quantity}</span>
+                <span className="text-xs font-black px-1">{quantity}</span>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     addToCart();
                   }}
-                  className="w-5 h-full flex items-center justify-center active:scale-75 transition-transform"
+                  className="w-7 h-full flex items-center justify-center active:scale-75 transition-transform"
                 >
-                  <i className="fa-solid fa-plus text-[9px]"></i>
+                  <i className="fa-solid fa-plus text-xs"></i>
                 </button>
               </div>
             )}

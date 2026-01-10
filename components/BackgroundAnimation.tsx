@@ -19,12 +19,12 @@ const BackgroundAnimation: React.FC = () => {
     const vegPattern = `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c-2-5-5-8-10-10 2 5 8 5 10 10zm0 0c2-5 5-8 10-10-2 5-8 5-10 10zm0 0c0 10-5 15-10 18 5-2 10-5 10-18zm0 0c0 10 5 15 10 18-5-2-10-5-10-18z' fill='%2316a34a' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E")`;
 
     return (
-        <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-white transition-colors duration-500">
+        <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-white dark:bg-slate-900 transition-colors duration-500">
             {/* 1. Organic Flow Gradient - Pure White for Light Mode */}
-            <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-white opacity-100"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 opacity-100"></div>
 
             {/* 4. Recycled Paper Texture */}
-            <div className="absolute inset-0 opacity-30 mix-blend-multiply pointer-events-none" style={{
+            <div className="absolute inset-0 opacity-30 dark:opacity-5 mix-blend-multiply dark:mix-blend-overlay pointer-events-none" style={{
                 backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.4'/%3E%3C/svg%3E")`
             }}></div>
 

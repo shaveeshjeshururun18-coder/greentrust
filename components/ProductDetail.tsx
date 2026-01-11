@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Product, Unit, CartItem } from '../types';
 import { PRODUCTS, ALL_PRODUCTS } from '../constants';
 import ProductCard from './ProductCard';
+import SparkleButton from './SparkleButton';
 
 interface ProductDetailProps {
   product: Product;
@@ -66,7 +67,30 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
             <button onClick={toggleFavorite} className="w-10 h-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-full shadow-lg flex items-center justify-center">
               <i className={`${isFavorite ? 'fa-solid text-red-500' : 'fa-regular text-slate-800 dark:text-white'} fa-heart`}></i>
             </button>
-            <button className="w-10 h-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-full shadow-lg flex items-center justify-center">
+            <button
+              onClick={async () => {
+                const shareData = {
+                  title: product.nameEn,
+                  text: `Check out ${product.nameEn} on Green Trust!`,
+                  url: window.location.href,
+                };
+                if (navigator.share) {
+                  try {
+                    await navigator.share(shareData);
+                  } catch (err) {
+                    console.log('Share dismissed', err);
+                  }
+                } else {
+                  try {
+                    await navigator.clipboard.writeText(shareData.url);
+                    alert("Link copied to clipboard!");
+                  } catch (err) {
+                    alert("Could not copy link.");
+                  }
+                }
+              }}
+              className="w-10 h-10 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform"
+            >
               <i className="fa-solid fa-share-nodes text-slate-800 dark:text-white"></i>
             </button>
           </div>
@@ -271,12 +295,12 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                   </button>
                 </div>
 
-                <button
+                <SparkleButton
                   onClick={() => addToCart(product, selectedUnit)}
-                  className="flex-1 h-14 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-[0_8px_20px_rgba(5,150,105,0.4)] border-b-4 border-green-800 hover:border-green-700 active:border-b-0 active:translate-y-1"
+                  className="sparkle-add-btn sparkle-btn-lg flex-1 h-14 flex items-center justify-center"
                 >
                   Add to Cart
-                </button>
+                </SparkleButton>
               </div>
 
               {/* Quick Checkout Options */}
@@ -324,12 +348,12 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                 </button>
               </div>
             ) : (
-              <button
+              <SparkleButton
                 onClick={() => addToCart(product, selectedUnit)}
-                className="flex-1 bg-white border-2 border-green-600 text-green-700 py-4 rounded-2xl font-black text-lg shadow-[0_4px_0_rgb(22,163,74)] hover:shadow-[0_2px_0_rgb(22,163,74)] hover:translate-y-[2px] active:shadow-none active:translate-y-[4px] transition-all flex flex-col items-center leading-none uppercase tracking-widest"
+                className="sparkle-add-btn sparkle-btn-lg flex-1 py-4 text-lg"
               >
                 ADD
-              </button>
+              </SparkleButton>
             )}
           </div>
         </div>

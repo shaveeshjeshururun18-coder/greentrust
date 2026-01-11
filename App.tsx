@@ -12,7 +12,7 @@ import AnimatedBanner from './components/AnimatedBanner.tsx';
 import CategoryGrid from './components/CategoryGrid.tsx';
 import ProductCard from './components/ProductCard.tsx';
 import BottomNav from './components/BottomNav.tsx';
-import MarqueeBanner from './components/MarqueeBanner.tsx';
+
 import Footer from './components/Footer.tsx';
 
 // Lazy Load Heavy Views
@@ -30,6 +30,7 @@ const DeveloperView = lazy(() => import('./components/DeveloperView.tsx'));
 const BasketBuddyView = lazy(() => import('./components/BasketBuddyView.tsx'));
 const SupportView = lazy(() => import('./components/SupportView.tsx'));
 const AdminDashboard = lazy(() => import('./components/AdminDashboard.tsx'));
+const AdminLogin = lazy(() => import('./components/AdminLogin.tsx'));
 const OrdersView = lazy(() => import('./components/OrdersView.tsx'));
 // DesktopHero and AIAssistant removed or lazy loaded if needed
 // EntranceScreen import removed
@@ -57,6 +58,10 @@ const App: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [shouldOpenFilter, setShouldOpenFilter] = useState(false);
   const [basketBuddyAction, setBasketBuddyAction] = useState<string | null>(null);
+  const [lastOrder, setLastOrder] = useState<any>(null);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
+    return sessionStorage.getItem('adminAuthenticated') === 'true';
+  });
 
   // Theme Toggle State - DEFAULTS TO LIGHT MODE
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -525,7 +530,7 @@ const App: React.FC = () => {
           <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
             <AllCategoriesView
               onCategoryClick={handleCategoryClick}
-              onSearchChange={setSearchQuery}
+
               cartCount={cart.reduce((acc, curr) => acc + curr.cartQuantity, 0)}
             />
           </Suspense>
@@ -545,6 +550,7 @@ const App: React.FC = () => {
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               initialFilterOpen={shouldOpenFilter}
+              onScrollChange={setIsScrolled}
             />
           </Suspense>
         );
@@ -761,7 +767,7 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <MarqueeBanner />
+
             <Footer />
           </div>
         );
@@ -796,6 +802,7 @@ const App: React.FC = () => {
               step="list"
               onStepChange={(s) => s === 'checkout' ? setCurrentView('checkout') : setCurrentView('cart')}
               onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
+              onOrderPlaced={setLastOrder}
               onLocationClick={() => setCurrentView('location-picker')}
             />
           </Suspense>
@@ -816,6 +823,7 @@ const App: React.FC = () => {
               step="checkout"
               onStepChange={(s) => s === 'list' ? setCurrentView('cart') : setCurrentView('checkout')}
               onOrderSuccess={() => { clearCart(); setCurrentView('order-success'); }}
+              onOrderPlaced={setLastOrder}
               onLocationClick={() => setCurrentView('location-picker')}
             />
           </Suspense>
@@ -826,6 +834,7 @@ const App: React.FC = () => {
             <OrderSuccessView
               onContinueShopping={() => setCurrentView('home')}
               onTrackOrder={() => setCurrentView('orders')}
+              orderData={lastOrder}
             />
           </Suspense>
         );
@@ -866,7 +875,11 @@ const App: React.FC = () => {
       case 'admin':
         return (
           <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div></div>}>
-            <AdminDashboard />
+            {isAdminAuthenticated ? (
+              <AdminDashboard />
+            ) : (
+              <AdminLogin onSuccess={() => setIsAdminAuthenticated(true)} />
+            )}
           </Suspense>
         );
       case 'orders':
@@ -930,8 +943,8 @@ const App: React.FC = () => {
 
       {currentView !== 'cart' && currentView !== 'product-detail' && currentView !== 'location-picker' && (
         <>
-          {/* Mobile Header: Visible on Home only (mostly) to avoid duplication */}
-          {currentView !== 'basketbuddy' && currentView !== 'all-categories' && currentView !== 'categories' && (
+          {/* Mobile Header: Visible on Home, Categories, etc. */}
+          {currentView !== 'basketbuddy' && (
             <div className="md:hidden">
               <Header
                 onProfileClick={() => setCurrentView('account')}
@@ -947,6 +960,9 @@ const App: React.FC = () => {
                 isDarkMode={isDarkMode}
                 toggleDarkMode={toggleTheme}
                 searchValue={searchQuery}
+                isScrolled={isScrolled}
+                showBack={currentView !== 'home'}
+                onBack={() => setCurrentView('home')}
               />
             </div>
           )}
@@ -968,6 +984,8 @@ const App: React.FC = () => {
             }}
             isDarkMode={isDarkMode}
             toggleDarkMode={toggleTheme}
+            isLoggedIn={isLoggedIn}
+            user={user}
           />
 
 

@@ -72,9 +72,14 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
         <div className="relative z-10 flex flex-col items-center">
           <div className="w-24 h-24 rounded-full border-4 border-white/30 p-1 mb-4 shadow-2xl bg-white/10 backdrop-blur-md overflow-hidden">
             <img
-              src={user?.photoURL || (isLoggedIn ? "https://picsum.photos/seed/greenuser/200/200" : "https://cdn-icons-png.flaticon.com/512/149/149071.png")}
+              src={user?.photoURL || (isLoggedIn ? "https://ui-avatars.com/api/?name=" + encodeURIComponent(user?.displayName || "User") + "&background=22c55e&color=fff&size=200" : "https://cdn-icons-png.flaticon.com/512/149/149071.png")}
               alt="Avatar"
               className="w-full h-full rounded-full object-cover"
+              onError={(e) => {
+                console.error("Profile image failed to load. photoURL:", user?.photoURL);
+                e.currentTarget.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(user?.displayName || "User") + "&background=22c55e&color=fff&size=200";
+              }}
+              onLoad={() => console.log("Profile image loaded successfully from:", user?.photoURL)}
             />
           </div>
           {isLoggedIn ? (
@@ -188,13 +193,7 @@ const AccountView: React.FC<AccountViewProps> = ({ onLoginClick, isLoggedIn, use
             icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
           />
         </div>
-        <div onClick={onSupportClick}>
-          <MenuLink
-            label="Need Help?"
-            sub="Chat with Basket Buddy"
-            icon={<svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
-          />
-        </div>
+
       </div>
 
 

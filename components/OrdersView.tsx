@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../firebaseConfig';
-import { collection, query, where, orderBy, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, query, where, orderBy, getDocs, Timestamp, doc, updateDoc } from 'firebase/firestore';
 
 interface OrderItem {
     name: string;
@@ -33,35 +33,75 @@ interface OrdersViewProps {
 const OrdersView: React.FC<OrdersViewProps> = ({ onBack }) => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
+    const [filterStatus, setFilterStatus] = useState<'all' | 'complete' | 'incomplete'>('all');
+    const [filterTime, setFilterTime] = useState<'all' | 'recent' | 'previous'>('all');
 
     useEffect(() => {
-        const fetchUserOrders = async () => {
-            try {
-                const userId = auth.currentUser?.uid;
-                if (!userId) {
-                    setLoading(false);
-                    return;
-                }
-
-                const ordersRef = collection(db, 'orders');
-                const q = query(ordersRef, where('userId', '==', userId), orderBy('createdAt', 'desc'));
-                const querySnapshot = await getDocs(q);
-
-                const ordersData = querySnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                } as Order));
-
-                setOrders(ordersData);
-            } catch (error) {
-                console.error("Error fetching orders:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchUserOrders();
     }, []);
+
+    const fetchUserOrders = async () => {
+        try {
+            const userId = auth.currentUser?.uid;
+            if (!userId) {
+                setLoading(false);
+                return;
+            }
+
+            const ordersRef = collection(db, 'orders');
+            const q = query(ordersRef, where('userId', '==', userId), orderBy('createdAt', 'desc'));
+            const querySnapshot = await getDocs(q);
+
+            const ordersData = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            } as Order));
+
+            setOrders(ordersData);
+        } catch (error) {
+            console.error("Error fetching orders:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const markAsComplete = async (orderId: string) => {
+        try {
+            const orderRef = doc(db, 'orders', orderId);
+            await updateDoc(orderRef, {
+                status: 'delivered'
+            });
+            // Refresh orders
+            await fetchUserOrders();
+        } catch (error) {
+            console.error("Error updating order:", error);
+            alert("Failed to update order status");
+        }
+    };
+
+    const downloadCSV = () => {
+        const headers = ['Order ID', 'Date', 'Items', 'Total', 'Status', 'Payment'];
+        const rows = filteredOrders.map(order => [
+            order.id.slice(-6),
+            formatDate(order.createdAt),
+            order.items.map(i => `${i.name} x${i.quantity}`).join('; '),
+            `₹${order.amount?.total || 0}`,
+            order.status,
+            order.paymentMethod
+        ]);
+
+        const csvContent = [headers, ...rows]
+            .map(row => row.map(cell => `"${cell}"`).join(','))
+            .join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `orders_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
 
     const formatDate = (timestamp: Timestamp) => {
         if (!timestamp) return 'N/A';
@@ -75,7 +115,6 @@ const OrdersView: React.FC<OrdersViewProps> = ({ onBack }) => {
     };
 
     const exportAsPDF = (order: Order) => {
-        // Simple text-based PDF generation using browser print
         const printContent = `
             <html>
             <head>
@@ -129,14 +168,36 @@ const OrdersView: React.FC<OrdersViewProps> = ({ onBack }) => {
 
     const getStatusColor = (status: string) => {
         switch (status.toLowerCase()) {
-            case 'pending': return 'bg-yellow-100 text-yellow-800';
-            case 'confirmed': return 'bg-blue-100 text-blue-800';
-            case 'shipped': return 'bg-purple-100 text-purple-800';
-            case 'delivered': return 'bg-green-100 text-green-800';
-            case 'cancelled': return 'bg-red-100 text-red-800';
-            default: return 'bg-gray-100 text-gray-800';
+            case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+            case 'confirmed': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
+            case 'shipped': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400';
+            case 'delivered': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+            case 'cancelled': return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+            default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
         }
     };
+
+    // Filter orders based on status and time
+    const filteredOrders = orders.filter(order => {
+        // Status filter
+        if (filterStatus === 'complete') {
+            if (!['delivered', 'completed'].includes(order.status.toLowerCase())) return false;
+        } else if (filterStatus === 'incomplete') {
+            if (['delivered', 'completed'].includes(order.status.toLowerCase())) return false;
+        }
+
+        // Time filter
+        if (filterTime !== 'all') {
+            const orderDate = new Date(order.createdAt.seconds * 1000);
+            const now = new Date();
+            const daysDiff = (now.getTime() - orderDate.getTime()) / (1000 * 60 * 60 * 24);
+
+            if (filterTime === 'recent' && daysDiff > 30) return false;
+            if (filterTime === 'previous' && daysDiff <= 30) return false;
+        }
+
+        return true;
+    });
 
     if (loading) {
         return (
@@ -149,28 +210,102 @@ const OrdersView: React.FC<OrdersViewProps> = ({ onBack }) => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-slate-900 pb-24">
             {/* Header */}
-            <div className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 px-4 py-4 flex items-center gap-4">
-                <button onClick={onBack} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center">
-                    <i className="fa-solid fa-arrow-left text-gray-600 dark:text-gray-300"></i>
-                </button>
-                <div>
-                    <h1 className="text-xl font-black text-gray-900 dark:text-white">Your Orders</h1>
-                    <p className="text-xs text-gray-500">{orders.length} order(s) found</p>
+            <div className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 px-4 py-4">
+                <div className="flex items-center gap-4 mb-4">
+                    <button onClick={onBack} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center">
+                        <i className="fa-solid fa-arrow-left text-gray-600 dark:text-gray-300"></i>
+                    </button>
+                    <div className="flex-1">
+                        <h1 className="text-xl font-black text-gray-900 dark:text-white">Your Orders</h1>
+                        <p className="text-xs text-gray-500">{filteredOrders.length} order(s) found</p>
+                    </div>
+                    <button
+                        onClick={downloadCSV}
+                        className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white rounded-lg text-xs font-bold hover:bg-green-700 transition-colors"
+                    >
+                        <i className="fa-solid fa-download"></i>
+                        CSV
+                    </button>
+                </div>
+
+                {/* Filters */}
+                <div className="space-y-2">
+                    {/* Status Filter */}
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setFilterStatus('all')}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterStatus === 'all'
+                                ? 'bg-green-600 text-white'
+                                : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300'
+                                }`}
+                        >
+                            All Orders
+                        </button>
+                        <button
+                            onClick={() => setFilterStatus('complete')}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterStatus === 'complete'
+                                ? 'bg-green-600 text-white'
+                                : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300'
+                                }`}
+                        >
+                            Complete
+                        </button>
+                        <button
+                            onClick={() => setFilterStatus('incomplete')}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterStatus === 'incomplete'
+                                ? 'bg-green-600 text-white'
+                                : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300'
+                                }`}
+                        >
+                            Incomplete
+                        </button>
+                    </div>
+
+                    {/* Time Filter */}
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setFilterTime('all')}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterTime === 'all'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300'
+                                }`}
+                        >
+                            All Time
+                        </button>
+                        <button
+                            onClick={() => setFilterTime('recent')}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterTime === 'recent'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300'
+                                }`}
+                        >
+                            Recent (30d)
+                        </button>
+                        <button
+                            onClick={() => setFilterTime('previous')}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterTime === 'previous'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300'
+                                }`}
+                        >
+                            Previous (&gt;30d)
+                        </button>
+                    </div>
                 </div>
             </div>
 
             {/* Orders List */}
             <div className="p-4 space-y-4">
-                {orders.length === 0 ? (
+                {filteredOrders.length === 0 ? (
                     <div className="text-center py-20">
                         <div className="w-20 h-20 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-300">
                             <i className="fa-solid fa-box-open text-3xl"></i>
                         </div>
-                        <h3 className="text-lg font-bold text-gray-600 dark:text-gray-400 mb-2">No orders yet</h3>
-                        <p className="text-sm text-gray-400">Your order history will appear here</p>
+                        <h3 className="text-lg font-bold text-gray-600 dark:text-gray-400 mb-2">No orders found</h3>
+                        <p className="text-sm text-gray-400">Try changing your filters</p>
                     </div>
                 ) : (
-                    orders.map((order) => (
+                    filteredOrders.map((order) => (
                         <div key={order.id} className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-slate-700">
                             {/* Order Header */}
                             <div className="flex items-start justify-between mb-4">
@@ -183,13 +318,24 @@ const OrdersView: React.FC<OrdersViewProps> = ({ onBack }) => {
                                     </div>
                                     <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{formatDate(order.createdAt)}</p>
                                 </div>
-                                <button
-                                    onClick={() => exportAsPDF(order)}
-                                    className="flex items-center gap-2 px-3 py-1.5 bg-green-50 dark:bg-green-900/30 text-green-600 rounded-lg text-xs font-bold hover:bg-green-100 transition-colors"
-                                >
-                                    <i className="fa-solid fa-file-pdf"></i>
-                                    Export PDF
-                                </button>
+                                <div className="flex gap-2">
+                                    {!['delivered', 'completed'].includes(order.status.toLowerCase()) && (
+                                        <button
+                                            onClick={() => markAsComplete(order.id)}
+                                            className="flex items-center gap-1 px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-600 rounded-lg text-[10px] font-bold hover:bg-green-100 transition-colors"
+                                        >
+                                            <i className="fa-solid fa-check"></i>
+                                            Complete
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={() => exportAsPDF(order)}
+                                        className="flex items-center gap-1 px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 rounded-lg text-[10px] font-bold hover:bg-blue-100 transition-colors"
+                                    >
+                                        <i className="fa-solid fa-file-pdf"></i>
+                                        PDF
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Items Preview */}

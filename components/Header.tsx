@@ -12,7 +12,10 @@ interface HeaderProps {
   showFilter?: boolean;
   isDarkMode?: boolean;
   toggleDarkMode?: () => void;
+
   searchValue?: string;
+  showBack?: boolean;
+  onBack?: () => void;
 }
 
 const SEARCH_PLACEHOLDERS = [
@@ -36,11 +39,16 @@ const Header: React.FC<HeaderProps> = ({
   showFilter = true,
   isDarkMode = false,
   toggleDarkMode,
-  searchValue: externalSearchValue
+
+  searchValue: externalSearchValue,
+  showBack = false,
+  onBack
 }) => {
   const [searchValue, setSearchValue] = useState(externalSearchValue || '');
+
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isVegMode, setIsVegMode] = useState(false);
+  const [isListening, setIsListening] = useState(false);
 
   // Sync with external search value (e.g. when cleared by App)
   useEffect(() => {
@@ -67,127 +75,121 @@ const Header: React.FC<HeaderProps> = ({
     setSearchValue(e.target.value);
   };
 
+  const handleVoiceSearch = () => {
+    if (!('webkitSpeechRecognition' in window)) {
+      alert("Voice search is not supported in this browser. Please use Chrome.");
+      return;
+    }
+
+    const recognition = new (window as any).webkitSpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setSearchValue(transcript);
+      onSearchChange(transcript);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Voice search error:', event.error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
+
   return (
-    <header className={`sticky top-0 z-[60] transition-all duration-300 ${isScrolled ? 'bg-white/95 dark:bg-[#120f26]/95 backdrop-blur-md shadow-md pb-2' : 'bg-transparent pb-4'}`}>
+    <header className="relative z-[60] bg-white dark:bg-slate-900 transition-all duration-300">
 
-      {/* Top Row: Location & Actions */}
-      <div className={`px-4 pt-4 pb-2 flex justify-between items-center transition-all duration-300 ${isScrolled ? 'h-0 opacity-0 overflow-hidden pt-0 pb-0' : 'h-auto opacity-100'}`}>
-        {/* Location / Brand */}
-        <div className="flex flex-col cursor-pointer group" onClick={onLocationClick}>
-          <a href="/" className="flex items-center gap-2 text-[#3d4152] dark:text-white" onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); }}>
-            <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center text-white text-sm shadow-md">
-              <i className="fa-solid fa-leaf"></i>
-            </div>
-            <h1 className="font-extrabold text-xl tracking-tight group-hover:text-green-600 transition-colors">Green Trust Grocery</h1>
-          </a>
-
-          {/* Address Display - More Prominent */}
-          <div className="flex items-center gap-2 mt-1 pl-10 group-hover:text-green-600 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-green-600" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-            </svg>
-            <p className="text-xs text-slate-600 dark:text-slate-400 font-bold truncate max-w-[180px] leading-tight">
-              {address || 'Tap to set location'}
-            </p>
-            <i className="fa-solid fa-pen-to-square text-[10px] text-green-600"></i>
-          </div>
-        </div>
-
-
-        {/* Right Actions */}
-        <div className="flex items-center gap-3">
-
-
-
-
-
-          <div className="flex items-center gap-2">
-            {/* Theme Toggle Button */}
-            {/* Theme Toggle Button - Livelier & Smaller */}
-            <button
-              onClick={toggleDarkMode}
-              className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-300 to-orange-500 dark:from-slate-700 dark:to-slate-900 flex items-center justify-center shadow-md hover:shadow-lg hover:scale-110 active-rotate transition-all duration-300 group overflow-hidden relative"
-              aria-label="Toggle Theme"
-            >
-              <div className="relative z-10">
-                {isDarkMode ? (
-                  <i className="fa-solid fa-sun text-yellow-100 text-sm animate-spin-slow"></i>
-                ) : (
-                  <i className="fa-solid fa-moon text-white text-sm group-hover:-rotate-12 transition-transform"></i>
-                )}
-              </div>
-              {/* Glow Effect */}
-              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </button>
-
-            <button
-              onClick={onWishlistClick}
-              className="w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-rose-500 hover:bg-white transition-all shadow-md active:scale-95"
-            >
-              <i className="fa-regular fa-heart text-base"></i>
-            </button>
-
-            <button
-              onClick={onProfileClick}
-              aria-label="View Profile"
-              className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm"
-            >
-              <img src="https://picsum.photos/seed/user/100/100" alt="User" className="w-full h-full object-cover" />
-            </button>
-          </div>
-        </div>
-
-        {/* Bottom Row: Search & Veg Toggle */}
-        <div className={`px-4 flex items-center gap-3 transition-all duration-300 ${isScrolled ? 'pt-2' : 'pt-2'}`}>
-          {/* Search Bar */}
-          <div className="flex-1 relative shadow-sm">
-            <input
-              type="text"
-              value={searchValue}
-              onChange={handleChange}
-              className="w-full h-12 rounded-xl bg-green-50 dark:bg-slate-800 border-none pl-12 pr-10 text-sm font-semibold outline-none focus:ring-2 focus:ring-green-500/50 transition-colors text-slate-800 dark:text-white placeholder-slate-400/80"
-              placeholder={SEARCH_PLACEHOLDERS[placeholderIndex]}
-              aria-label="Search Products"
-            />
-            <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center pointer-events-none" aria-hidden="true">
-              <i className="fa-solid fa-magnifying-glass text-green-600 text-lg"></i>
-            </div>
-            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 flex items-center gap-3">
-              {searchValue && (
-                <button onClick={() => { setSearchValue(''); onSearchChange(''); }} className="text-slate-400" aria-label="Clear Search">
-                  <i className="fa-solid fa-xmark" aria-hidden="true"></i>
-                </button>
-              )}
-              {/* Microphone Removed */}
+      {/* Top Row: Brand & Location & Profile (Collapses on Scroll) */}
+      <div
+        className={`w-full bg-white dark:bg-slate-900 overflow-hidden transition-all duration-300 ease-in-out border-b border-transparent ${isScrolled ? 'max-h-0 opacity-0' : 'max-h-20 opacity-100'
+          }`}
+      >
+        <div className="flex items-center justify-between px-4 pt-3 pb-1 gap-4">
+          <div className="flex flex-col flex-1" onClick={onLocationClick}>
+            <h1 className="text-xl font-black text-slate-800 dark:text-white tracking-tight leading-none mb-1 flex items-center gap-2">
+              Green Trust Grocery <i className="fa-solid fa-leaf text-green-500 text-xs"></i>
+            </h1>
+            <div className="flex items-center gap-1.5 cursor-pointer max-w-fit">
+              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 truncate max-w-[200px]">
+                {address === 'Detecting location...' ? 'Select Location' : address}
+              </span>
+              <i className="fa-solid fa-caret-down text-[10px] text-slate-400"></i>
             </div>
           </div>
 
-          {/* Veg Toggle */}
+          {/* Theme Toggle */}
           <button
-            onClick={() => setIsVegMode(!isVegMode)}
-            className={`hidden md:flex flex-col items-center justify-center h-12 min-w-[3.5rem] rounded-xl border transition-all active:scale-95 ${isVegMode ? 'bg-green-50 border-green-500' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'}`}
+            onClick={toggleDarkMode}
+            className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center transition-colors"
           >
-            <span className={`text-[9px] font-bold uppercase mb-0.5 ${isVegMode ? 'text-green-700' : 'text-slate-400'}`}>VEG</span>
-            <div className={`w-8 h-4 rounded-full p-0.5 flex items-center transition-colors ${isVegMode ? 'bg-green-600' : 'bg-slate-300'}`}>
-              <div className={`w-3 h-3 bg-white rounded-full shadow-sm transition-transform ${isVegMode ? 'translate-x-4' : 'translate-x-0'}`}>
-                {isVegMode && <div className="w-1.5 h-1.5 bg-green-600 rounded-full m-auto mt-[3px]"></div>}
-              </div>
-            </div>
+            <i className={`fa-solid ${isDarkMode ? 'fa-sun text-yellow-500' : 'fa-moon text-blue-500'} text-xs`}></i>
           </button>
 
-          {/* Filter Button (Mobile/Desktop) - Conditionally Rendered */}
-          {showFilter && (
-            <button
-              onClick={onFilterClick}
-              aria-label="Filter Products"
-              className="flex flex-col items-center justify-center h-12 w-12 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 active:scale-95 transition-all"
-            >
-              <i className="fa-solid fa-sliders text-lg" aria-hidden="true"></i>
-            </button>
-          )}
+          {/* Wishlist */}
+          <button
+            onClick={onWishlistClick}
+            className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center transition-colors group"
+          >
+            <i className="fa-regular fa-heart text-xs text-red-500 group-hover:scale-110 transition-transform"></i>
+          </button>
+
+          {/* Profile */}
+          <button
+            onClick={onProfileClick}
+            className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center transition-colors group"
+          >
+            <i className="fa-regular fa-user text-sm text-green-600 group-hover:scale-110 transition-transform"></i>
+          </button>
         </div>
       </div>
-    </header>
+
+      {/* Bottom Row: Search Bar (Always Visible) */}
+      {/* Sticky Background: Pastel Green on Scroll */}
+      <div className={`px-4 pb-3 pt-2 shadow-sm border-b transition-colors duration-300 ${isScrolled
+        ? 'bg-[#E8F5E9]/95 dark:bg-slate-900/95 border-green-100 dark:border-slate-800 backdrop-blur-md' // Pastel Green on Scroll
+        : 'bg-white dark:bg-slate-900 border-slate-50 dark:border-slate-800'
+        }`}>
+        <div className="flex items-center gap-3 w-full">
+          {showBack && (
+            <button onClick={onBack} className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white active:scale-90 transition-transform">
+              <i className="fa-solid fa-arrow-left"></i>
+            </button>
+          )}
+          <div className="relative flex-1">
+            <input
+              type="text"
+              value={searchValue || ''}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder='Search "eggs"'
+              className={`w-full h-11 border rounded-xl pl-11 pr-4 text-sm font-medium outline-none transition-all shadow-sm placeholder:text-slate-400 ${isScrolled
+                ? 'bg-white dark:bg-slate-800 border-green-200 dark:border-slate-700 focus:border-green-500' // White input on Pastel bg
+                : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:border-green-500'
+                }`}
+            />
+            <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 w-px h-5 bg-slate-200 dark:bg-slate-700"></div>
+            <button
+              onClick={handleVoiceSearch}
+              className={`absolute right-0 top-0 bottom-0 px-4 flex items-center justify-center transition-colors ${isListening ? 'text-red-500 animate-pulse' : 'text-slate-400'}`}
+            >
+              <i className={`fa-solid ${isListening ? 'fa-microphone-lines' : 'fa-microphone'}`}></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header >
   );
 };
 

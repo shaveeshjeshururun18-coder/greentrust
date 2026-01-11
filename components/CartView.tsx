@@ -16,6 +16,7 @@ interface CartViewProps {
   step?: 'list' | 'checkout';
   onStepChange?: (step: 'list' | 'checkout') => void;
   onOrderSuccess: () => void;
+  onOrderPlaced?: (orderData: any) => void;
   onLocationClick?: () => void;  // Add location picker callback
 }
 
@@ -33,10 +34,14 @@ const CartView: React.FC<CartViewProps> = ({
   step = 'list',
   onStepChange,
   onOrderSuccess,
+  onOrderPlaced,
   onLocationClick
 }) => {
   const [showQR, setShowQR] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'gpay' | 'phonepe'>('cod');
+  const [customerPhone, setCustomerPhone] = useState(() => {
+    return auth.currentUser?.phoneNumber?.replace('+91', '') || '';
+  });
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Calculations
@@ -60,7 +65,9 @@ const CartView: React.FC<CartViewProps> = ({
       setIsProcessing(true);
       const orderData = {
         userId: auth.currentUser?.uid || 'guest',
-        userPhone: auth.currentUser?.phoneNumber || 'unknown',
+        userEmail: auth.currentUser?.email || 'unknown',
+        userPhone: customerPhone ? `+91${customerPhone}` : (auth.currentUser?.phoneNumber || 'unknown'),
+        customerPhone: customerPhone,
         items: cart.map(item => ({
           name: item.nameEn,
           weight: item.selectedUnit.weight,
@@ -80,6 +87,7 @@ const CartView: React.FC<CartViewProps> = ({
       };
 
       await addDoc(collection(db, 'orders'), orderData);
+      if (onOrderPlaced) onOrderPlaced(orderData);
       return true;
     } catch (error) {
       console.error("Error saving order:", error);
@@ -94,9 +102,15 @@ const CartView: React.FC<CartViewProps> = ({
     // Enforce Login
     if (!isLoggedIn) { onLoginReq(); return; }
 
+    // Validate phone number
+    if (!customerPhone || customerPhone.length !== 10) {
+      alert('Please enter a valid 10-digit phone number');
+      return;
+    }
+
     // 1. Open WhatsApp Immediately (Optimistic UI)
     const orderItems = cart.map(item => `- ${item.nameEn} (${item.selectedUnit.weight}) x ${item.cartQuantity} = ₹${item.selectedUnit.price * item.cartQuantity}`).join('%0A');
-    const message = `*NEW ORDER FROM GREEN TRUST GROCERY*%0A%0A*Items:*%0A${orderItems}%0A%0A*Bill Details:*%0ASubtotal: ₹${subtotal}%0ADelivery: ₹${deliveryFee}%0AHandling: ₹${handlingFee}%0A*Total: ₹${total}*%0A%0A*Payment Mode:* ${paymentMethod.toUpperCase()}%0A*Delivery Address:*%0A${address}%0A%0A_Please confirm my order from Green Trust Grocery!_`;
+    const message = `*NEW ORDER FROM GREEN TRUST GROCERY*%0A%0A*Customer Phone:* +91${customerPhone}%0A%0A*Items:*%0A${orderItems}%0A%0A*Bill Details:*%0ASubtotal: ₹${subtotal}%0ADelivery: ₹${deliveryFee}%0AHandling: ₹${handlingFee}%0A*Total: ₹${total}*%0A%0A*Payment Mode:* ${paymentMethod.toUpperCase()}%0A*Delivery Address:*%0A${address}%0A%0A_Please confirm my order from Green Trust Grocery!_`;
 
     // Use the correct number from footer: 9091600916
     const waUrl = `https://wa.me/9091600916?text=${message}`;
@@ -241,6 +255,37 @@ const CartView: React.FC<CartViewProps> = ({
                 </svg>
                 <span className="text-[10px] font-black uppercase tracking-wider">15-min instant delivery</span>
               </div>
+            </div>
+
+            {/* Phone Number Input Card */}
+            <div className="mx-6 md:mx-0 bg-white dark:bg-slate-900 p-6 rounded-[2rem] shadow-sm border border-gray-100 dark:border-slate-800 animate-popIn stagger-2">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                  <i className="fa-solid fa-phone text-blue-600 dark:text-blue-400"></i>
+                </div>
+                <div>
+                  <p className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wide">Contact Number</p>
+                  <p className="text-[10px] text-gray-500">For order updates</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-black text-gray-700 dark:text-gray-300">+91</span>
+                <input
+                  type="tel"
+                  maxLength={10}
+                  value={customerPhone}
+                  onChange={(e) => setCustomerPhone(e.target.value.replace(/\D/g, ''))}
+                  placeholder="Enter 10-digit number"
+                  className="flex-1 px-4 py-3 border-2 border-gray-200 dark:border-slate-700 rounded-xl outline-none focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-slate-800 text-gray-900 dark:text-white font-bold transition-all"
+                  required
+                />
+              </div>
+              {customerPhone.length > 0 && customerPhone.length !== 10 && (
+                <p className="text-xs text-red-500 mt-2 flex items-center gap-1">
+                  <i className="fa-solid fa-circle-exclamation"></i>
+                  Phone number must be 10 digits
+                </p>
+              )}
             </div>
 
             {/* Cart Items List */}

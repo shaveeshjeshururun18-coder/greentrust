@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Product } from '../types';
+import SparkleButton from './SparkleButton';
 
 
 interface ProductCardProps {
@@ -25,101 +26,122 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const defaultUnit = product.units[0];
 
   return (
-    <div className="h-full bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col relative group animate-popIn">
-      {/* Top badges */}
-      <div className="absolute top-3 left-3 z-10 flex flex-col gap-1">
-        {product.units.length > 1 && (
-          <div className="bg-blue-600 text-white text-[7px] px-2 py-1 rounded-full font-black shadow-lg shadow-blue-200 uppercase tracking-widest">
-            Variant
+    <div className="flex flex-col gap-2 h-full animate-popIn group relative">
+      {/* Image Area with Overlay Button */}
+      <div className="relative aspect-[0.9] bg-slate-100 dark:bg-slate-800/50 rounded-xl overflow-hidden cursor-pointer" onClick={onClick}>
+        {/* Discount Badge */}
+        {product.discount && (
+          <div className="absolute top-0 left-0 bg-[#5d8ed5] text-white text-[9px] font-black px-1.5 py-1 rounded-br-lg z-10 shadow-sm uppercase tracking-tighter">
+            {Math.round(((defaultUnit.mrp - defaultUnit.price) / defaultUnit.mrp) * 100)}% OFF
           </div>
         )}
-      </div>
 
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          toggleFavorite();
-        }}
-        className={`absolute top-3 right-3 z-20 p-2 bg-white/80 dark:bg-slate-700/80 backdrop-blur-md rounded-full shadow-lg transition-all duration-300 ${isFavorite ? 'scale-110 shadow-red-100 dark:shadow-none bg-red-50 dark:bg-red-900/10' : 'hover:scale-110 active:scale-95'}`}
-        aria-label={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-      >
-        <div className={`${isFavorite ? 'animate-heartBeat' : ''}`}>
-          <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-colors duration-300 ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-300'}`} viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-          </svg>
-        </div>
-      </button>
+        {/* Like Button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleFavorite();
+          }}
+          className={`absolute top-2 right-2 z-20 w-7 h-7 flex items-center justify-center rounded-full transition-all ${isFavorite ? 'text-red-500' : 'text-slate-400 bg-white/50'}`}
+        >
+          {isFavorite ? <i className="fa-solid fa-heart text-sm animate-heartBeat"></i> : <i className="fa-regular fa-heart text-sm"></i>}
+        </button>
 
-      <div className="relative cursor-pointer overflow-hidden p-3 pb-0" onClick={onClick}>
-        <div className="h-40 bg-white dark:bg-white rounded-2xl flex items-center justify-center relative overflow-hidden">
-          <img
-            src={product.image}
-            alt={`Fresh Organic ${product.nameEn} available at Green Trust Chennai`}
-            className="w-full h-full object-contain mix-blend-multiply transition-all duration-700 group-hover:scale-105"
-          />
-        </div>
-      </div>
+        {/* Share Button (New - Bottom Left) */}
+        <button
 
-      <div className="px-4 pb-5 flex-1 flex flex-col">
-        <div className="cursor-pointer" onClick={onClick}>
-          <div className="flex items-center gap-1.5 mb-2">
-            <span className="text-[9px] text-green-600 font-black bg-green-50 dark:bg-green-900/30 px-2 py-0.5 rounded-full uppercase tracking-widest">{defaultUnit.weight}</span>
-            <div className="flex text-yellow-400 scale-75 origin-left">
-              <svg className="w-3 h-3 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-              <span className="text-[10px] text-gray-400 font-bold ml-1">{product.rating}</span>
-            </div>
-          </div>
+          onClick={async (e) => {
+            e.stopPropagation();
+            e.preventDefault();
 
-          <h3 className="text-sm font-black text-slate-800 dark:text-slate-200 line-clamp-2 leading-tight h-10 mb-2 group-hover:text-purple-600 transition-colors">
-            {product.nameEn}
-          </h3>
+            const shareData = {
+              title: product.nameEn,
+              text: `Check out ${product.nameEn} on Green Trust!`,
+              url: window.location.href,
+            };
 
-          <div className="flex items-center gap-1.5 mb-3">
-            <span className="text-[10px] text-slate-400 font-bold">{defaultUnit.weight}</span>
-          </div>
-        </div>
+            // Try Native Share
+            if (navigator.share) {
+              try {
+                await navigator.share(shareData);
+              } catch (err) {
+                console.log('Share dismissed or failed', err);
+              }
+            } else {
+              // Fallback to Clipboard
+              try {
+                await navigator.clipboard.writeText(shareData.url);
+                alert("Link copied to clipboard!");
+              } catch (err) {
+                console.error('Clipboard failed', err);
+                alert("Could not copy link. Please manually copy the URL.");
+              }
+            }
+          }}
+          className="absolute bottom-2 left-2 z-20 w-7 h-7 flex items-center justify-center rounded-full bg-white/60 backdrop-blur-sm text-slate-500 hover:bg-green-100 hover:text-green-600 transition-all active:scale-95 shadow-sm border border-white/50"
+        >
+          <i className="fa-solid fa-share-nodes text-[12px]"></i>
+        </button>
 
-        <div className="mt-auto flex items-center justify-between pt-2 border-t border-slate-50 dark:border-slate-700">
-          <div className="flex flex-col">
-            <span className="text-xs text-slate-400 font-bold line-through">₹{defaultUnit.mrp}</span>
-            <span className="text-lg font-black text-slate-900 dark:text-white leading-none">₹{defaultUnit.price}</span>
-          </div>
+        <img
+          src={product.image}
+          alt={product.nameEn}
+          className="w-full h-full object-contain mix-blend-multiply hover:scale-105 transition-transform duration-500 p-3"
+        />
 
-          <div className="relative z-10">
-            {quantity === 0 ? (
+        {/* ADD Button Overlay (Bottom Right) */}
+        <div className="absolute bottom-2 right-2 z-20">
+          {quantity === 0 ? (
+            <SparkleButton
+              onClick={(e) => {
+                e.stopPropagation();
+                addToCart();
+              }}
+              className="bg-white text-green-700 border border-green-600 font-bold text-[10px] px-4 py-1.5 rounded-lg shadow-sm hover:bg-green-50 active:scale-95 transition-all uppercase tracking-wide relative overflow-visible"
+            >
+              ADD
+            </SparkleButton>
+          ) : (
+            <div className="flex items-center bg-green-600 text-white rounded-lg shadow-md px-1 h-7 min-w-[70px] justify-between">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeFromCart();
+                }}
+                className="w-6 h-full flex items-center justify-center active:bg-green-700"
+              >
+                <i className="fa-solid fa-minus text-[8px]"></i>
+              </button>
+              <span className="text-[10px] font-black">{quantity}</span>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   addToCart();
                 }}
-                className="px-8 py-2 bg-white dark:bg-slate-800 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-900 rounded-lg text-xs font-black shadow-sm hover:shadow-md hover:bg-green-50 transition-all uppercase tracking-wider active:scale-95"
+                className="w-6 h-full flex items-center justify-center active:bg-green-700"
               >
-                ADD
+                <i className="fa-solid fa-plus text-[8px]"></i>
               </button>
-            ) : (
-              <div className="flex items-center bg-green-600 text-white rounded-lg shadow-lg px-0 py-0 h-9 min-w-[85px] justify-between overflow-hidden">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeFromCart();
-                  }}
-                  className="w-8 h-full flex items-center justify-center active:bg-green-700 transition-colors"
-                >
-                  <i className="fa-solid fa-minus text-[10px]"></i>
-                </button>
-                <span className="text-xs font-black px-1">{quantity}</span>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addToCart();
-                  }}
-                  className="w-8 h-full flex items-center justify-center active:bg-green-700 transition-colors"
-                >
-                  <i className="fa-solid fa-plus text-[10px]"></i>
-                </button>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Content Area */}
+      <div className="px-1 flex flex-col gap-0.5" onClick={onClick}>
+        {/* Weight Pill */}
+        <div className="w-fit bg-slate-100 dark:bg-slate-800 text-slate-500 text-[9px] font-bold px-1.5 py-0.5 rounded-[4px] mb-1">
+          {defaultUnit.weight}
+        </div>
+
+        <h3 className="text-[13px] font-bold text-slate-800 dark:text-slate-200 leading-snug line-clamp-2 h-9">
+          {product.nameEn}
+        </h3>
+
+        {/* Price */}
+        <div className="flex items-center gap-2 mt-1">
+          <span className="text-sm font-black text-slate-900 dark:text-white">₹{defaultUnit.price}</span>
+          <span className="text-[10px] text-slate-400 line-through">₹{defaultUnit.mrp}</span>
         </div>
       </div>
     </div>

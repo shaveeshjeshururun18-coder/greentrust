@@ -14,6 +14,8 @@ interface DesktopHeaderProps {
     userAddress?: string;
     onLocationClick?: () => void;
     searchValue?: string;
+    isLoggedIn?: boolean;
+    user?: any;
 }
 
 const DesktopHeader: React.FC<DesktopHeaderProps> = ({
@@ -27,7 +29,9 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
     toggleDarkMode,
     userAddress = 'Select Location',
     onLocationClick,
-    searchValue: externalSearchValue
+    searchValue: externalSearchValue,
+    isLoggedIn = false,
+    user
 }) => {
     const [searchValue, setSearchValue] = useState(externalSearchValue || '');
 
@@ -107,6 +111,15 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                             BasketBuddy
                         </button>
 
+                        {/* Orders Button */}
+                        <button
+                            onClick={() => setCurrentView('orders')}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-sm transition-all ${currentView === 'orders' ? 'bg-green-50 text-green-700' : 'hover:bg-slate-50 text-slate-700'}`}
+                        >
+                            <i className="fa-solid fa-clipboard-list"></i>
+                            Orders
+                        </button>
+
                         {/* Developer Button */}
                         <button
                             onClick={() => setCurrentView('developer')}
@@ -140,13 +153,36 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                             onClick={() => setCurrentView('account')}
                             className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group"
                         >
-                            <div className="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden border-2 border-transparent group-hover:border-green-500 transition-colors">
-                                <img src="https://picsum.photos/seed/user/100/100" alt="User" className="w-full h-full object-cover" />
+                            <div className={`w-9 h-9 rounded-full overflow-hidden border-2 transition-colors flex items-center justify-center ${isLoggedIn ? 'border-green-500 p-0.5' : 'bg-slate-200 dark:bg-slate-700 border-transparent group-hover:border-green-500'}`}>
+                                {isLoggedIn && user?.photoURL ? (
+                                    <img
+                                        src={user.photoURL}
+                                        alt="User"
+                                        className="w-full h-full object-cover rounded-full"
+                                        onError={(e) => {
+                                            console.error("Desktop header profile image failed to load. photoURL:", user?.photoURL);
+                                            e.currentTarget.src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(user?.displayName || "User") + "&background=22c55e&color=fff&size=200";
+                                        }}
+                                        onLoad={() => console.log("Desktop header profile image loaded from:", user?.photoURL)}
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center bg-slate-200 dark:bg-slate-700 text-slate-400">
+                                        {isLoggedIn && user?.displayName ? (
+                                            <span className="font-bold text-xs text-slate-600">{user.displayName.charAt(0)}</span>
+                                        ) : (
+                                            <i className="fa-solid fa-user text-xs"></i>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                             <div className={`text-left hidden lg:block ${isScrolled ? 'hidden xl:block' : ''}`}>
-                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider leading-none mb-1">Account</p>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider leading-none mb-1">
+                                    {isLoggedIn ? 'Welcome' : 'Account'}
+                                </p>
                                 <div className="flex items-center gap-1">
-                                    <p className="text-sm font-bold text-slate-700 dark:text-slate-200 leading-none group-hover:text-green-600 transition-colors">Sign In</p>
+                                    <p className="text-sm font-bold text-slate-700 dark:text-slate-200 leading-none group-hover:text-green-600 transition-colors truncate max-w-[100px]">
+                                        {isLoggedIn ? (user?.displayName?.split(' ')[0] || 'User') : 'Sign In'}
+                                    </p>
                                     <i className="fa-solid fa-angle-down text-xs text-slate-400"></i>
                                 </div>
                             </div>
@@ -164,6 +200,8 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                                 </span>
                             )}
                         </button>
+
+
 
                         {/* Theme Toggle */}
                         {/* Theme Toggle - Livelier */}

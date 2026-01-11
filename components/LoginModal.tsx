@@ -19,9 +19,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
   const recaptchaWrapperRef = useRef<HTMLDivElement>(null);
 
   const handleGoogleLogin = async () => {
+    console.log("Attempting Google Sign-In...");
     setIsLoading(true);
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log("Google Sign-In Result:", result);
       setIsLoading(false);
       onLogin(); // App.tsx onAuthStateChanged will actually handle state, but we close modal
     } catch (error: any) {
@@ -30,11 +32,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose, onLogin }) => {
 
       let message = "Google login failed. Please try again.";
       if (error.code === 'auth/unauthorized-domain') {
-        message = "This domain is not authorized. Please add it in Firebase Console (Authentication > Settings > Authorized Domains).";
+        message = "Domain Error: Add this domain to Firebase Console > Auth > Settings > Authorized Domains.";
       } else if (error.code === 'auth/popup-closed-by-user') {
-        message = "Login popup closed. Please try again.";
+        message = "Login cancelled. You closed the popup.";
       } else if (error.code === 'auth/operation-not-allowed') {
-        message = "Google Sign-in is not enabled in Firebase Console.";
+        message = "Configuration Error: Enable Google Sign-in in Firebase Console.";
+      } else if (error.code === 'auth/popup-blocked') {
+        message = "Browser Error: Popup blocked. Please allow popups for this site.";
       }
 
       alert(message);

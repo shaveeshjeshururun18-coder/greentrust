@@ -57,12 +57,7 @@ const AnimatedBanner: React.FC = () => {
                     <div className="absolute inset-0 bg-[url('https://raw.githubusercontent.com/h-s-c/realistic-clouds/master/dist/cloud.png')] bg-cover opacity-10 animate-[panImage_30s_linear_infinite]"></div>
 
                     {/* Marquee Text Layer (Behind content, low opacity) */}
-                    <div className="absolute top-10 left-0 w-full overflow-hidden opacity-40 pointer-events-none">
-                        <div className="whitespace-nowrap animate-[scrollLeft_30s_linear_infinite]">
-                            <span className="text-8xl font-black text-white px-4">Freshora • Greensio • Nutrify • Harvesta • Vegora • Purelia • Farmora • Leafora • Ecozia • Freshlet • </span>
-                            <span className="text-8xl font-black text-white px-4">Freshora • Greensio • Nutrify • Harvesta • Vegora • Purelia • Farmora • Leafora • Ecozia • Freshlet • </span>
-                        </div>
-                    </div>
+
                 </div>
 
                 <div className="relative z-30 p-4 md:p-10 flex flex-col items-start justify-center h-full">
@@ -188,29 +183,7 @@ const AnimatedBanner: React.FC = () => {
                     <span className="text-xs font-black text-red-800 dark:text-red-300">Trusted by Families</span>
                 </button>
             </div>
-            {/* Scrolling Marquee - Single Line Text */}
-            <div className="mt-8 mb-2 overflow-hidden relative w-full py-3 bg-slate-50/50 dark:bg-slate-900/30 border-y border-slate-100 dark:border-slate-800">
-                <div className="whitespace-nowrap flex animate-[scrollLeft_25s_linear_infinite] gap-12 text-slate-400 dark:text-slate-500 font-bold text-sm md:text-base uppercase tracking-widest">
-                    <span className="flex items-center gap-2">Fresh Groceries, Delivered Daily <i className="fa-solid fa-bolt text-yellow-400"></i></span>
-                    <span className="flex items-center gap-2">Delivered with <i className="fa-solid fa-heart text-red-500"></i> in Tamil Nadu</span>
-                    <span className="flex items-center gap-2">Shop Fresh Now <i className="fa-solid fa-basket-shopping text-green-400"></i></span>
-                    <span className="flex items-center gap-2">Order Groceries <i className="fa-solid fa-leaf text-green-500"></i></span>
-                    <span className="flex items-center gap-2">Start Shopping <i className="fa-solid fa-cart-plus text-blue-400"></i></span>
-                    <span className="flex items-center gap-2">Buy Fresh Today <i className="fa-solid fa-carrot text-orange-400"></i></span>
-                    <span className="flex items-center gap-2">Get Fresh Groceries <i className="fa-solid fa-truck-fast text-slate-400"></i></span>
 
-                    {/* Duplicate for infinite loop */}
-                    <span className="flex items-center gap-2">Fresh Groceries, Delivered Daily <i className="fa-solid fa-bolt text-yellow-400"></i></span>
-                    <span className="flex items-center gap-2">Delivered with <i className="fa-solid fa-heart text-red-500"></i> in Tamil Nadu</span>
-                    <span className="flex items-center gap-2">Shop Fresh Now <i className="fa-solid fa-basket-shopping text-green-400"></i></span>
-                    <span className="flex items-center gap-2">Order Groceries <i className="fa-solid fa-leaf text-green-500"></i></span>
-                    <span className="flex items-center gap-2">Start Shopping <i className="fa-solid fa-cart-plus text-blue-400"></i></span>
-                    <span className="flex items-center gap-2">Buy Fresh Today <i className="fa-solid fa-carrot text-orange-400"></i></span>
-                    <span className="flex items-center gap-2">Get Fresh Groceries <i className="fa-solid fa-truck-fast text-slate-400"></i></span>
-                </div>
-                <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-white dark:from-slate-950 to-transparent z-10"></div>
-                <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white dark:from-slate-950 to-transparent z-10"></div>
-            </div>
 
             {/* Custom Keyframe Styles injected for this component */}
             <style>{`

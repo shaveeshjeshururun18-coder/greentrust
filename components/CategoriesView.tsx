@@ -17,6 +17,7 @@ interface CategoriesViewProps {
     setSearchQuery?: (query: string) => void;
     initialCategoryId?: string;
     initialFilterOpen?: boolean;
+    onScrollChange?: (isScrolled: boolean) => void;
 }
 
 const CategoriesView: React.FC<CategoriesViewProps> = ({
@@ -28,13 +29,15 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
     wishlist = [],
     toggleWishlist = () => { },
     initialCategoryId = 'all',
+
     searchQuery = '',
     setSearchQuery,
+    onScrollChange,
 }) => {
     // Current Active Category (Unified for Mobile & Desktop)
     const [activeCategoryId, setActiveCategoryId] = useState<string>(initialCategoryId);
     const [activeSubCategory, setActiveSubCategory] = useState<string>('all');
-    const [isSidebarHidden, setIsSidebarHidden] = useState(false);
+    const [showSidebar, setShowSidebar] = useState(true);
 
     // Filter Logic
     const allProductsWithMetadata = useMemo(() => {
@@ -83,103 +86,133 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
         <div className="h-full bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row relative animate-fadeIn transition-all overflow-hidden">
 
             {/* --- MOBILE VIEW --- */}
-            <div className="md:hidden flex flex-col w-full h-full pb-20">
-                {/* Mobile Header */}
-                <div className="sticky top-0 z-30 bg-white dark:bg-slate-900 shadow-sm border-b border-slate-100 dark:border-slate-800">
-                    <div className="px-4 py-3 flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-3">
-                            <button onClick={onBack} className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-300">
-                                <i className="fa-solid fa-arrow-left"></i>
-                            </button>
-                            <h2 className="text-lg font-black text-slate-900 dark:text-white truncate max-w-[120px]">
-                                {activeCategoryId === 'all' ? 'All Items' : activeCategory.name}
-                            </h2>
-                        </div>
-                        <div className="relative w-40">
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
-                                placeholder="Search..."
-                                className="w-full h-8 bg-slate-100 dark:bg-slate-800 rounded-full pl-8 pr-3 text-xs outline-none focus:ring-2 focus:ring-green-500"
-                            />
-                            <i className="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400"></i>
-                        </div>
-                    </div>
-                </div>
+            <div className="md:hidden flex flex-col w-full h-full pb-20 pt-[62px]">
+                {/* Global Header takes up space. Initial height ~140px. Collapsed is ~90px */}
 
                 {/* Mobile Split Body */}
-                <div className="flex flex-1 overflow-hidden">
-                    {/* Mobile Left Rail */}
-                    <div className="w-20 bg-slate-50 dark:bg-slate-900 overflow-y-auto no-scrollbar border-r border-slate-100 dark:border-slate-800">
+                <div className="flex flex-1 overflow-hidden bg-white dark:bg-slate-950">
+                    {/* Mobile Left Rail - Zepto Style - Collapsible */}
+                    <div className={`w-[86px] bg-slate-50 dark:bg-slate-900 overflow-y-auto no-scrollbar pb-24 flex-shrink-0 fixed top-[62px] bottom-0 z-30 border-r border-slate-100 dark:border-slate-800 transition-transform duration-300 ${showSidebar ? 'left-0' : '-left-[86px]'}`}>
+                        {/* Close Button */}
+                        <button
+                            onClick={() => setShowSidebar(false)}
+                            className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center z-50 shadow-lg"
+                        >
+                            <i className="fa-solid fa-times text-xs"></i>
+                        </button>
+
+                        {/* All Category */}
                         <button
                             onClick={() => handleCategoryChange('all')}
-                            className={`w-full py-4 flex flex-col items-center gap-1 transition-all relative ${activeCategoryId === 'all' ? 'bg-white dark:bg-slate-800' : ''}`}
+                            className="w-full py-4 flex flex-col items-center gap-2 relative mt-8"
                         >
-                            {activeCategoryId === 'all' && <div className="absolute right-0 top-2 bottom-2 w-1 bg-green-500 rounded-l-full"></div>}
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${activeCategoryId === 'all' ? 'bg-green-100 text-green-600 shadow-sm' : 'text-slate-400'}`}>
-                                <i className="fa-solid fa-border-all"></i>
+                            {activeCategoryId === 'all' && <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-green-600 rounded-r-lg"></div>}
+                            <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${activeCategoryId === 'all' ? 'bg-green-100 border-2 border-green-600' : 'bg-slate-200 dark:bg-slate-800'}`}>
+                                <i className={`fa-solid fa-border-all text-xl ${activeCategoryId === 'all' ? 'text-green-700' : 'text-slate-400'}`}></i>
                             </div>
-                            <span className={`text-[10px] font-black ${activeCategoryId === 'all' ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>All</span>
+                            <span className={`text-[10px] font-bold text-center leading-tight px-1 ${activeCategoryId === 'all' ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>
+                                All Items
+                            </span>
                         </button>
+
+                        {/* Categories List */}
                         {DETAILED_CATEGORIES.map(cat => (
                             <button
                                 key={cat.id}
                                 onClick={() => handleCategoryChange(cat.id)}
-                                className={`w-full py-4 flex flex-col items-center gap-1 transition-all relative ${activeCategoryId === cat.id ? 'bg-white dark:bg-slate-800' : ''}`}
+                                className="w-full py-4 flex flex-col items-center gap-2 relative"
                             >
-                                {activeCategoryId === cat.id && <div className="absolute right-0 top-2 bottom-2 w-1 bg-green-500 rounded-l-full"></div>}
-                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center p-1.5 border ${activeCategoryId === cat.id ? 'bg-white border-green-100 shadow-sm' : 'bg-slate-100 border-transparent dark:bg-slate-800'}`}>
-                                    <img src={cat.image} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" alt="" />
+                                {activeCategoryId === cat.id && <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-green-600 rounded-r-lg"></div>}
+                                <div className={`w-14 h-14 rounded-full flex items-center justify-center overflow-hidden p-2 transition-all ${activeCategoryId === cat.id ? 'bg-green-50 border-2 border-green-600' : 'bg-slate-100 dark:bg-slate-800'}`}>
+                                    <img src={cat.image} className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal" alt={cat.name} />
                                 </div>
-                                <span className={`text-[10px] font-black truncate w-full px-1 text-center ${activeCategoryId === cat.id ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>{cat.name}</span>
+                                <span className={`text-[10px] font-bold text-center leading-tight px-1 truncate w-full ${activeCategoryId === cat.id ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>
+                                    {cat.name}
+                                </span>
                             </button>
                         ))}
                     </div>
 
-                    {/* Mobile Content Area */}
-                    <div className="flex-1 overflow-y-auto p-3 no-scrollbar pb-24">
-                        {/* Mobile Subcategories */}
-                        {activeCategoryId !== 'all' && activeCategory.subcategories && activeCategory.subcategories.length > 0 && (
-                            <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-1">
-                                <button
-                                    onClick={() => setActiveSubCategory('all')}
-                                    className={`px-4 py-1.5 rounded-full text-[10px] font-black whitespace-nowrap border-2 transition-all ${activeSubCategory === 'all' ? 'bg-green-600 border-green-600 text-white' : 'bg-slate-50 border-slate-100 text-slate-500'}`}
-                                >
-                                    All
-                                </button>
-                                {activeCategory.subcategories.map(sub => (
-                                    <button
-                                        key={sub.name}
-                                        onClick={() => setActiveSubCategory(sub.name)}
-                                        className={`px-4 py-1.5 rounded-full text-[10px] font-black whitespace-nowrap border-2 transition-all ${activeSubCategory === sub.name ? 'bg-green-600 border-green-600 text-white' : 'bg-slate-50 border-slate-100 text-slate-500'}`}
-                                    >
-                                        {sub.name}
-                                    </button>
-                                ))}
-                            </div>
+                    {/* Mobile Content Area - Adjust margin based on sidebar visibility */}
+                    <div
+                        className={`flex-1 overflow-y-auto no-scrollbar pb-24 relative bg-white dark:bg-slate-900 h-full transition-all duration-300 ${showSidebar ? 'ml-[86px]' : 'ml-0'}`}
+                        onScroll={(e) => {
+                            const scrollTop = e.currentTarget.scrollTop;
+                            if (onScrollChange) onScrollChange(scrollTop > 10);
+                        }}
+                    >
+                        {/* Show Menu Button - When Sidebar Hidden */}
+                        {!showSidebar && (
+                            <button
+                                onClick={() => setShowSidebar(true)}
+                                className="fixed left-2 top-20 z-40 w-12 h-12 bg-green-600 text-white rounded-full shadow-lg flex items-center justify-center"
+                            >
+                                <i className="fa-solid fa-bars"></i>
+                            </button>
                         )}
 
-                        <div className="grid grid-cols-2 gap-3">
-                            {filteredProducts.map(({ product: p }) => (
-                                <ProductCard
-                                    key={p.id}
-                                    product={p}
-                                    onClick={() => onProductClick(p)}
-                                    addToCart={() => addToCart(p, p.units[0])}
-                                    quantity={getQuantity(p.id, p.units[0].id)}
-                                    removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
-                                    isFavorite={wishlist.includes(p.id)}
-                                    toggleFavorite={() => toggleWishlist(p.id)}
-                                />
-                            ))}
+                        {/* Filter Chips - Sticky Row (Below Global Header) */}
+                        <div className="sticky top-0 z-20 bg-[#E8F5E9]/95 dark:bg-slate-950/95 backdrop-blur-md pt-3 pb-2 px-3 border-b border-green-100 dark:border-slate-800 flex items-center gap-2 overflow-x-auto no-scrollbar transition-colors duration-300">
+                            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm whitespace-nowrap active:scale-95 transition-transform">
+                                <i className="fa-solid fa-sliders text-xs"></i>
+                                <span className="text-[11px] font-bold">Filters</span>
+                                <i className="fa-solid fa-caret-down text-[10px] opacity-50"></i>
+                            </button>
+                            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm whitespace-nowrap active:scale-95 transition-transform">
+                                <span className="text-[11px] font-bold">Sort By</span>
+                                <i className="fa-solid fa-caret-down text-[10px] opacity-50"></i>
+                            </button>
+                            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm whitespace-nowrap active:scale-95 transition-transform">
+                                <span className="text-[11px] font-bold">Price</span>
+                            </button>
+                            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm whitespace-nowrap active:scale-95 transition-transform">
+                                <span className="text-[11px] font-bold">Brand</span>
+                            </button>
                         </div>
-                        {filteredProducts.length === 0 && (
-                            <div className="flex flex-col items-center justify-center py-20 opacity-50">
-                                <i className="fa-solid fa-magnifying-glass text-4xl mb-3"></i>
-                                <p className="text-sm font-bold">No items found</p>
+
+                        <div className="p-3">
+                            {/* Mobile Subcategories */}
+                            {activeCategoryId !== 'all' && activeCategory.subcategories && activeCategory.subcategories.length > 0 && (
+                                <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-1">
+                                    <button
+                                        onClick={() => setActiveSubCategory('all')}
+                                        className={`px-4 py-1.5 rounded-full text-[10px] font-black whitespace-nowrap border-2 transition-all ${activeSubCategory === 'all' ? 'bg-green-600 border-green-600 text-white' : 'bg-slate-50 border-slate-100 text-slate-500'}`}
+                                    >
+                                        All
+                                    </button>
+                                    {activeCategory.subcategories.map(sub => (
+                                        <button
+                                            key={sub.name}
+                                            onClick={() => setActiveSubCategory(sub.name)}
+                                            className={`px-4 py-1.5 rounded-full text-[10px] font-black whitespace-nowrap border-2 transition-all ${activeSubCategory === sub.name ? 'bg-green-600 border-green-600 text-white' : 'bg-slate-50 border-slate-100 text-slate-500'}`}
+                                        >
+                                            {sub.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+
+                            <div className="grid grid-cols-2 gap-3">
+                                {filteredProducts.map(({ product: p }) => (
+                                    <ProductCard
+                                        key={p.id}
+                                        product={p}
+                                        onClick={() => onProductClick(p)}
+                                        addToCart={() => addToCart(p, p.units[0])}
+                                        quantity={getQuantity(p.id, p.units[0].id)}
+                                        removeFromCart={() => removeFromCart(p.id, p.units[0].id)}
+                                        isFavorite={wishlist.includes(p.id)}
+                                        toggleFavorite={() => toggleWishlist(p.id)}
+                                    />
+                                ))}
                             </div>
-                        )}
+                            {filteredProducts.length === 0 && (
+                                <div className="flex flex-col items-center justify-center py-20 opacity-50">
+                                    <i className="fa-solid fa-magnifying-glass text-4xl mb-3"></i>
+                                    <p className="text-sm font-bold">No items found</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -250,16 +283,16 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
 
                 {/* Desktop Content Area with Category-Specific Pastel Background */}
                 <div className={`flex-1 h-full overflow-y-auto no-scrollbar pb-20 transition-colors duration-300 ${activeCategoryId === 'all' ? 'bg-slate-50 dark:bg-slate-950' :
-                        activeCategoryId === 'dc1' ? 'bg-green-50 dark:bg-green-950/20' :
-                            activeCategoryId === 'dc2' ? 'bg-orange-50 dark:bg-orange-950/20' :
-                                activeCategoryId === 'dc3' ? 'bg-emerald-50 dark:bg-emerald-950/20' :
-                                    activeCategoryId === 'dc4' ? 'bg-pink-50 dark:bg-pink-950/20' :
-                                        activeCategoryId === 'dc5' ? 'bg-amber-50 dark:bg-amber-950/20' :
-                                            activeCategoryId === 'dc6' ? 'bg-blue-50 dark:bg-blue-950/20' :
-                                                activeCategoryId === 'dc7' ? 'bg-rose-50 dark:bg-rose-950/20' :
-                                                    activeCategoryId === 'dc8' ? 'bg-cyan-50 dark:bg-cyan-950/20' :
-                                                        activeCategoryId === 'dc9' ? 'bg-yellow-50 dark:bg-yellow-950/20' :
-                                                            'bg-purple-50 dark:bg-purple-950/20'
+                    activeCategoryId === 'dc1' ? 'bg-green-50 dark:bg-green-950/20' :
+                        activeCategoryId === 'dc2' ? 'bg-orange-50 dark:bg-orange-950/20' :
+                            activeCategoryId === 'dc3' ? 'bg-emerald-50 dark:bg-emerald-950/20' :
+                                activeCategoryId === 'dc4' ? 'bg-pink-50 dark:bg-pink-950/20' :
+                                    activeCategoryId === 'dc5' ? 'bg-amber-50 dark:bg-amber-950/20' :
+                                        activeCategoryId === 'dc6' ? 'bg-blue-50 dark:bg-blue-950/20' :
+                                            activeCategoryId === 'dc7' ? 'bg-rose-50 dark:bg-rose-950/20' :
+                                                activeCategoryId === 'dc8' ? 'bg-cyan-50 dark:bg-cyan-950/20' :
+                                                    activeCategoryId === 'dc9' ? 'bg-yellow-50 dark:bg-yellow-950/20' :
+                                                        'bg-purple-50 dark:bg-purple-950/20'
                     }`}>
                     <div className="p-8 pb-0">
                         {/* Category Headline */}
@@ -271,7 +304,7 @@ const CategoriesView: React.FC<CategoriesViewProps> = ({
                         </div>
 
                         {/* Desktop Grid */}
-                        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8 pb-32">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 pb-32">
                             {filteredProducts.map(({ product: p }) => (
                                 <ProductCard
                                     key={p.id}

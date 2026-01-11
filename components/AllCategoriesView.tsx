@@ -3,14 +3,14 @@ import { DetailedCategory } from '../types';
 import { DETAILED_CATEGORIES } from '../constants';
 
 interface AllCategoriesViewProps {
+
     onCategoryClick: (categoryId: string) => void;
-    onSearchChange: (query: string) => void;
     cartCount: number;
 }
 
 const AllCategoriesView: React.FC<AllCategoriesViewProps> = ({
     onCategoryClick,
-    onSearchChange,
+
     cartCount
 }) => {
     return (
@@ -21,24 +21,6 @@ const AllCategoriesView: React.FC<AllCategoriesViewProps> = ({
                 <div className="flex items-center justify-between px-4 py-3">
                     <h1 className="text-xl font-black text-slate-800 tracking-tight">All Categories</h1>
                     {/* Optional: Cart Icon or similar if needed */}
-                </div>
-
-                {/* Search Bar Area */}
-                <div className="px-4 pb-2">
-                    <div className="relative shadow-sm">
-                        <input
-                            type="text"
-                            placeholder="Search for products..."
-                            className="w-full h-12 rounded-xl bg-slate-100 border-none pl-12 pr-10 text-sm font-semibold outline-none focus:ring-2 focus:ring-green-500/50 transition-colors text-slate-800 placeholder-slate-400"
-                            onChange={(e) => onSearchChange(e.target.value)}
-                        />
-                        <div className="absolute left-0 top-0 h-full w-12 flex items-center justify-center pointer-events-none">
-                            <i className="fa-solid fa-magnifying-glass text-slate-400 text-lg"></i>
-                        </div>
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                            <i className="fa-solid fa-microphone text-orange-500"></i>
-                        </div>
-                    </div>
                 </div>
             </div>
 

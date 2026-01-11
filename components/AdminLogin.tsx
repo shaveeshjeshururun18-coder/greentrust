@@ -8,6 +8,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess }) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -50,16 +51,25 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess }) => {
                         <label htmlFor="password" className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                             Password
                         </label>
-                        <input
-                            id="password"
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Enter admin password"
-                            className="w-full px-4 py-3 border-2 border-gray-200 dark:border-slate-600 rounded-xl outline-none focus:border-green-500 dark:focus:border-green-400 transition-all bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400"
-                            autoFocus
-                            required
-                        />
+                        <div className="relative">
+                            <input
+                                id="password"
+                                type={showPassword ? 'text' : 'password'}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Enter admin password"
+                                className="w-full px-4 py-3 pr-12 border-2 border-gray-200 dark:border-slate-600 rounded-xl outline-none focus:border-green-500 dark:focus:border-green-400 transition-all bg-white dark:bg-slate-700 text-gray-900 dark:text-white placeholder-gray-400"
+                                autoFocus
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                            >
+                                <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                            </button>
+                        </div>
                         {error && (
                             <p className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center gap-2">
                                 <i className="fa-solid fa-circle-exclamation"></i>
@@ -72,8 +82,8 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess }) => {
                         type="submit"
                         disabled={isLoading || password.length === 0}
                         className={`w-full py-3 rounded-xl font-black text-white transition-all ${isLoading || password.length === 0
-                                ? 'bg-gray-300 cursor-not-allowed'
-                                : 'bg-green-600 hover:bg-green-700 active:scale-95'
+                            ? 'bg-gray-300 cursor-not-allowed'
+                            : 'bg-green-600 hover:bg-green-700 active:scale-95'
                             }`}
                     >
                         {isLoading ? (

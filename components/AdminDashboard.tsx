@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebaseConfig';
-import { collection, query, orderBy, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs, Timestamp, doc, updateDoc } from 'firebase/firestore';
 
 interface OrderItem {
     name: string;
@@ -32,6 +32,7 @@ const AdminDashboard: React.FC = () => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -60,6 +61,44 @@ const AdminDashboard: React.FC = () => {
     const formatDate = (timestamp: Timestamp) => {
         if (!timestamp) return 'N/A';
         return new Date(timestamp.seconds * 1000).toLocaleString();
+    };
+
+    const markAsComplete = async (orderIds: string[]) => {
+        try {
+            for (const orderId of orderIds) {
+                const orderRef = doc(db, 'orders', orderId);
+                await updateDoc(orderRef, { status: 'delivered' });
+            }
+            // Refresh orders
+            const ordersRef = collection(db, 'orders');
+            const q = query(ordersRef, orderBy('createdAt', 'desc'));
+            const querySnapshot = await getDocs(q);
+            const ordersData = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            } as Order));
+            setOrders(ordersData);
+            setSelectedOrders([]);
+        } catch (error) {
+            console.error('Error updating orders:', error);
+            alert('Failed to update orders');
+        }
+    };
+
+    const toggleOrderSelection = (orderId: string) => {
+        setSelectedOrders(prev =>
+            prev.includes(orderId)
+                ? prev.filter(id => id !== orderId)
+                : [...prev, orderId]
+        );
+    };
+
+    const toggleSelectAll = () => {
+        if (selectedOrders.length === orders.length) {
+            setSelectedOrders([]);
+        } else {
+            setSelectedOrders(orders.map(o => o.id));
+        }
     };
 
     const exportAsPDF = (order: Order) => {
@@ -148,6 +187,48 @@ const AdminDashboard: React.FC = () => {
                     </div>
                 </header>
 
+                {/* Bulk Actions Toolbar */}
+                {selectedOrders.length > 0 && (
+                    <div className="mb-4 bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-xl p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <i className="fa-solid fa-check-circle text-green-600 text-xl"></i>
+                            <span className="font-bold text-gray-900 dark:text-white">
+                                {selectedOrders.length} order(s) selected
+                            </span>
+                        </div>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => markAsComplete(selectedOrders)}
+                                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 transition-colors"
+                            >
+                                <i className="fa-solid fa-check"></i>
+                                Mark as Complete
+                            </button>
+                            <button
+                                onClick={() => setSelectedOrders([])}
+                                className="px-4 py-2 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg font-bold hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors"
+                            >
+                                Clear Selection
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Select All Checkbox */}
+                {orders.length > 0 && (
+                    <div className="mb-4 flex items-center gap-3 px-2">
+                        <input
+                            type="checkbox"
+                            checked={selectedOrders.length === orders.length && orders.length > 0}
+                            onChange={toggleSelectAll}
+                            className="w-5 h-5 rounded border-2 border-gray-300 text-green-600 focus:ring-green-500"
+                        />
+                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                            Select All ({orders.length} orders)
+                        </label>
+                    </div>
+                )}
+
                 {/* Orders List */}
                 <div className="space-y-4">
                     {orders.length === 0 ? (
@@ -161,30 +242,38 @@ const AdminDashboard: React.FC = () => {
                     ) : (
                         orders.map((order) => (
                             <div key={order.id} className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-slate-700">
-                                {/* Order Header */}
-                                <div className="flex items-start justify-between mb-4">
-                                    <div>
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-black uppercase ${order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                    order.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                                                        'bg-blue-100 text-blue-800'
-                                                }`}>
-                                                {order.status}
-                                            </span>
-                                            <span className="text-sm text-gray-400 font-mono">#{order.id.slice(-6)}</span>
+                                {/* Checkbox and Order Header */}
+                                <div className="flex items-start gap-4 mb-4">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedOrders.includes(order.id)}
+                                        onChange={() => toggleOrderSelection(order.id)}
+                                        className="mt-1 w-5 h-5 rounded border-2 border-gray-300 text-green-600 focus:ring-green-500"
+                                    />
+                                    <div className="flex-1 flex items-start justify-between">
+                                        <div>
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-black uppercase ${order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                        order.status === 'delivered' ? 'bg-green-100 text-green-800' :
+                                                            'bg-blue-100 text-blue-800'
+                                                    }`}>
+                                                    {order.status}
+                                                </span>
+                                                <span className="text-sm text-gray-400 font-mono">#{order.id.slice(-6)}</span>
+                                            </div>
+                                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{formatDate(order.createdAt)}</p>
+                                            <p className="text-sm font-bold text-gray-700 dark:text-gray-300 mt-1">
+                                                Phone: {order.customerPhone || order.userPhone || 'N/A'}
+                                            </p>
                                         </div>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{formatDate(order.createdAt)}</p>
-                                        <p className="text-sm font-bold text-gray-700 dark:text-gray-300 mt-1">
-                                            Phone: {order.customerPhone || order.userPhone || 'N/A'}
-                                        </p>
+                                        <button
+                                            onClick={() => exportAsPDF(order)}
+                                            className="flex items-center gap-2 px-4 py-2 bg-green-50 dark:bg-green-900/30 text-green-600 rounded-lg text-sm font-bold hover:bg-green-100 transition-colors"
+                                        >
+                                            <i className="fa-solid fa-file-pdf"></i>
+                                            Export
+                                        </button>
                                     </div>
-                                    <button
-                                        onClick={() => exportAsPDF(order)}
-                                        className="flex items-center gap-2 px-4 py-2 bg-green-50 dark:bg-green-900/30 text-green-600 rounded-lg text-sm font-bold hover:bg-green-100 transition-colors"
-                                    >
-                                        <i className="fa-solid fa-file-pdf"></i>
-                                        Export
-                                    </button>
                                 </div>
 
                                 {/* Items Preview */}

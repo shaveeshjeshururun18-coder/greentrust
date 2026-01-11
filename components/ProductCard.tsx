@@ -26,9 +26,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const defaultUnit = product.units[0];
 
   return (
-    <div className="flex flex-col gap-2 h-full animate-popIn group relative">
+    <div className="flex flex-col gap-2 h-full animate-popIn group relative min-h-[280px]">
       {/* Image Area with Overlay Button */}
-      <div className="relative aspect-[0.9] bg-slate-100 dark:bg-slate-800/50 rounded-xl overflow-hidden cursor-pointer" onClick={onClick}>
+      <div className="relative aspect-square bg-slate-100 dark:bg-slate-800/50 rounded-xl overflow-hidden cursor-pointer" onClick={onClick}>
         {/* Discount Badge */}
         {product.discount && (
           <div className="absolute top-0 left-0 bg-[#5d8ed5] text-white text-[9px] font-black px-1.5 py-1 rounded-br-lg z-10 shadow-sm uppercase tracking-tighter">

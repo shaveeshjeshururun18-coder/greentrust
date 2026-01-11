@@ -35,11 +35,9 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
 }) => {
     const [searchValue, setSearchValue] = useState(externalSearchValue || '');
 
-    // Sync with external search value
+    // Sync with external search value - CRITICAL FIX
     useEffect(() => {
-        if (externalSearchValue !== undefined) {
-            setSearchValue(externalSearchValue);
-        }
+        setSearchValue(externalSearchValue || '');
     }, [externalSearchValue]);
 
     // Debounce Search to prevent re-rendering App on every keystroke
@@ -48,7 +46,7 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
             onSearchChange(searchValue);
         }, 300);
         return () => clearTimeout(timer);
-    }, [searchValue]);
+    }, [searchValue, onSearchChange]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value);
@@ -56,9 +54,9 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
 
     return (
         <header className={`hidden md:block sticky top-0 z-[60] transition-all duration-300 font-sans ${isScrolled ? 'shadow-md' : ''}`}>
-            {/* Main Header */}
-            <div className={`bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-gray-100 dark:border-slate-800 transition-all duration-300 ${isScrolled ? 'py-2' : 'py-4'}`}>
-                <div className="max-w-[1920px] mx-auto px-10 flex items-center justify-between gap-8">
+            {/* Main Header - Optimized Size */}
+            <div className={`bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-gray-100 dark:border-slate-800 transition-all duration-300 ${isScrolled ? 'py-1.5' : 'py-2.5'}`}>
+                <div className="max-w-[1920px] mx-auto px-6 flex items-center justify-between gap-6">
                     {/* Logo & Categories */}
                     <div className="flex items-center gap-8">
                         {/* Logo */}
@@ -118,15 +116,6 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({
                         >
                             <i className="fa-solid fa-clipboard-list"></i>
                             Orders
-                        </button>
-
-                        {/* Developer Button */}
-                        <button
-                            onClick={() => setCurrentView('developer')}
-                            className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-sm transition-all ${currentView === 'developer' ? 'bg-green-50 text-green-700' : 'hover:bg-slate-50 text-slate-700'}`}
-                        >
-                            <i className="fa-solid fa-code text-lg"></i>
-                            Developer
                         </button>
                     </div>
 
